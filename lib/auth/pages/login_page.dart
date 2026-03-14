@@ -13,7 +13,6 @@ class LoginPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
             const Text("Login Page"),
 
             ElevatedButton(
@@ -30,7 +29,9 @@ class LoginPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const RecoverPasswordPage()),
+                  MaterialPageRoute(
+                    builder: (_) => const RecoverPasswordPage(),
+                  ),
                 );
               },
               child: const Text("Recover Password"),
