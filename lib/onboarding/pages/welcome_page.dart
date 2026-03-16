@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import '../../auth/pages/login_page.dart';
-import '../../auth/pages/register_page.dart';
 import '../../core/constants/app_colors.dart';
 import '../../widgets/language_selector.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
+
+  void _navigate(BuildContext context, String route) {
+    Navigator.pushNamed(context, route);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,23 +20,42 @@ class WelcomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
 
-              /// 🌍 Language selector
+              /// Language selector
               const Align(
                 alignment: Alignment.topRight,
                 child: LanguageSelector(),
               ),
 
-              /// 🔥 Logo + Title
+              /// Logo + Title
               Column(
                 children: [
 
-                  /// Logo
-                  Image.asset(
-                    "assets/LogoRyzeAI.png",
-                    height: 110,
+                  /// LOGO CON CIRCULO
+                  Container(
+                    padding: const EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 235, 213, 178),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.primary,
+                        width: 3,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withOpacity(0.4),
+                          blurRadius: 20,
+                          spreadRadius: 2,
+                          offset: const Offset(0, 6),
+                        )
+                      ],
+                    ),
+                    child: Image.asset(
+                      "assets/LogoRyzeAI.png",
+                      height: 80,
+                    ),
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
 
                   /// App name
                   const Text(
@@ -60,21 +81,26 @@ class WelcomePage extends StatelessWidget {
                 ],
               ),
 
-              /// 🚀 Buttons
+              /// Buttons
               Column(
                 children: [
 
-                  /// LOGIN BUTTON
+                  /// LOGIN
                   SizedBox(
                     width: double.infinity,
                     height: 55,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
+                        elevation: 6,
+                        shadowColor: AppColors.primary.withOpacity(0.5),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
+                      onPressed: () {
+                        _navigate(context, "/login");
+                      },
                       child: const Text(
                         "Log In",
                         style: TextStyle(
@@ -82,20 +108,12 @@ class WelcomePage extends StatelessWidget {
                           color: AppColors.textPrimary,
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const LoginPage(),
-                          ),
-                        );
-                      },
                     ),
                   ),
 
                   const SizedBox(height: 16),
 
-                  /// REGISTER BUTTON
+                  /// REGISTER
                   SizedBox(
                     width: double.infinity,
                     height: 55,
@@ -109,6 +127,9 @@ class WelcomePage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
+                      onPressed: () {
+                        _navigate(context, "/register");
+                      },
                       child: const Text(
                         "Create Account",
                         style: TextStyle(
@@ -116,14 +137,6 @@ class WelcomePage extends StatelessWidget {
                           color: AppColors.primary,
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const RegisterPage(),
-                          ),
-                        );
-                      },
                     ),
                   ),
 
