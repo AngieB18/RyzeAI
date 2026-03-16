@@ -71,7 +71,7 @@ class WelcomePage extends StatelessWidget {
 
                   /// Subtitle
                   const Text(
-                    "Boost your productivity with AI",
+                    "Welcome! Get inspired and design your ideal space in 3D",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
