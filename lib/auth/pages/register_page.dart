@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/validators/register_validators.dart';
 import '../widgets/password_strength_indicator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -35,7 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
       if (!_acceptTerms) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -46,7 +48,33 @@ class _RegisterPageState extends State<RegisterPage> {
         );
         return;
       }
-      // TODO: conectar con servicio de registro
+
+      try {
+        // Crear usuario en Firebase Authentication
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim(),
+            );
+
+        String uid = userCredential.user!.uid;
+
+        // Guardar información adicional en Firestore
+        await FirebaseFirestore.instance.collection('users').doc(uid).set({
+          'firstName': _firstNameController.text.trim(),
+          'lastName': _lastNameController.text.trim(),
+          'email': _emailController.text.trim(),
+          'createdAt': Timestamp.now(),
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Cuenta creada correctamente')),
+        );
+      } on FirebaseAuthException catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message ?? 'Error al registrar')),
+        );
+      }
     }
   }
 
@@ -142,7 +170,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: _buildTextField(
                               controller: _firstNameController,
                               label: 'Nombre',
-                              placeholder: 'María',
+                              placeholder: 'Ingresa tu nombre en este campo',
                               validator: RegisterValidators.validateFirstName,
                             ),
                           ),
@@ -151,7 +179,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: _buildTextField(
                               controller: _lastNameController,
                               label: 'Apellido',
-                              placeholder: 'García',
+                              placeholder: 'Ingresa tu apellido en este campo',
                               validator: RegisterValidators.validateLastName,
                             ),
                           ),
@@ -163,7 +191,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       _buildTextField(
                         controller: _emailController,
                         label: 'Correo electrónico',
-                        placeholder: 'maria@ejemplo.com',
+                        placeholder: 'Digita tu email aquí',
                         keyboardType: TextInputType.emailAddress,
                         validator: RegisterValidators.validateEmail,
                         suffix: const Icon(
@@ -178,7 +206,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       _buildTextField(
                         controller: _passwordController,
                         label: 'Contraseña',
-                        placeholder: '••••••••',
+                        placeholder: 'Crea una contraseña segura',
                         obscureText: !_showPassword,
                         onChanged: (v) => setState(() => _passwordValue = v),
                         validator: RegisterValidators.validatePassword,
@@ -204,7 +232,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       _buildTextField(
                         controller: _confirmPasswordController,
                         label: 'Confirmar contraseña',
-                        placeholder: '••••••••',
+                        placeholder: 'Confirma tu contraseña',
                         obscureText: !_showConfirmPassword,
                         validator: (v) =>
                             RegisterValidators.validateConfirmPassword(
@@ -287,7 +315,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             elevation: 0,
                           ),
                           child: const Text(
-                            'Crear Cuenta Gratis',
+                            'Crear Cuenta',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,

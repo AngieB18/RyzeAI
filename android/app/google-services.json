@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "888646898645",
+    "project_id": "ryzeai",
+    "storage_bucket": "ryzeai.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:888646898645:android:1faa56b53139abf9a7e35c",
+        "android_client_info": {
+          "package_name": "com.example.ryzeai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6JJFr9xg4nBBHLd8rvn8vp9gHWw8Z2FE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
