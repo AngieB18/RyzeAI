@@ -29,6 +29,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Account created successfully",
     ),
     "andThe": MessageLookupByLibrary.simpleMessage(" and the "),
+    "bedroom": MessageLookupByLibrary.simpleMessage("Bedroom"),
+    "colorful": MessageLookupByLibrary.simpleMessage("Colorful"),
     "confirmPassword": MessageLookupByLibrary.simpleMessage("Confirm Password"),
     "confirmPasswordHint": MessageLookupByLibrary.simpleMessage(
       "Confirm your password",
@@ -36,6 +38,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "createAccount": MessageLookupByLibrary.simpleMessage("Create Account"),
     "createAccountButton": MessageLookupByLibrary.simpleMessage(
       "Create Account",
+    ),
+    "decorate": MessageLookupByLibrary.simpleMessage("Decorate with AI"),
+    "decorateDesc": MessageLookupByLibrary.simpleMessage(
+      "Take a photo and visualize furniture in 3D",
+    ),
+    "decorateDesc2": MessageLookupByLibrary.simpleMessage(
+      "Take a photo of your space and visualize furniture in 3D instantly",
     ),
     "email": MessageLookupByLibrary.simpleMessage("Email"),
     "enterEmail": MessageLookupByLibrary.simpleMessage("Enter your email"),
@@ -48,15 +57,31 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterPassword": MessageLookupByLibrary.simpleMessage(
       "Create a secure password",
     ),
+    "exploreStyles": MessageLookupByLibrary.simpleMessage("Explore Styles"),
+    "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
     "firstName": MessageLookupByLibrary.simpleMessage("First Name"),
+    "helloUser": MessageLookupByLibrary.simpleMessage("Hello"),
+    "home": MessageLookupByLibrary.simpleMessage("Home"),
+    "hoursAgo": MessageLookupByLibrary.simpleMessage("2h ago"),
     "joinRyzeAI": MessageLookupByLibrary.simpleMessage(
       "Join RyzeAI and start decorating",
     ),
     "language": MessageLookupByLibrary.simpleMessage("Language"),
     "lastName": MessageLookupByLibrary.simpleMessage("Last Name"),
+    "livingRoom": MessageLookupByLibrary.simpleMessage("Living Room"),
     "login": MessageLookupByLibrary.simpleMessage("Log In"),
+    "minimal": MessageLookupByLibrary.simpleMessage("Minimal"),
+    "modern": MessageLookupByLibrary.simpleMessage("Modern"),
+    "modifiedAgo": MessageLookupByLibrary.simpleMessage("Modified"),
+    "natural": MessageLookupByLibrary.simpleMessage("Natural"),
+    "newBadge": MessageLookupByLibrary.simpleMessage("New"),
+    "newItems": MessageLookupByLibrary.simpleMessage("5 new"),
+    "openCamera": MessageLookupByLibrary.simpleMessage("Open AI Camera"),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
     "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
+    "profile": MessageLookupByLibrary.simpleMessage("Profile"),
+    "projects": MessageLookupByLibrary.simpleMessage("Projects"),
+    "recentProjects": MessageLookupByLibrary.simpleMessage("Recent Projects"),
     "registerError": MessageLookupByLibrary.simpleMessage(
       "Error while registering",
     ),
@@ -65,8 +90,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "By signing up you accept the ",
     ),
     "termsOfService": MessageLookupByLibrary.simpleMessage("Terms of Service"),
+    "thisMonth": MessageLookupByLibrary.simpleMessage("+1 this month"),
     "welcome": MessageLookupByLibrary.simpleMessage(
       "Welcome! Get inspired and design your ideal space in 3D",
     ),
+    "welcomeBack": MessageLookupByLibrary.simpleMessage("Welcome back"),
+    "yesterday": MessageLookupByLibrary.simpleMessage("yesterday"),
   };
 }
