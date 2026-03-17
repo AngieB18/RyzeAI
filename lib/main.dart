@@ -1,32 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-
 import 'onboarding/pages/welcome_page.dart';
 import 'auth/pages/login_page.dart';
 import 'auth/pages/register_page.dart';
+import 'home/home_page.dart'; // ← este faltaba
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'generated/l10n.dart'; 
+import 'generated/l10n.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
 
-  // Método para actualizar el idioma desde cualquier widget hijo
   static void setLocale(BuildContext context, Locale newLocale) {
-    final _MyAppState? state =
-        context.findAncestorStateOfType<_MyAppState>();
+    final _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
     state?.setLocale(newLocale);
   }
 }
@@ -44,8 +39,6 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-
-      /// Locale dinámico para traducciones
       locale: _locale,
       supportedLocales: S.delegate.supportedLocales,
       localizationsDelegates: const [
@@ -54,11 +47,7 @@ class _MyAppState extends State<MyApp> {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-
-      /// pantalla inicial
       initialRoute: "/",
-
-      /// rutas con transición personalizada
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case "/":
@@ -67,6 +56,8 @@ class _MyAppState extends State<MyApp> {
             return _fadeRoute(const LoginPage());
           case "/register":
             return _fadeRoute(const RegisterPage());
+          case "/home": // ← esta ruta faltaba
+            return _fadeRoute(const HomePage());
           default:
             return _fadeRoute(const WelcomePage());
         }
@@ -75,15 +66,11 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-/// Transición fade entre pantallas
 PageRouteBuilder _fadeRoute(Widget page) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => page,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      return FadeTransition(
-        opacity: animation,
-        child: child,
-      );
+      return FadeTransition(opacity: animation, child: child);
     },
     transitionDuration: const Duration(milliseconds: 350),
   );

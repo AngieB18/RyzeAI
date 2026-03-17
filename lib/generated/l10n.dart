@@ -69,16 +69,6 @@ class S {
     return Intl.message('Log In', name: 'login', desc: '', args: []);
   }
 
-  /// `Create Account`
-  String get createAccount {
-    return Intl.message(
-      'Create Account',
-      name: 'createAccount',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Language`
   String get language {
     return Intl.message('Language', name: 'language', desc: '', args: []);
@@ -117,6 +107,16 @@ class S {
   /// `Step 1 of 1`
   String get step1of1 {
     return Intl.message('Step 1 of 1', name: 'step1of1', desc: '', args: []);
+  }
+
+  /// `Create Account`
+  String get createAccount {
+    return Intl.message(
+      'Create Account',
+      name: 'createAccount',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Join RyzeAI and start decorating`
@@ -252,6 +252,161 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Welcome back`
+  String get welcomeBack {
+    return Intl.message(
+      'Welcome back',
+      name: 'welcomeBack',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hello`
+  String get helloUser {
+    return Intl.message('Hello', name: 'helloUser', desc: '', args: []);
+  }
+
+  /// `Decorate with AI`
+  String get decorate {
+    return Intl.message(
+      'Decorate with AI',
+      name: 'decorate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take a photo and visualize furniture in 3D`
+  String get decorateDesc {
+    return Intl.message(
+      'Take a photo and visualize furniture in 3D',
+      name: 'decorateDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open AI Camera`
+  String get openCamera {
+    return Intl.message(
+      'Open AI Camera',
+      name: 'openCamera',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recent Projects`
+  String get recentProjects {
+    return Intl.message(
+      'Recent Projects',
+      name: 'recentProjects',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Explore Styles`
+  String get exploreStyles {
+    return Intl.message(
+      'Explore Styles',
+      name: 'exploreStyles',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Projects`
+  String get projects {
+    return Intl.message('Projects', name: 'projects', desc: '', args: []);
+  }
+
+  /// `Favorites`
+  String get favorites {
+    return Intl.message('Favorites', name: 'favorites', desc: '', args: []);
+  }
+
+  /// `Profile`
+  String get profile {
+    return Intl.message('Profile', name: 'profile', desc: '', args: []);
+  }
+
+  /// `Home`
+  String get home {
+    return Intl.message('Home', name: 'home', desc: '', args: []);
+  }
+
+  /// `New`
+  String get newBadge {
+    return Intl.message('New', name: 'newBadge', desc: '', args: []);
+  }
+
+  /// `Take a photo of your space and visualize furniture in 3D instantly`
+  String get decorateDesc2 {
+    return Intl.message(
+      'Take a photo of your space and visualize furniture in 3D instantly',
+      name: 'decorateDesc2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Modified`
+  String get modifiedAgo {
+    return Intl.message('Modified', name: 'modifiedAgo', desc: '', args: []);
+  }
+
+  /// `2h ago`
+  String get hoursAgo {
+    return Intl.message('2h ago', name: 'hoursAgo', desc: '', args: []);
+  }
+
+  /// `yesterday`
+  String get yesterday {
+    return Intl.message('yesterday', name: 'yesterday', desc: '', args: []);
+  }
+
+  /// `Living Room`
+  String get livingRoom {
+    return Intl.message('Living Room', name: 'livingRoom', desc: '', args: []);
+  }
+
+  /// `Bedroom`
+  String get bedroom {
+    return Intl.message('Bedroom', name: 'bedroom', desc: '', args: []);
+  }
+
+  /// `Modern`
+  String get modern {
+    return Intl.message('Modern', name: 'modern', desc: '', args: []);
+  }
+
+  /// `Natural`
+  String get natural {
+    return Intl.message('Natural', name: 'natural', desc: '', args: []);
+  }
+
+  /// `Minimal`
+  String get minimal {
+    return Intl.message('Minimal', name: 'minimal', desc: '', args: []);
+  }
+
+  /// `Colorful`
+  String get colorful {
+    return Intl.message('Colorful', name: 'colorful', desc: '', args: []);
+  }
+
+  /// `+1 this month`
+  String get thisMonth {
+    return Intl.message('+1 this month', name: 'thisMonth', desc: '', args: []);
+  }
+
+  /// `5 new`
+  String get newItems {
+    return Intl.message('5 new', name: 'newItems', desc: '', args: []);
   }
 }
 

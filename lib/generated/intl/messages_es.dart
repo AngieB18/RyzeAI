@@ -29,6 +29,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Cuenta creada correctamente",
     ),
     "andThe": MessageLookupByLibrary.simpleMessage(" y la "),
+    "bedroom": MessageLookupByLibrary.simpleMessage("Dormitorio"),
+    "colorful": MessageLookupByLibrary.simpleMessage("Colorido"),
     "confirmPassword": MessageLookupByLibrary.simpleMessage(
       "Confirmar contraseña",
     ),
@@ -37,6 +39,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "createAccount": MessageLookupByLibrary.simpleMessage("Crear Cuenta"),
     "createAccountButton": MessageLookupByLibrary.simpleMessage("Crear Cuenta"),
+    "decorate": MessageLookupByLibrary.simpleMessage("Decora con IA"),
+    "decorateDesc": MessageLookupByLibrary.simpleMessage(
+      "Toma una foto y visualiza muebles en 3D",
+    ),
+    "decorateDesc2": MessageLookupByLibrary.simpleMessage(
+      "Toma una foto de tu espacio y visualiza muebles en 3D al instante",
+    ),
     "email": MessageLookupByLibrary.simpleMessage("Correo electrónico"),
     "enterEmail": MessageLookupByLibrary.simpleMessage("Digita tu email aquí"),
     "enterFirstName": MessageLookupByLibrary.simpleMessage("Ingresa tu nombre"),
@@ -46,16 +55,34 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterPassword": MessageLookupByLibrary.simpleMessage(
       "Crea una contraseña segura",
     ),
+    "exploreStyles": MessageLookupByLibrary.simpleMessage("Explorar estilos"),
+    "favorites": MessageLookupByLibrary.simpleMessage("Favoritos"),
     "firstName": MessageLookupByLibrary.simpleMessage("Nombre"),
+    "helloUser": MessageLookupByLibrary.simpleMessage("Hola"),
+    "home": MessageLookupByLibrary.simpleMessage("Inicio"),
+    "hoursAgo": MessageLookupByLibrary.simpleMessage("hace 2h"),
     "joinRyzeAI": MessageLookupByLibrary.simpleMessage(
       "Únete a RyzeAI y empieza a decorar",
     ),
     "language": MessageLookupByLibrary.simpleMessage("Idioma"),
     "lastName": MessageLookupByLibrary.simpleMessage("Apellido"),
+    "livingRoom": MessageLookupByLibrary.simpleMessage("Sala principal"),
     "login": MessageLookupByLibrary.simpleMessage("Iniciar sesión"),
+    "minimal": MessageLookupByLibrary.simpleMessage("Mínimal"),
+    "modern": MessageLookupByLibrary.simpleMessage("Moderno"),
+    "modifiedAgo": MessageLookupByLibrary.simpleMessage("Modificado"),
+    "natural": MessageLookupByLibrary.simpleMessage("Natural"),
+    "newBadge": MessageLookupByLibrary.simpleMessage("Nuevo"),
+    "newItems": MessageLookupByLibrary.simpleMessage("5 nuevos"),
+    "openCamera": MessageLookupByLibrary.simpleMessage("Abrir cámara IA"),
     "password": MessageLookupByLibrary.simpleMessage("Contraseña"),
     "privacyPolicy": MessageLookupByLibrary.simpleMessage(
       "Política de privacidad",
+    ),
+    "profile": MessageLookupByLibrary.simpleMessage("Perfil"),
+    "projects": MessageLookupByLibrary.simpleMessage("Proyectos"),
+    "recentProjects": MessageLookupByLibrary.simpleMessage(
+      "Proyectos recientes",
     ),
     "registerError": MessageLookupByLibrary.simpleMessage("Error al registrar"),
     "step1of1": MessageLookupByLibrary.simpleMessage("Paso 1 de 1"),
@@ -65,8 +92,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "termsOfService": MessageLookupByLibrary.simpleMessage(
       "Términos de servicio",
     ),
+    "thisMonth": MessageLookupByLibrary.simpleMessage("+1 este mes"),
     "welcome": MessageLookupByLibrary.simpleMessage(
       "¡Bienvenido! Inspírate y diseña tu espacio ideal en 3D",
     ),
+    "welcomeBack": MessageLookupByLibrary.simpleMessage("Bienvenida de nuevo"),
+    "yesterday": MessageLookupByLibrary.simpleMessage("ayer"),
   };
 }
