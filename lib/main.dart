@@ -5,6 +5,8 @@ import 'firebase_options.dart';
 import 'onboarding/pages/welcome_page.dart';
 import 'auth/pages/login_page.dart';
 import 'auth/pages/register_page.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'generated/l10n.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,14 +17,43 @@ void main() async {
 
   runApp(const MyApp());
 }
-
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+
+  // Método para actualizar el idioma desde cualquier widget hijo
+  static void setLocale(BuildContext context, Locale newLocale) {
+    final _MyAppState? state =
+        context.findAncestorStateOfType<_MyAppState>();
+    state?.setLocale(newLocale);
+  }
+}
+
+class _MyAppState extends State<MyApp> {
+  Locale? _locale;
+
+  void setLocale(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+
+      /// Locale dinámico para traducciones
+      locale: _locale,
+      supportedLocales: S.delegate.supportedLocales,
+      localizationsDelegates: const [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
 
       /// pantalla inicial
       initialRoute: "/",
@@ -30,16 +61,12 @@ class MyApp extends StatelessWidget {
       /// rutas con transición personalizada
       onGenerateRoute: (settings) {
         switch (settings.name) {
-
           case "/":
             return _fadeRoute(const WelcomePage());
-
           case "/login":
             return _fadeRoute(const LoginPage());
-
           case "/register":
             return _fadeRoute(const RegisterPage());
-
           default:
             return _fadeRoute(const WelcomePage());
         }
