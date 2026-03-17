@@ -1,10 +1,10 @@
-// lib/auth/pages/register_page.dart
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/validators/register_validators.dart';
 import '../widgets/password_strength_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../generated/l10n.dart'; 
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -41,8 +41,8 @@ class _RegisterPageState extends State<RegisterPage> {
     if (_formKey.currentState!.validate()) {
       if (!_acceptTerms) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Debes aceptar los términos para continuar'),
+          SnackBar(
+            content: Text(S.of(context).acceptTermsError),
             backgroundColor: AppColors.passwordWeak,
           ),
         );
@@ -53,9 +53,9 @@ class _RegisterPageState extends State<RegisterPage> {
         // Crear usuario en Firebase Authentication
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
-              email: _emailController.text.trim(),
-              password: _passwordController.text.trim(),
-            );
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
 
         String uid = userCredential.user!.uid;
 
@@ -68,11 +68,11 @@ class _RegisterPageState extends State<RegisterPage> {
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Cuenta creada correctamente')),
+          SnackBar(content: Text(S.of(context).accountCreated)),
         );
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? 'Error al registrar')),
+          SnackBar(content: Text(e.message ?? S.of(context).registerError)),
         );
       }
     }
@@ -89,10 +89,7 @@ class _RegisterPageState extends State<RegisterPage> {
               // ── Banner superior ──────────────────────
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 20,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                 decoration: const BoxDecoration(
                   color: Color(0xFF2A1F1A),
                   borderRadius: BorderRadius.only(
@@ -113,8 +110,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          'Paso 1 de 1',
-                          style: TextStyle(
+                          S.of(context).step1of1,
+                          style: const TextStyle(
                             color: AppColors.textSecondary,
                             fontSize: 12,
                           ),
@@ -128,25 +125,23 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: LinearProgressIndicator(
                         value: 1.0,
                         backgroundColor: AppColors.inputBorder,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          AppColors.primary,
-                        ),
+                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
                         minHeight: 6,
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Crear cuenta',
-                      style: TextStyle(
+                    Text(
+                      S.of(context).createAccount,
+                      style: const TextStyle(
                         color: AppColors.textPrimary,
                         fontSize: 26,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      'Únete a RyzeAI y empieza a decorar',
-                      style: TextStyle(
+                    Text(
+                      S.of(context).joinRyzeAI,
+                      style: const TextStyle(
                         color: AppColors.textSecondary,
                         fontSize: 13,
                       ),
@@ -169,8 +164,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           Expanded(
                             child: _buildTextField(
                               controller: _firstNameController,
-                              label: 'Nombre',
-                              placeholder: 'Ingresa tu nombre en este campo',
+                              label: S.of(context).firstName,
+                              placeholder: S.of(context).enterFirstName,
                               validator: RegisterValidators.validateFirstName,
                             ),
                           ),
@@ -178,8 +173,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           Expanded(
                             child: _buildTextField(
                               controller: _lastNameController,
-                              label: 'Apellido',
-                              placeholder: 'Ingresa tu apellido en este campo',
+                              label: S.of(context).lastName,
+                              placeholder: S.of(context).enterLastName,
                               validator: RegisterValidators.validateLastName,
                             ),
                           ),
@@ -190,8 +185,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       // Email
                       _buildTextField(
                         controller: _emailController,
-                        label: 'Correo electrónico',
-                        placeholder: 'Digita tu email aquí',
+                        label: S.of(context).email,
+                        placeholder: S.of(context).enterEmail,
                         keyboardType: TextInputType.emailAddress,
                         validator: RegisterValidators.validateEmail,
                         suffix: const Icon(
@@ -205,16 +200,14 @@ class _RegisterPageState extends State<RegisterPage> {
                       // Contraseña
                       _buildTextField(
                         controller: _passwordController,
-                        label: 'Contraseña',
-                        placeholder: 'Crea una contraseña segura',
+                        label: S.of(context).password,
+                        placeholder: S.of(context).enterPassword,
                         obscureText: !_showPassword,
                         onChanged: (v) => setState(() => _passwordValue = v),
                         validator: RegisterValidators.validatePassword,
                         suffix: IconButton(
                           icon: Icon(
-                            _showPassword
-                                ? Icons.visibility_off
-                                : Icons.visibility,
+                            _showPassword ? Icons.visibility_off : Icons.visibility,
                             color: AppColors.textSecondary,
                             size: 18,
                           ),
@@ -231,25 +224,21 @@ class _RegisterPageState extends State<RegisterPage> {
                       // Confirmar contraseña
                       _buildTextField(
                         controller: _confirmPasswordController,
-                        label: 'Confirmar contraseña',
-                        placeholder: 'Confirma tu contraseña',
+                        label: S.of(context).confirmPassword,
+                        placeholder: S.of(context).confirmPasswordHint,
                         obscureText: !_showConfirmPassword,
-                        validator: (v) =>
-                            RegisterValidators.validateConfirmPassword(
-                              v,
-                              _passwordController.text,
-                            ),
+                        validator: (v) => RegisterValidators.validateConfirmPassword(
+                          v,
+                          _passwordController.text,
+                        ),
                         suffix: IconButton(
                           icon: Icon(
-                            _showConfirmPassword
-                                ? Icons.visibility_off
-                                : Icons.visibility,
+                            _showConfirmPassword ? Icons.visibility_off : Icons.visibility,
                             color: AppColors.textSecondary,
                             size: 18,
                           ),
-                          onPressed: () => setState(
-                            () => _showConfirmPassword = !_showConfirmPassword,
-                          ),
+                          onPressed: () =>
+                              setState(() => _showConfirmPassword = !_showConfirmPassword),
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -277,21 +266,21 @@ class _RegisterPageState extends State<RegisterPage> {
                           const SizedBox(width: 10),
                           Flexible(
                             child: RichText(
-                              text: const TextSpan(
-                                style: TextStyle(
+                              text: TextSpan(
+                                style: const TextStyle(
                                   color: AppColors.textSecondary,
                                   fontSize: 12,
                                 ),
                                 children: [
-                                  TextSpan(text: 'Al registrarte aceptas los '),
+                                  TextSpan(text: S.of(context).termsIntro),
                                   TextSpan(
-                                    text: 'Términos de servicio',
-                                    style: TextStyle(color: AppColors.primary),
+                                    text: S.of(context).termsOfService,
+                                    style: const TextStyle(color: AppColors.primary),
                                   ),
-                                  TextSpan(text: ' y la '),
+                                  TextSpan(text: S.of(context).andThe),
                                   TextSpan(
-                                    text: 'Política de privacidad',
-                                    style: TextStyle(color: AppColors.primary),
+                                    text: S.of(context).privacyPolicy,
+                                    style: const TextStyle(color: AppColors.primary),
                                   ),
                                 ],
                               ),
@@ -314,9 +303,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                             elevation: 0,
                           ),
-                          child: const Text(
-                            'Crear Cuenta',
-                            style: TextStyle(
+                          child: Text(
+                            S.of(context).createAccountButton,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -369,10 +358,7 @@ class _RegisterPageState extends State<RegisterPage> {
             suffixIcon: suffix,
             filled: true,
             fillColor: AppColors.surface,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
-            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(color: AppColors.inputBorder),
@@ -383,10 +369,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(
-                color: AppColors.primary,
-                width: 1.5,
-              ),
+              borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),

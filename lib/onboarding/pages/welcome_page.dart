@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../widgets/language_selector.dart';
+import '../../generated/l10n.dart'; 
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -19,40 +20,49 @@ class WelcomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-
-              /// Language selector
-              const Align(
+              /// Language selector 
+              Align(
                 alignment: Alignment.topRight,
-                child: LanguageSelector(),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 235, 213, 178),
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: const LanguageSelector(),
+                ),
               ),
 
-              /// Logo + Title
+              /// Logo + Título
               Column(
                 children: [
-
-                  /// LOGO CON CIRCULO
+                  /// LOGO CON CÍRCULO
                   Container(
                     padding: const EdgeInsets.all(18),
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(255, 235, 213, 178),
                       shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.primary,
-                        width: 3,
-                      ),
+                      border: Border.all(color: AppColors.primary, width: 3),
                       boxShadow: [
                         BoxShadow(
                           color: AppColors.primary.withOpacity(0.4),
                           blurRadius: 20,
                           spreadRadius: 2,
                           offset: const Offset(0, 6),
-                        )
+                        ),
                       ],
                     ),
-                    child: Image.asset(
-                      "assets/LogoRyzeAI.png",
-                      height: 80,
-                    ),
+                    child: Image.asset("assets/LogoRyzeAI.png", height: 80),
                   ),
 
                   const SizedBox(height: 24),
@@ -70,10 +80,10 @@ class WelcomePage extends StatelessWidget {
                   const SizedBox(height: 12),
 
                   /// Subtitle
-                  const Text(
-                    "Welcome! Get inspired and design your ideal space in 3D",
+                  Text(
+                    S.of(context).welcome, 
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       color: AppColors.textSecondary,
                     ),
@@ -81,10 +91,9 @@ class WelcomePage extends StatelessWidget {
                 ],
               ),
 
-              /// Buttons
+              /// Botones
               Column(
                 children: [
-
                   /// LOGIN
                   SizedBox(
                     width: double.infinity,
@@ -101,9 +110,9 @@ class WelcomePage extends StatelessWidget {
                       onPressed: () {
                         _navigate(context, "/login");
                       },
-                      child: const Text(
-                        "Log In",
-                        style: TextStyle(
+                      child: Text(
+                        S.of(context).login, 
+                        style: const TextStyle(
                           fontSize: 16,
                           color: AppColors.textPrimary,
                         ),
@@ -130,9 +139,9 @@ class WelcomePage extends StatelessWidget {
                       onPressed: () {
                         _navigate(context, "/register");
                       },
-                      child: const Text(
-                        "Create Account",
-                        style: TextStyle(
+                      child: Text(
+                        S.of(context).createAccount, 
+                        style: const TextStyle(
                           fontSize: 16,
                           color: AppColors.primary,
                         ),
