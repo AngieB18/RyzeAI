@@ -1,20 +1,52 @@
 // lib/home/screens/profile_screen.dart
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/services/user_service.dart';
 import '../../generated/l10n.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  Map<String, dynamic>? _userData;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  Future<void> _loadUser() async {
+    final data = await UserService.getCurrentUserData();
+    if (mounted) {
+      setState(() {
+        _userData = data;
+        _loading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final l = S.of(context);
+    final firstName = _userData?['firstName'] ?? '';
+    final lastName = _userData?['lastName'] ?? '';
+    final email =
+        _userData?['email'] ?? FirebaseAuth.instance.currentUser?.email ?? '';
+    final fullName = '$firstName $lastName'.trim();
+    final initials = UserService.getInitials(firstName, lastName);
 
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
           children: [
-            _buildHeader(l),
+            _buildHeader(fullName, email, initials),
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -32,7 +64,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(S l) {
+  Widget _buildHeader(String fullName, String email, String initials) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 16, 70, 28),
@@ -45,31 +77,50 @@ class ProfileScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const CircleAvatar(
-            radius: 36,
-            backgroundColor: AppColors.primary,
-            child: Text(
-              'MG',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+          _loading
+              ? const CircleAvatar(
+                  radius: 36,
+                  backgroundColor: Color(0xFF3A3A3C),
+                )
+              : CircleAvatar(
+                  radius: 36,
+                  backgroundColor: AppColors.primary,
+                  child: Text(
+                    initials.isNotEmpty ? initials : '?',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
           const SizedBox(height: 12),
-          const Text(
-            'María García',
-            style: TextStyle(
-              color: AppColors.textPrimary,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          _loading
+              ? const SizedBox(
+                  width: 120,
+                  height: 20,
+                  child: LinearProgressIndicator(
+                    backgroundColor: Color(0xFF3A3A3C),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColors.primary,
+                    ),
+                  ),
+                )
+              : Text(
+                  fullName.isNotEmpty ? fullName : 'User',
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
           const SizedBox(height: 4),
-          const Text(
-            'maria@ejemplo.com',
-            style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+          Text(
+            email,
+            style: const TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 13,
+            ),
           ),
           const SizedBox(height: 12),
           Container(
@@ -139,11 +190,11 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildMenuSection(BuildContext context, S l) {
     final items = [
-      {'icon': Icons.person_outline_rounded, 'label': 'Edit Profile'},
-      {'icon': Icons.notifications_none_rounded, 'label': 'Notifications'},
-      {'icon': Icons.lock_outline_rounded, 'label': 'Privacy'},
-      {'icon': Icons.help_outline_rounded, 'label': 'Help & Support'},
-      {'icon': Icons.logout_rounded, 'label': 'Log Out', 'danger': true},
+      {'icon': Icons.person_outline, 'label': 'Edit Profile'},
+      {'icon': Icons.notifications_none, 'label': 'Notifications'},
+      {'icon': Icons.lock_outline, 'label': 'Privacy'},
+      {'icon': Icons.help_outline, 'label': 'Help & Support'},
+      {'icon': Icons.logout, 'label': 'Log Out', 'danger': true},
     ];
 
     return Column(
@@ -179,7 +230,17 @@ class ProfileScreen extends StatelessWidget {
                     color: AppColors.textSecondary,
                     size: 20,
                   ),
-            onTap: () {},
+            onTap: isDanger
+                ? () async {
+                    await FirebaseAuth.instance.signOut();
+                    if (!mounted) return;
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      '/',
+                      (route) => false,
+                    );
+                  }
+                : () {},
           ),
         );
       }).toList(),
