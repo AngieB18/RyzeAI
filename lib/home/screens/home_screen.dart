@@ -1,21 +1,49 @@
 // lib/home/screens/home_screen.dart
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/services/user_service.dart';
 import '../../generated/l10n.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  Map<String, dynamic>? _userData;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  Future<void> _loadUser() async {
+    final data = await UserService.getCurrentUserData();
+    if (mounted) {
+      setState(() {
+        _userData = data;
+        _loading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final l = S.of(context);
+    final firstName = _userData?['firstName'] ?? '';
+    final lastName = _userData?['lastName'] ?? '';
+    final initials = UserService.getInitials(firstName, lastName);
 
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(l),
+            _buildHeader(l, firstName, initials),
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -42,7 +70,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(S l) {
+  Widget _buildHeader(S l, String firstName, String initials) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 16, 80, 20),
@@ -67,34 +95,51 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 2),
-              Row(
-                children: [
-                  Text(
-                    '${l.helloUser}, María',
-                    style: const TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+              _loading
+                  ? const SizedBox(
+                      width: 160,
+                      height: 26,
+                      child: LinearProgressIndicator(
+                        backgroundColor: Color(0xFF3A3A3C),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppColors.primary,
+                        ),
+                      ),
+                    )
+                  : Row(
+                      children: [
+                        Text(
+                          '${l.helloUser}, $firstName',
+                          style: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        const Text('👋', style: TextStyle(fontSize: 20)),
+                      ],
                     ),
-                  ),
-                  const SizedBox(width: 6),
-                  const Text('👋', style: TextStyle(fontSize: 20)),
-                ],
-              ),
             ],
           ),
-          const CircleAvatar(
-            radius: 22,
-            backgroundColor: AppColors.primary,
-            child: Text(
-              'MG',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            ),
-          ),
+          // Avatar con iniciales
+          _loading
+              ? const CircleAvatar(
+                  radius: 22,
+                  backgroundColor: Color(0xFF3A3A3C),
+                )
+              : CircleAvatar(
+                  radius: 22,
+                  backgroundColor: AppColors.primary,
+                  child: Text(
+                    initials.isNotEmpty ? initials : '?',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
         ],
       ),
     );
@@ -149,33 +194,30 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 14),
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.white24,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(
-                    Icons.camera_alt_rounded,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white24,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.camera_alt_rounded,
+                  color: Colors.white,
+                  size: 14,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  l.openCamera,
+                  style: const TextStyle(
                     color: Colors.white,
-                    size: 14,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
                   ),
-                  const SizedBox(width: 6),
-                  Text(
-                    l.openCamera,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
