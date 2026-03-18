@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/services/user_service.dart';
 import '../../generated/l10n.dart';
+import '../../main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,6 +20,18 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadUser();
+    // Escucha cambios de tema para redibujar esta pantalla
+    themeProvider.addListener(_onThemeChanged);
+  }
+
+  void _onThemeChanged() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    themeProvider.removeListener(_onThemeChanged);
+    super.dispose();
   }
 
   Future<void> _loadUser() async {
@@ -74,9 +87,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 16, 80, 20),
-      decoration: const BoxDecoration(
-        color: Color(0xFF2A1F1A),
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: AppColors.header(context), // ✅ dinámico
+        borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(24),
           bottomRight: Radius.circular(24),
         ),
@@ -89,19 +102,19 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Text(
                 l.welcomeBack,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
+                style: TextStyle(
+                  color: AppColors.textSecondary(context),
                   fontSize: 13,
                 ),
               ),
               const SizedBox(height: 2),
               _loading
-                  ? const SizedBox(
+                  ? SizedBox(
                       width: 160,
                       height: 26,
                       child: LinearProgressIndicator(
-                        backgroundColor: Color(0xFF3A3A3C),
-                        valueColor: AlwaysStoppedAnimation<Color>(
+                        backgroundColor: AppColors.inputBorder(context),
+                        valueColor: const AlwaysStoppedAnimation<Color>(
                           AppColors.primary,
                         ),
                       ),
@@ -110,8 +123,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Text(
                           '${l.helloUser}, $firstName',
-                          style: const TextStyle(
-                            color: AppColors.textPrimary,
+                          style: TextStyle(
+                            color: AppColors.textPrimary(context),
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                           ),
@@ -122,11 +135,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
             ],
           ),
-          // Avatar con iniciales
           _loading
-              ? const CircleAvatar(
+              ? CircleAvatar(
                   radius: 22,
-                  backgroundColor: Color(0xFF3A3A3C),
+                  backgroundColor: AppColors.inputBorder(context),
                 )
               : CircleAvatar(
                   radius: 22,
@@ -203,11 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  Icons.camera_alt_rounded,
-                  color: Colors.white,
-                  size: 14,
-                ),
+                const Icon(Icons.camera_alt_rounded, color: Colors.white, size: 14),
                 const SizedBox(width: 6),
                 Text(
                   l.openCamera,
@@ -229,53 +237,32 @@ class _HomeScreenState extends State<HomeScreen> {
     return Row(
       children: [
         Expanded(
-          child: _buildStatCard(
-            l.projects,
-            '3',
-            l.thisMonth,
-            AppColors.passwordStrong,
-          ),
+          child: _buildStatCard(l.projects, '3', l.thisMonth, AppColors.passwordStrong),
         ),
         const SizedBox(width: 12),
         Expanded(
-          child: _buildStatCard(
-            l.favorites,
-            '12',
-            l.newItems,
-            AppColors.primary,
-          ),
+          child: _buildStatCard(l.favorites, '12', l.newItems, AppColors.primary),
         ),
       ],
     );
   }
 
-  Widget _buildStatCard(
-    String title,
-    String value,
-    String sub,
-    Color subColor,
-  ) {
+  Widget _buildStatCard(String title, String value, String sub, Color subColor) {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF2C2C2E),
+        color: AppColors.surface(context), // ✅ dinámico
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 11,
-            ),
-          ),
+          Text(title, style: TextStyle(color: AppColors.textSecondary(context), fontSize: 11)),
           const SizedBox(height: 4),
           Text(
             value,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
+            style: TextStyle(
+              color: AppColors.textPrimary(context),
               fontSize: 26,
               fontWeight: FontWeight.bold,
             ),
@@ -290,8 +277,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(
-        color: AppColors.textPrimary,
+      style: TextStyle(
+        color: AppColors.textPrimary(context),
         fontSize: 15,
         fontWeight: FontWeight.w600,
       ),
@@ -320,7 +307,7 @@ class _HomeScreenState extends State<HomeScreen> {
           margin: const EdgeInsets.only(bottom: 8),
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: const Color(0xFF2C2C2E),
+            color: AppColors.surface(context), // ✅ dinámico
             borderRadius: BorderRadius.circular(14),
           ),
           child: Row(
@@ -329,14 +316,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF3A2218),
+                  color: AppColors.header(context), // ✅ dinámico
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(
-                  child: Text(
-                    p['icon'] as String,
-                    style: const TextStyle(fontSize: 22),
-                  ),
+                  child: Text(p['icon'] as String, style: const TextStyle(fontSize: 22)),
                 ),
               ),
               const SizedBox(width: 12),
@@ -346,8 +330,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       p['name'] as String,
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
+                      style: TextStyle(
+                        color: AppColors.textPrimary(context),
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
@@ -355,10 +339,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 3),
                     Text(
                       p['time'] as String,
-                      style: const TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 11,
-                      ),
+                      style: TextStyle(color: AppColors.textSecondary(context), fontSize: 11),
                     ),
                   ],
                 ),
@@ -396,7 +377,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: styles.map((s) {
         return Container(
           decoration: BoxDecoration(
-            color: const Color(0xFF2C2C2E),
+            color: AppColors.surface(context), // ✅ dinámico
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
@@ -406,10 +387,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(width: 8),
               Text(
                 s['name'] as String,
-                style: const TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 13,
-                ),
+                style: TextStyle(color: AppColors.textPrimary(context), fontSize: 13),
               ),
             ],
           ),

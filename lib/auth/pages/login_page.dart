@@ -32,14 +32,14 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // Usamos el color de fondo oscuro definido en tus constantes
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.background(context),
       // AppBar transparente que solo muestra la flecha de regreso
       appBar: AppBar(
         backgroundColor: Colors.transparent, // Sin color de fondo
         elevation: 0, // Sin sombra
         // Flecha de regreso a la página anterior (página principal)
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.textPrimary),
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.textPrimary(context)),
           onPressed: () => Navigator.pop(context), // Regresa a la pantalla anterior
         ),
       ),
@@ -51,45 +51,45 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.start, // Alinea todo a la izquierda
             children: [
               // --- SECCIÓN DE TÍTULOS ---
-              const Text(
+              Text(
                 "Bienvenido de vuelta",
                 style: TextStyle(
-                  color: AppColors.textPrimary,
+                  color: AppColors.textPrimary(context),
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8), // Espaciado pequeño
-              const Text(
+              Text(
                 "Inicia sesión para continuar",
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                style: TextStyle(color: AppColors.textSecondary(context), fontSize: 14),
               ),
               const SizedBox(height: 32), // Espaciado grande antes de los campos
 
               // --- CAMPO DE CORREO ELECTRÓNICO ---
-              const Text(
+              Text(
                 "Correo electrónico",
-                style: TextStyle(color: AppColors.textPrimary, fontSize: 14),
+                style: TextStyle(color: AppColors.textPrimary(context), fontSize: 14),
               ),
               const SizedBox(height: 8),
               TextField(
                 controller: _emailController, // Conectamos el controlador
                 keyboardType: TextInputType.emailAddress, // Muestra el @ en el teclado
-                style: const TextStyle(color: AppColors.textPrimary),
+                style: TextStyle(color: AppColors.textPrimary(context)),
                 decoration: InputDecoration(
                   hintText: "maria@ejemplo.com", // Texto de sugerencia
-                  hintStyle: const TextStyle(color: AppColors.textSecondary),
-                  suffixIcon: const Icon(Icons.email_outlined, color: AppColors.textSecondary),
+                  hintStyle: TextStyle(color: AppColors.textSecondary(context)),
+                  suffixIcon: Icon(Icons.email_outlined, color: AppColors.textSecondary(context)),
                   filled: true,
-                  fillColor: AppColors.surface, // Fondo gris oscuro del campo
+                  fillColor: AppColors.surface(context), // Fondo gris oscuro del campo
                   // Definimos los bordes redondeados para todos los estados
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.inputBorder),
+                    borderSide: BorderSide(color: AppColors.inputBorder(context)),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.inputBorder),
+                    borderSide: BorderSide(color: AppColors.inputBorder(context)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -100,23 +100,23 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 20),
 
               // --- CAMPO DE CONTRASEÑA ---
-              const Text(
+              Text(
                 "Contraseña",
-                style: TextStyle(color: AppColors.textPrimary, fontSize: 14),
+                style: TextStyle(color: AppColors.textPrimary(context), fontSize: 14),
               ),
               const SizedBox(height: 8),
               TextField(
                 controller: _passwordController, // Conectamos el controlador
                 obscureText: _obscurePassword, // Oculta el texto con puntos
-                style: const TextStyle(color: AppColors.textPrimary),
+                style: TextStyle(color: AppColors.textPrimary(context)),
                 decoration: InputDecoration(
                   hintText: "••••••••••",
-                  hintStyle: const TextStyle(color: AppColors.textSecondary),
+                  hintStyle: TextStyle(color: AppColors.textSecondary(context)),
                   // Icono de ojo que cambia el estado al presionarlo
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                      color: AppColors.textSecondary,
+                      color: AppColors.textSecondary(context),
                     ),
                     onPressed: () {
                       // setState refresca la pantalla para mostrar/ocultar texto
@@ -126,14 +126,14 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                   filled: true,
-                  fillColor: AppColors.surface,
+                  fillColor: AppColors.surface(context),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.inputBorder),
+                    borderSide: BorderSide(color: AppColors.inputBorder(context)),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.inputBorder),
+                    borderSide: BorderSide(color: AppColors.inputBorder(context)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),

@@ -88,7 +88,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.background(context),
       body: Stack(
         children: [
           SafeArea(
@@ -114,16 +114,16 @@ class _RegisterPageState extends State<RegisterPage> {
                       children: [
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.arrow_back_ios,
-                              color: AppColors.textSecondary,
+                              color: AppColors.textSecondary(context),
                               size: 14,
                             ),
                             const SizedBox(width: 4),
                             Text(
                               S.of(context).step1of1,
-                              style: const TextStyle(
-                                color: AppColors.textSecondary,
+                              style: TextStyle(
+                                color: AppColors.textSecondary(context),
                                 fontSize: 12,
                               ),
                             ),
@@ -134,7 +134,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           borderRadius: BorderRadius.circular(4),
                           child: LinearProgressIndicator(
                             value: 1.0,
-                            backgroundColor: AppColors.inputBorder,
+                            backgroundColor: AppColors.inputBorder(context),
                             valueColor: AlwaysStoppedAnimation<Color>(
                               AppColors.primary,
                             ),
@@ -144,8 +144,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         const SizedBox(height: 16),
                         Text(
                           S.of(context).createAccount,
-                          style: const TextStyle(
-                            color: AppColors.textPrimary,
+                          style: TextStyle(
+                            color: AppColors.textPrimary(context),
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
                           ),
@@ -153,8 +153,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         const SizedBox(height: 4),
                         Text(
                           S.of(context).joinRyzeAI,
-                          style: const TextStyle(
-                            color: AppColors.textSecondary,
+                          style: TextStyle(
+                            color: AppColors.textSecondary(context),
                             fontSize: 13,
                           ),
                         ),
@@ -225,7 +225,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 _showPassword
                                     ? Icons.visibility_off
                                     : Icons.visibility,
-                                color: AppColors.textSecondary,
+                                color: AppColors.textSecondary(context),
                                 size: 18,
                               ),
                               onPressed: () => setState(
@@ -255,7 +255,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 _showConfirmPassword
                                     ? Icons.visibility_off
                                     : Icons.visibility,
-                                color: AppColors.textSecondary,
+                                color: AppColors.textSecondary(context),
                                 size: 18,
                               ),
                               onPressed: () => setState(
@@ -278,8 +278,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                   onChanged: (v) =>
                                       setState(() => _acceptTerms = v ?? false),
                                   activeColor: AppColors.primary,
-                                  side: const BorderSide(
-                                    color: AppColors.textSecondary,
+                                  side: BorderSide(
+                                    color: AppColors.textSecondary(context),
                                   ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(4),
@@ -290,8 +290,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               Flexible(
                                 child: RichText(
                                   text: TextSpan(
-                                    style: const TextStyle(
-                                      color: AppColors.textSecondary,
+                                    style: TextStyle(
+                                      color: AppColors.textSecondary(context),
                                       fontSize: 12,
                                     ),
                                     children: [
@@ -375,7 +375,7 @@ class _RegisterPageState extends State<RegisterPage> {
       children: [
         Text(
           label,
-          style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+          style: TextStyle(color: AppColors.textSecondary(context), fontSize: 13),
         ),
         const SizedBox(height: 6),
         TextFormField(
@@ -384,27 +384,27 @@ class _RegisterPageState extends State<RegisterPage> {
           keyboardType: keyboardType,
           onChanged: onChanged,
           validator: validator,
-          style: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
+          style: TextStyle(color: AppColors.textPrimary(context), fontSize: 14),
           decoration: InputDecoration(
             hintText: placeholder,
-            hintStyle: const TextStyle(
-              color: AppColors.textSecondary,
+            hintStyle: TextStyle(
+              color: AppColors.textSecondary(context),
               fontSize: 14,
             ),
             suffixIcon: suffix,
             filled: true,
-            fillColor: AppColors.surface,
+            fillColor: AppColors.surface(context),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 14,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.inputBorder),
+              borderSide: BorderSide(color: AppColors.inputBorder(context)),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.inputBorder),
+              borderSide: BorderSide(color: AppColors.inputBorder(context)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),

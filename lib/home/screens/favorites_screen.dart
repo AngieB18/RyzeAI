@@ -11,44 +11,19 @@ class FavoritesScreen extends StatelessWidget {
     final l = S.of(context);
 
     final items = [
-      {
-        'icon': '🛋️',
-        'name': 'Scandinavian Sofa',
-        'store': 'IKEA',
-        'price': '\$899',
-      },
-      {
-        'icon': '💡',
-        'name': 'Arc Floor Lamp',
-        'store': 'Wayfair',
-        'price': '\$230',
-      },
+      {'icon': '🛋️', 'name': 'Scandinavian Sofa', 'store': 'IKEA', 'price': '\$899'},
+      {'icon': '💡', 'name': 'Arc Floor Lamp', 'store': 'Wayfair', 'price': '\$230'},
       {'icon': '🪑', 'name': 'Accent Chair', 'store': 'CB2', 'price': '\$540'},
-      {
-        'icon': '🖼️',
-        'name': 'Abstract Art Print',
-        'store': 'Society6',
-        'price': '\$75',
-      },
-      {
-        'icon': '🛏️',
-        'name': 'Linen Bed Frame',
-        'store': 'West Elm',
-        'price': '\$1,200',
-      },
-      {
-        'icon': '🪴',
-        'name': 'Monstera Plant',
-        'store': 'The Sill',
-        'price': '\$65',
-      },
+      {'icon': '🖼️', 'name': 'Abstract Art Print', 'store': 'Society6', 'price': '\$75'},
+      {'icon': '🛏️', 'name': 'Linen Bed Frame', 'store': 'West Elm', 'price': '\$1,200'},
+      {'icon': '🪴', 'name': 'Monstera Plant', 'store': 'The Sill', 'price': '\$65'},
     ];
 
     return SafeArea(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeader(l),
+          _buildHeader(context, l),
           Expanded(
             child: GridView.builder(
               padding: const EdgeInsets.all(20),
@@ -59,7 +34,7 @@ class FavoritesScreen extends StatelessWidget {
                 childAspectRatio: 0.85,
               ),
               itemCount: items.length,
-              itemBuilder: (_, i) => _buildFavoriteCard(items[i]),
+              itemBuilder: (ctx, i) => _buildFavoriteCard(ctx, items[i]),
             ),
           ),
         ],
@@ -67,21 +42,21 @@ class FavoritesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(S l) {
+  Widget _buildHeader(BuildContext context, S l) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 16, 70, 20),
-      decoration: const BoxDecoration(
-        color: Color(0xFF2A1F1A),
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: AppColors.header(context),
+        borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(24),
           bottomRight: Radius.circular(24),
         ),
       ),
       child: Text(
         l.favorites,
-        style: const TextStyle(
-          color: AppColors.textPrimary,
+        style: TextStyle(
+          color: AppColors.textPrimary(context),
           fontSize: 24,
           fontWeight: FontWeight.bold,
         ),
@@ -89,10 +64,10 @@ class FavoritesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFavoriteCard(Map<String, String> item) {
+  Widget _buildFavoriteCard(BuildContext context, Map<String, String> item) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF2C2C2E),
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -102,7 +77,7 @@ class FavoritesScreen extends StatelessWidget {
           Container(
             height: 110,
             decoration: BoxDecoration(
-              color: const Color(0xFF3A2218),
+              color: AppColors.darkHeader.withOpacity(0.8),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16),
                 topRight: Radius.circular(16),
@@ -121,8 +96,8 @@ class FavoritesScreen extends StatelessWidget {
                   right: 8,
                   child: Container(
                     padding: const EdgeInsets.all(6),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF2C2C2E),
+                    decoration: BoxDecoration(
+                      color: AppColors.surface(context),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -143,8 +118,8 @@ class FavoritesScreen extends StatelessWidget {
               children: [
                 Text(
                   item['name']!,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
+                  style: TextStyle(
+                    color: AppColors.textPrimary(context),
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
@@ -154,8 +129,8 @@ class FavoritesScreen extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   item['store']!,
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
+                  style: TextStyle(
+                    color: AppColors.textSecondary(context),
                     fontSize: 10,
                   ),
                 ),

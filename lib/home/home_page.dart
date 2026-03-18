@@ -7,6 +7,7 @@ import 'screens/home_screen.dart';
 import 'screens/favorites_screen.dart';
 import 'screens/projects_screen.dart';
 import 'screens/profile_screen.dart';
+import '../main.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,7 +29,7 @@ class _HomePageState extends State<HomePage> {
   void _onCameraPressed() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: const Color(0xFF2C2C2E),
+      backgroundColor: AppColors.surface(context),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -41,7 +42,7 @@ class _HomePageState extends State<HomePage> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: const Color(0xFF3A3A3C),
+                color: AppColors.inputBorder(context),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -52,20 +53,20 @@ class _HomePageState extends State<HomePage> {
               size: 48,
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'AI Camera',
               style: TextStyle(
-                color: AppColors.textPrimary,
+                color: AppColors.textPrimary(context),
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Point your camera at any space and\nvisualize furniture in 3D instantly',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: AppColors.textSecondary,
+                color: AppColors.textSecondary(context),
                 fontSize: 13,
                 height: 1.5,
               ),
@@ -105,26 +106,32 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final l = S.of(context);
+Widget build(BuildContext context) {
+  final l = S.of(context);
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Stack(
-        children: [
-          _screens[_currentIndex],
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 12,
-            right: 16,
-            child: const LanguageSelector(),
-          ),
-        ],
-      ),
-      bottomNavigationBar: _buildBottomNav(l),
-      floatingActionButton: _buildCameraFAB(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    );
-  }
+  return ListenableBuilder(
+    listenable: themeProvider,
+    builder: (context, _) {
+      return Scaffold(
+        backgroundColor: AppColors.background(context),
+        body: Stack(
+          children: [
+            _screens[_currentIndex],
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 12,
+              right: 16,
+              child: const LanguageSelector(),
+            ),
+          ],
+        ),
+        bottomNavigationBar: _buildBottomNav(l),
+        floatingActionButton: _buildCameraFAB(),
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.centerDocked,
+      );
+    },
+  );
+}
 
   Widget _buildCameraFAB() {
     return GestureDetector(
@@ -135,7 +142,7 @@ class _HomePageState extends State<HomePage> {
         decoration: BoxDecoration(
           color: AppColors.primary,
           shape: BoxShape.circle,
-          border: Border.all(color: AppColors.background, width: 3),
+          border: Border.all(color: AppColors.background(context), width: 3),
         ),
         child: const Icon(
           Icons.camera_alt_rounded,
@@ -148,7 +155,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildBottomNav(S l) {
     return BottomAppBar(
-      color: const Color(0xFF2C2C2E),
+      color: AppColors.surface(context),
       shape: const CircularNotchedRectangle(),
       notchMargin: 6,
       child: SizedBox(
@@ -180,14 +187,14 @@ class _HomePageState extends State<HomePage> {
           children: [
             Icon(
               icon,
-              color: isActive ? AppColors.primary : AppColors.textSecondary,
+              color: isActive ? AppColors.primary : AppColors.textSecondary(context),
               size: 22,
             ),
             const SizedBox(height: 3),
             Text(
               label,
               style: TextStyle(
-                color: isActive ? AppColors.primary : AppColors.textSecondary,
+                color: isActive ? AppColors.primary : AppColors.textSecondary(context),
                 fontSize: 10,
                 fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
               ),

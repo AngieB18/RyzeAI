@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/services/user_service.dart';
 import '../../generated/l10n.dart';
+import '../../main.dart'; // Importante para acceder al themeProvider global
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -67,20 +68,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildHeader(String fullName, String email, String initials) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 16, 70, 28),
-      decoration: const BoxDecoration(
-        color: Color(0xFF2A1F1A),
-        borderRadius: BorderRadius.only(
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+      decoration: BoxDecoration(
+        color: AppColors.header(context),
+        borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(24),
           bottomRight: Radius.circular(24),
         ),
       ),
       child: Column(
         children: [
+          const SizedBox(height: 8),
           _loading
-              ? const CircleAvatar(
+              ? CircleAvatar(
                   radius: 36,
-                  backgroundColor: Color(0xFF3A3A3C),
+                  backgroundColor: AppColors.inputBorder(context),
                 )
               : CircleAvatar(
                   radius: 36,
@@ -96,20 +98,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
           const SizedBox(height: 12),
           _loading
-              ? const SizedBox(
+              ? SizedBox(
                   width: 120,
                   height: 20,
                   child: LinearProgressIndicator(
-                    backgroundColor: Color(0xFF3A3A3C),
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      AppColors.primary,
-                    ),
+                    backgroundColor: AppColors.inputBorder(context),
+                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
                   ),
                 )
               : Text(
                   fullName.isNotEmpty ? fullName : 'User',
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
+                  style: TextStyle(
+                    color: AppColors.textPrimary(context),
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
@@ -117,8 +117,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 4),
           Text(
             email,
-            style: const TextStyle(
-              color: AppColors.textSecondary,
+            style: TextStyle(
+              color: AppColors.textSecondary(context),
               fontSize: 13,
             ),
           ),
@@ -148,7 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF2C2C2E),
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -169,8 +169,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         Text(
           value,
-          style: const TextStyle(
-            color: AppColors.textPrimary,
+          style: TextStyle(
+            color: AppColors.textPrimary(context),
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
@@ -178,72 +178,108 @@ class _ProfileScreenState extends State<ProfileScreen> {
         const SizedBox(height: 2),
         Text(
           label,
-          style: const TextStyle(color: AppColors.textSecondary, fontSize: 11),
+          style: TextStyle(color: AppColors.textSecondary(context), fontSize: 11),
         ),
       ],
     );
   }
 
   Widget _buildDivider() {
-    return Container(width: 1, height: 32, color: const Color(0xFF3A3A3C));
+    return Container(
+      width: 1, 
+      height: 32, 
+      color: AppColors.inputBorder(context),
+    );
   }
 
   Widget _buildMenuSection(BuildContext context, S l) {
+    // Definimos los items normales
     final items = [
       {'icon': Icons.person_outline, 'label': 'Edit Profile'},
       {'icon': Icons.notifications_none, 'label': 'Notifications'},
       {'icon': Icons.lock_outline, 'label': 'Privacy'},
       {'icon': Icons.help_outline, 'label': 'Help & Support'},
-      {'icon': Icons.logout, 'label': 'Log Out', 'danger': true},
     ];
 
     return Column(
-      children: items.map((item) {
-        final isDanger = item['danger'] == true;
-        return Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          decoration: BoxDecoration(
-            color: const Color(0xFF2C2C2E),
-            borderRadius: BorderRadius.circular(14),
+      children: [
+        // 1. Dibujamos los items normales
+        ...items.map((item) => _buildMenuItem(
+          icon: item['icon'] as IconData,
+          label: item['label'] as String,
+          onTap: () {},
+        )),
+
+        // 2. Dibujamos el item de Dark Mode con el Switch
+        _buildMenuItem(
+          icon: themeProvider.isDark ? Icons.nightlight_round : Icons.wb_sunny,
+          label: themeProvider.isDark ? 'Dark Mode' : 'Light Mode',
+          trailing: Switch(
+            value: themeProvider.isDark,
+            activeColor: AppColors.primary,
+            onChanged: (value) {
+              // Al cambiar el switch, notificamos al provider y refrescamos este widget
+              setState(() {
+                themeProvider.toggleTheme();
+              });
+            },
           ),
-          child: ListTile(
-            leading: Icon(
-              item['icon'] as IconData,
-              color: isDanger
-                  ? AppColors.passwordWeak
-                  : AppColors.textSecondary,
-              size: 22,
-            ),
-            title: Text(
-              item['label'] as String,
-              style: TextStyle(
-                color: isDanger
-                    ? AppColors.passwordWeak
-                    : AppColors.textPrimary,
-                fontSize: 14,
-              ),
-            ),
-            trailing: isDanger
-                ? null
-                : const Icon(
-                    Icons.chevron_right_rounded,
-                    color: AppColors.textSecondary,
-                    size: 20,
-                  ),
-            onTap: isDanger
-                ? () async {
-                    await FirebaseAuth.instance.signOut();
-                    if (!mounted) return;
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      '/',
-                      (route) => false,
-                    );
-                  }
-                : () {},
+          onTap: () {
+            setState(() {
+              themeProvider.toggleTheme();
+            });
+          },
+        ),
+
+        // 3. Dibujamos el Log Out
+        _buildMenuItem(
+          icon: Icons.logout,
+          label: 'Log Out',
+          isDanger: true,
+          onTap: () async {
+            await FirebaseAuth.instance.signOut();
+            if (!mounted) return;
+            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+          },
+        ),
+      ],
+    );
+  }
+
+  // Helper para no repetir código de diseño en cada fila del menú
+  Widget _buildMenuItem({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    Widget? trailing,
+    bool isDanger = false,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: AppColors.surface(context),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: ListTile(
+        leading: Icon(
+          icon,
+          color: isDanger ? AppColors.passwordWeak : AppColors.textSecondary(context),
+          size: 22,
+        ),
+        title: Text(
+          label,
+          style: TextStyle(
+            color: isDanger ? AppColors.passwordWeak : AppColors.textPrimary(context),
+            fontSize: 14,
           ),
-        );
-      }).toList(),
+        ),
+        trailing: trailing ?? (isDanger ? null : Icon(
+          Icons.chevron_right_rounded,
+          color: AppColors.textSecondary(context),
+          size: 20,
+        )),
+        onTap: onTap,
+      ),
     );
   }
 }
