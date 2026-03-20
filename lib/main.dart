@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'onboarding/pages/welcome_page.dart';
+import 'auth/pages/welcome_page.dart';
 import 'auth/pages/login_page.dart';
 import 'auth/pages/register_page.dart';
-import 'home/home_page.dart'; // ← este faltaba
+import 'home/home_page.dart'; 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'generated/l10n.dart';
 import 'core/theme/theme_provider.dart';
 import 'core/theme/app_theme.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  //Cargar tema desde Firebase
+  await themeProvider.loadTheme();
+
   runApp(const MyApp());
 }
 
-//variable global para manejar el tema desde cualquier parte de la app
 final themeProvider = ThemeProvider();
 
 class MyApp extends StatefulWidget {
@@ -42,7 +48,6 @@ class _MyAppState extends State<MyApp> {
 
 @override
   Widget build(BuildContext context) {
-    // ListenableBuilder es el que "escucha" el switch y refresca la app
     return ListenableBuilder(
       listenable: themeProvider,
       builder: (context, _) {
@@ -51,7 +56,6 @@ class _MyAppState extends State<MyApp> {
           locale: _locale,
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
-          // Esto le dice a la app qué modo usar
           themeMode: themeProvider.themeMode, 
           supportedLocales: S.delegate.supportedLocales,
           localizationsDelegates: const [

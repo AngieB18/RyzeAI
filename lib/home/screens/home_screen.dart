@@ -20,7 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadUser();
-    // Escucha cambios de tema para redibujar esta pantalla
     themeProvider.addListener(_onThemeChanged);
   }
 
@@ -47,8 +46,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final l = S.of(context);
-    final firstName = _userData?['firstName'] ?? '';
-    final lastName = _userData?['lastName'] ?? '';
+    final firstName = _userData?['first_name'] ?? '';
+    final lastName = _userData?['last_name'] ?? '';
     final initials = UserService.getInitials(firstName, lastName);
 
     return SafeArea(
@@ -88,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 16, 80, 20),
       decoration: BoxDecoration(
-        color: AppColors.header(context), // ✅ dinámico
+        color: AppColors.header(context),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(24),
           bottomRight: Radius.circular(24),
@@ -108,6 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 2),
+
               _loading
                   ? SizedBox(
                       width: 160,
@@ -122,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   : Row(
                       children: [
                         Text(
-                          '${l.helloUser}, $firstName',
+                          '${l.helloUser} $firstName',
                           style: TextStyle(
                             color: AppColors.textPrimary(context),
                             fontSize: 22,

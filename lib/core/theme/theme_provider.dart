@@ -1,57 +1,68 @@
-// lib/core/theme/theme_provider.dart
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  ThemeMode _themeMode = ThemeMode.dark;
+  ThemeMode _themeMode = ThemeMode.light;
 
   ThemeMode get themeMode => _themeMode;
 
   bool get isDark => _themeMode == ThemeMode.dark;
 
-  void toggleTheme() {
+  // Cargar tema desde Firebase
+  Future<void> loadTheme() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+
+    if (uid != null) {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .get();
+
+      if (doc.exists && doc.data() != null) {
+        final data = doc.data()!;
+        final theme = data['theme'] ?? 'light';
+
+        _themeMode = theme == 'dark' ? ThemeMode.dark : ThemeMode.light;
+        notifyListeners();
+      }
+    }
+  }
+
+  // Cambiar y guardar tema
+  Future<void> toggleTheme() async {
     _themeMode =
         _themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+
     notifyListeners();
+
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+
+    if (uid != null) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .update({
+        'theme': _themeMode == ThemeMode.dark ? 'dark' : 'light',
+      });
+    }
   }
 
-  static ThemeProvider of(BuildContext context) {
-    return context
-        .findAncestorStateOfType<_ThemeProviderInheritedState>()!
-        .widget
-        .provider;
+  // Cambiar tema directamente 
+  Future<void> setTheme(bool isDarkMode) async {
+    _themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
+
+    notifyListeners();
+
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+
+    if (uid != null) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .update({
+        'theme': isDarkMode ? 'dark' : 'light',
+      });
+    }
   }
-}
-
-// Widget que expone el provider al árbol
-class ThemeProviderWidget extends StatefulWidget {
-  final ThemeProvider provider;
-  final Widget child;
-
-  const ThemeProviderWidget({
-    super.key,
-    required this.provider,
-    required this.child,
-  });
-
-  @override
-  State<ThemeProviderWidget> createState() => _ThemeProviderInheritedState();
-}
-
-class _ThemeProviderInheritedState extends State<ThemeProviderWidget> {
-  @override
-  void initState() {
-    super.initState();
-    widget.provider.addListener(_onThemeChanged);
-  }
-
-  void _onThemeChanged() => setState(() {});
-
-  @override
-  void dispose() {
-    widget.provider.removeListener(_onThemeChanged);
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => widget.child;
 }

@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/services/user_service.dart';
 import '../../generated/l10n.dart';
-import '../../main.dart'; // Importante para acceder al themeProvider global
+import '../../main.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -186,14 +186,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildDivider() {
     return Container(
-      width: 1, 
-      height: 32, 
+      width: 1,
+      height: 32,
       color: AppColors.inputBorder(context),
     );
   }
 
   Widget _buildMenuSection(BuildContext context, S l) {
-    // Definimos los items normales
     final items = [
       {'icon': Icons.person_outline, 'label': 'Edit Profile'},
       {'icon': Icons.notifications_none, 'label': 'Notifications'},
@@ -203,22 +202,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Column(
       children: [
-        // 1. Dibujamos los items normales
         ...items.map((item) => _buildMenuItem(
-          icon: item['icon'] as IconData,
-          label: item['label'] as String,
-          onTap: () {},
-        )),
+              icon: item['icon'] as IconData,
+              label: item['label'] as String,
+              onTap: () {},
+            )),
 
-        // 2. Dibujamos el item de Dark Mode con el Switch
+        // 🌍 IDIOMA
+        _buildLanguageSelector(l),
+
+        // 🌙 TEMA
         _buildMenuItem(
-          icon: themeProvider.isDark ? Icons.nightlight_round : Icons.wb_sunny,
+          icon: themeProvider.isDark
+              ? Icons.nightlight_round
+              : Icons.wb_sunny,
           label: themeProvider.isDark ? 'Dark Mode' : 'Light Mode',
           trailing: Switch(
             value: themeProvider.isDark,
             activeColor: AppColors.primary,
             onChanged: (value) {
-              // Al cambiar el switch, notificamos al provider y refrescamos este widget
               setState(() {
                 themeProvider.toggleTheme();
               });
@@ -231,7 +233,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           },
         ),
 
-        // 3. Dibujamos el Log Out
+        // LOG OUT
         _buildMenuItem(
           icon: Icons.logout,
           label: 'Log Out',
@@ -246,7 +248,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Helper para no repetir código de diseño en cada fila del menú
+   // Selector de idioma 
+Widget _buildLanguageSelector(S l) {
+  String currentLang = Localizations.localeOf(context).languageCode;
+
+  return _buildMenuItem(
+    icon: Icons.language,
+    label: l.language, 
+    trailing: DropdownButton<String>(
+      value: currentLang,
+      underline: const SizedBox(),
+      dropdownColor: AppColors.surface(context),
+      items: [
+        DropdownMenuItem(
+          value: 'es',
+          child: Text(
+            'Español',
+            style: TextStyle(color: AppColors.textPrimary(context)),
+          ),
+        ),
+        DropdownMenuItem(
+          value: 'en',
+          child: Text(
+            'English',
+            style: TextStyle(color: AppColors.textPrimary(context)),
+          ),
+        ),
+      ],
+      onChanged: (value) {
+        if (value == null) return;
+
+        if (value == 'es') {
+          MyApp.setLocale(context, const Locale('es'));
+        } else {
+          MyApp.setLocale(context, const Locale('en'));
+        }
+
+        setState(() {});
+      },
+    ),
+    onTap: () {},
+  );
+}
+
   Widget _buildMenuItem({
     required IconData icon,
     required String label,
@@ -263,21 +307,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: ListTile(
         leading: Icon(
           icon,
-          color: isDanger ? AppColors.passwordWeak : AppColors.textSecondary(context),
+          color: isDanger
+              ? AppColors.passwordWeak
+              : AppColors.textSecondary(context),
           size: 22,
         ),
         title: Text(
           label,
           style: TextStyle(
-            color: isDanger ? AppColors.passwordWeak : AppColors.textPrimary(context),
+            color: isDanger
+                ? AppColors.passwordWeak
+                : AppColors.textPrimary(context),
             fontSize: 14,
           ),
         ),
-        trailing: trailing ?? (isDanger ? null : Icon(
-          Icons.chevron_right_rounded,
-          color: AppColors.textSecondary(context),
-          size: 20,
-        )),
+        trailing: trailing ??
+            (isDanger
+                ? null
+                : Icon(
+                    Icons.chevron_right_rounded,
+                    color: AppColors.textSecondary(context),
+                    size: 20,
+                  )),
         onTap: onTap,
       ),
     );
