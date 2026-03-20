@@ -35,18 +35,18 @@
   "favorites": "Favoritos",
   "profile": "Perfil",
   "home": "Inicio",
-
-"newBadge": "Nuevo",
-"decorateDesc2": "Toma una foto de tu espacio y visualiza muebles en 3D al instante",
-"modifiedAgo": "Modificado",
-"hoursAgo": "hace 2h",
-"yesterday": "ayer",
-"livingRoom": "Sala principal",
-"bedroom": "Dormitorio",
-"modern": "Moderno",
-"natural": "Natural",
-"minimal": "Mínimal",
-"colorful": "Colorido",
-"thisMonth": "+1 este mes",
-"newItems": "5 nuevos"
+  "language": "Idioma"
+  "newBadge": "Nuevo",
+  "decorateDesc2": "Toma una foto de tu espacio y visualiza muebles en 3D al instante",
+  "modifiedAgo": "Modificado",
+  "hoursAgo": "hace 2h",
+  "yesterday": "ayer",
+  "livingRoom": "Sala principal",
+  "bedroom": "Dormitorio",
+  "modern": "Moderno",
+  "natural": "Natural",
+  "minimal": "Mínimal",
+  "colorful": "Colorido",
+  "thisMonth": "+1 este mes",
+  "newItems": "5 nuevos"
 }

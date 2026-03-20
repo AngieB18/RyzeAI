@@ -35,18 +35,18 @@
   "favorites": "Favorites",
   "profile": "Profile",
   "home": "Home",
-
-"newBadge": "New",
-"decorateDesc2": "Take a photo of your space and visualize furniture in 3D instantly",
-"modifiedAgo": "Modified",
-"hoursAgo": "2h ago",
-"yesterday": "yesterday",
-"livingRoom": "Living Room",
-"bedroom": "Bedroom",
-"modern": "Modern",
-"natural": "Natural",
-"minimal": "Minimal",
-"colorful": "Colorful",
-"thisMonth": "+1 this month",
-"newItems": "5 new"
+  "language": "Idioma"
+  "newBadge": "New",
+  "decorateDesc2": "Take a photo of your space and visualize furniture in 3D instantly",
+  "modifiedAgo": "Modified",
+  "hoursAgo": "2h ago",
+  "yesterday": "yesterday",
+  "livingRoom": "Living Room",
+  "bedroom": "Bedroom",
+  "modern": "Modern",
+  "natural": "Natural",
+  "minimal": "Minimal",
+  "colorful": "Colorful",
+  "thisMonth": "+1 this month",
+  "newItems": "5 new"
 }

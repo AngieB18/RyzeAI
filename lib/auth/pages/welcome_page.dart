@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
-import '../../widgets/language_selector.dart';
+import '../../core/settings/language_selector.dart';
 import '../../generated/l10n.dart';
 
 class WelcomePage extends StatelessWidget {

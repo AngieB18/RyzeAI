@@ -1,7 +1,5 @@
-// lib/home/home_page.dart
 import 'package:flutter/material.dart';
 import '../core/constants/app_colors.dart';
-import '../widgets/language_selector.dart';
 import '../generated/l10n.dart';
 import 'screens/home_screen.dart';
 import 'screens/favorites_screen.dart';
@@ -106,32 +104,26 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-Widget build(BuildContext context) {
-  final l = S.of(context);
+  Widget build(BuildContext context) {
+    final l = S.of(context);
 
-  return ListenableBuilder(
-    listenable: themeProvider,
-    builder: (context, _) {
-      return Scaffold(
-        backgroundColor: AppColors.background(context),
-        body: Stack(
-          children: [
-            _screens[_currentIndex],
-            Positioned(
-              top: MediaQuery.of(context).padding.top + 12,
-              right: 16,
-              child: const LanguageSelector(),
-            ),
-          ],
-        ),
-        bottomNavigationBar: _buildBottomNav(l),
-        floatingActionButton: _buildCameraFAB(),
-        floatingActionButtonLocation:
-            FloatingActionButtonLocation.centerDocked,
-      );
-    },
-  );
-}
+    return ListenableBuilder(
+      listenable: themeProvider,
+      builder: (context, _) {
+        return Scaffold(
+          backgroundColor: AppColors.background(context),
+
+          // 🔥 YA SIN SELECTOR DE IDIOMA
+          body: _screens[_currentIndex],
+
+          bottomNavigationBar: _buildBottomNav(l),
+          floatingActionButton: _buildCameraFAB(),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+        );
+      },
+    );
+  }
 
   Widget _buildCameraFAB() {
     return GestureDetector(
@@ -142,7 +134,10 @@ Widget build(BuildContext context) {
         decoration: BoxDecoration(
           color: AppColors.primary,
           shape: BoxShape.circle,
-          border: Border.all(color: AppColors.background(context), width: 3),
+          border: Border.all(
+            color: AppColors.background(context),
+            width: 3,
+          ),
         ),
         child: const Icon(
           Icons.camera_alt_rounded,
@@ -176,6 +171,7 @@ Widget build(BuildContext context) {
 
   Widget _buildNavItem(int index, IconData icon, String label) {
     final isActive = _currentIndex == index;
+
     return GestureDetector(
       onTap: () => setState(() => _currentIndex = index),
       behavior: HitTestBehavior.opaque,
@@ -187,16 +183,21 @@ Widget build(BuildContext context) {
           children: [
             Icon(
               icon,
-              color: isActive ? AppColors.primary : AppColors.textSecondary(context),
+              color: isActive
+                  ? AppColors.primary
+                  : AppColors.textSecondary(context),
               size: 22,
             ),
             const SizedBox(height: 3),
             Text(
               label,
               style: TextStyle(
-                color: isActive ? AppColors.primary : AppColors.textSecondary(context),
+                color: isActive
+                    ? AppColors.primary
+                    : AppColors.textSecondary(context),
                 fontSize: 10,
-                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+                fontWeight:
+                    isActive ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
           ],

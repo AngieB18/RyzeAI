@@ -5,7 +5,7 @@ import '../widgets/password_strength_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../generated/l10n.dart';
-import '../../widgets/language_selector.dart';
+import '../../core/settings/language_selector.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -60,10 +60,12 @@ class _RegisterPageState extends State<RegisterPage> {
         String uid = userCredential.user!.uid;
 
         await FirebaseFirestore.instance.collection('users').doc(uid).set({
-          'firstName': _firstNameController.text.trim(),
-          'lastName': _lastNameController.text.trim(),
+          'first_name': _firstNameController.text.trim(),
+          'last_name': _lastNameController.text.trim(),
           'email': _emailController.text.trim(),
-          'createdAt': Timestamp.now(),
+          'language': Localizations.localeOf(context).languageCode,
+          'theme': 'dark',
+          'created_at': Timestamp.now(),
         });
 
         if (!mounted) return;
