@@ -30,7 +30,7 @@ class ProjectsScreen extends StatelessWidget {
         'name': 'Kitchen',
         'items': '3 items',
         'status': 'Draft',
-        'color': AppColors.textSecondary,
+        'color': AppColors.darkTextSecondary,
       },
     ];
 
@@ -38,12 +38,12 @@ class ProjectsScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeader(l),
+          _buildHeader(context, l),
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(20),
               itemCount: projects.length,
-              itemBuilder: (_, i) => _buildProjectCard(projects[i]),
+              itemBuilder: (ctx, i) => _buildProjectCard(ctx, projects[i]),
             ),
           ),
         ],
@@ -51,13 +51,13 @@ class ProjectsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(S l) {
+  Widget _buildHeader(BuildContext context, S l) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 16, 70, 20),
-      decoration: const BoxDecoration(
-        color: Color(0xFF2A1F1A),
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: AppColors.header(context),
+        borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(24),
           bottomRight: Radius.circular(24),
         ),
@@ -67,8 +67,8 @@ class ProjectsScreen extends StatelessWidget {
         children: [
           Text(
             l.projects,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
+            style: TextStyle(
+              color: AppColors.textPrimary(context),
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
@@ -99,12 +99,12 @@ class ProjectsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProjectCard(Map<String, dynamic> project) {
+  Widget _buildProjectCard(BuildContext context, Map<String, dynamic> project) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF2C2C2E),
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -113,7 +113,7 @@ class ProjectsScreen extends StatelessWidget {
             width: 52,
             height: 52,
             decoration: BoxDecoration(
-              color: const Color(0xFF3A2218),
+              color: AppColors.darkHeader.withOpacity(0.8),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
@@ -130,8 +130,8 @@ class ProjectsScreen extends StatelessWidget {
               children: [
                 Text(
                   project['name'] as String,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
+                  style: TextStyle(
+                    color: AppColors.textPrimary(context),
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -139,8 +139,8 @@ class ProjectsScreen extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   project['items'] as String,
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
+                  style: TextStyle(
+                    color: AppColors.textSecondary(context),
                     fontSize: 12,
                   ),
                 ),

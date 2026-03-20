@@ -26,7 +26,7 @@ class PasswordStrengthIndicator extends StatelessWidget {
       children: [
         LinearProgressIndicator(
           value: (strength + 1) / 3,
-          backgroundColor: AppColors.inputBorder,
+          backgroundColor: AppColors.inputBorder(context),
           valueColor: AlwaysStoppedAnimation<Color>(color),
           minHeight: 4,
         ),

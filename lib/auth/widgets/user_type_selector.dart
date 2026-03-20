@@ -18,16 +18,16 @@ class UserTypeSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _buildOption(UserType.HOME, '🏠', 'Hogar'),
+        _buildOption(context, UserType.HOME, '🏠', 'Hogar'),
         const SizedBox(width: 8),
-        _buildOption(UserType.DESIGNER, '✏️', 'Diseñador'),
+        _buildOption(context, UserType.DESIGNER, '✏️', 'Diseñador'),
         const SizedBox(width: 8),
-        _buildOption(UserType.STORE, '🎁', 'Tienda'),
+        _buildOption(context, UserType.STORE, '🎁', 'Tienda'),
       ],
     );
   }
 
-  Widget _buildOption(UserType type, String icon, String label) {
+  Widget _buildOption(BuildContext context, UserType type, String icon, String label) {
     final isSelected = selected == type;
     return Expanded(
       child: GestureDetector(
@@ -37,10 +37,10 @@ class UserTypeSelector extends StatelessWidget {
           decoration: BoxDecoration(
             color: isSelected
                 ? AppColors.primary.withOpacity(0.2)
-                : AppColors.surface,
+                : AppColors.surface(context),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: isSelected ? AppColors.primary : AppColors.inputBorder,
+              color: isSelected ? AppColors.primary : AppColors.inputBorder(context),
             ),
           ),
           child: Column(
@@ -52,7 +52,7 @@ class UserTypeSelector extends StatelessWidget {
                 style: TextStyle(
                   color: isSelected
                       ? AppColors.primary
-                      : AppColors.textSecondary,
+                      : AppColors.textSecondary(context),
                   fontSize: 11,
                 ),
               ),

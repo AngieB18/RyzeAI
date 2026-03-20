@@ -9,7 +9,7 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.background(context),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -57,12 +57,12 @@ class WelcomePage extends StatelessWidget {
 
                 const SizedBox(height: 24),
 
-                const Text(
+                Text(
                   "RyzeAI",
                   style: TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
+                    color: AppColors.textPrimary(context),
                   ),
                 ),
 
@@ -71,9 +71,9 @@ class WelcomePage extends StatelessWidget {
                 Text(
                   S.of(context).welcome,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
-                    color: AppColors.textSecondary,
+                    color: AppColors.textSecondary(context),
                   ),
                 ),
 
@@ -93,9 +93,9 @@ class WelcomePage extends StatelessWidget {
                     onPressed: () => Navigator.pushNamed(context, "/login"),
                     child: Text(
                       S.of(context).login,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
-                        color: AppColors.textPrimary,
+                        color: AppColors.textPrimary(context),
                       ),
                     ),
                   ),
