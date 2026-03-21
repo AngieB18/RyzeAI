@@ -5,6 +5,7 @@ import '../../core/constants/app_colors.dart';
 import '../../core/services/user_service.dart';
 import '../../generated/l10n.dart';
 import '../../main.dart';
+import 'privacy_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -47,12 +48,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            _buildHeader(fullName, email, initials),
+            _buildHeader(l, fullName, email, initials),
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  _buildInfoCard(),
+                  _buildInfoCard(l),
                   const SizedBox(height: 16),
                   _buildMenuSection(context, l),
                   const SizedBox(height: 90),
@@ -65,7 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildHeader(String fullName, String email, String initials) {
+  Widget _buildHeader(S l, String fullName, String email, String initials) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
@@ -103,7 +104,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 20,
                   child: LinearProgressIndicator(
                     backgroundColor: AppColors.inputBorder(context),
-                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                      AppColors.primary,
+                    ),
                   ),
                 )
               : Text(
@@ -130,9 +133,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: AppColors.primary),
             ),
-            child: const Text(
-              'Home User',
-              style: TextStyle(
+            child: Text(
+              l.homeUser,
+              style: const TextStyle(
                 color: AppColors.primary,
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
@@ -144,7 +147,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildInfoCard() {
+  Widget _buildInfoCard(S l) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -154,11 +157,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildStat('3', 'Projects'),
+          _buildStat('3', l.projects),
           _buildDivider(),
-          _buildStat('12', 'Favorites'),
+          _buildStat('12', l.favorites),
           _buildDivider(),
-          _buildStat('2', 'Rooms'),
+          _buildStat('2', l.rooms),
         ],
       ),
     );
@@ -178,7 +181,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         const SizedBox(height: 2),
         Text(
           label,
-          style: TextStyle(color: AppColors.textSecondary(context), fontSize: 11),
+          style: TextStyle(
+            color: AppColors.textSecondary(context),
+            fontSize: 11,
+          ),
         ),
       ],
     );
@@ -194,29 +200,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildMenuSection(BuildContext context, S l) {
     final items = [
-      {'icon': Icons.person_outline, 'label': 'Edit Profile'},
-      {'icon': Icons.notifications_none, 'label': 'Notifications'},
-      {'icon': Icons.lock_outline, 'label': 'Privacy'},
-      {'icon': Icons.help_outline, 'label': 'Help & Support'},
+      {'icon': Icons.person_outline, 'label': l.editProfile},
+      {'icon': Icons.notifications_none, 'label': l.notifications},
+      {'icon': Icons.lock_outline, 'label': l.privacy},
+      {'icon': Icons.help_outline, 'label': l.helpSupport},
     ];
 
     return Column(
       children: [
-        ...items.map((item) => _buildMenuItem(
-              icon: item['icon'] as IconData,
-              label: item['label'] as String,
-              onTap: () {},
-            )),
+        ...items.map((item) {
+          final label = item['label'] as String;
+          final icon = item['icon'] as IconData;
+          return _buildMenuItem(
+            icon: icon,
+            label: label,
+            onTap: label == l.editProfile
+                ? () => _showEditProfileSheet(context)
+                : label == l.privacy
+                ? () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const PrivacyScreen()),
+                  )
+                : () {},
+          );
+        }),
 
         // 🌍 IDIOMA
         _buildLanguageSelector(l),
 
         // 🌙 TEMA
         _buildMenuItem(
-          icon: themeProvider.isDark
-              ? Icons.nightlight_round
-              : Icons.wb_sunny,
-          label: themeProvider.isDark ? 'Dark Mode' : 'Light Mode',
+          icon: themeProvider.isDark ? Icons.nightlight_round : Icons.wb_sunny,
+          label: themeProvider.isDark ? l.darkMode : l.lightMode,
           trailing: Switch(
             value: themeProvider.isDark,
             activeColor: AppColors.primary,
@@ -236,7 +251,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         // LOG OUT
         _buildMenuItem(
           icon: Icons.logout,
-          label: 'Log Out',
+          label: l.logOut,
           isDanger: true,
           onTap: () async {
             await FirebaseAuth.instance.signOut();
@@ -248,48 +263,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-   // Selector de idioma 
-Widget _buildLanguageSelector(S l) {
-  String currentLang = Localizations.localeOf(context).languageCode;
+  Widget _buildLanguageSelector(S l) {
+    String currentLang = Localizations.localeOf(context).languageCode;
 
-  return _buildMenuItem(
-    icon: Icons.language,
-    label: l.language, 
-    trailing: DropdownButton<String>(
-      value: currentLang,
-      underline: const SizedBox(),
-      dropdownColor: AppColors.surface(context),
-      items: [
-        DropdownMenuItem(
-          value: 'es',
-          child: Text(
-            'Español',
-            style: TextStyle(color: AppColors.textPrimary(context)),
+    return _buildMenuItem(
+      icon: Icons.language,
+      label: l.language,
+      trailing: DropdownButton<String>(
+        value: currentLang,
+        underline: const SizedBox(),
+        dropdownColor: AppColors.surface(context),
+        items: [
+          DropdownMenuItem(
+            value: 'es',
+            child: Text(
+              'Español',
+              style: TextStyle(color: AppColors.textPrimary(context)),
+            ),
           ),
-        ),
-        DropdownMenuItem(
-          value: 'en',
-          child: Text(
-            'English',
-            style: TextStyle(color: AppColors.textPrimary(context)),
+          DropdownMenuItem(
+            value: 'en',
+            child: Text(
+              'English',
+              style: TextStyle(color: AppColors.textPrimary(context)),
+            ),
           ),
-        ),
-      ],
-      onChanged: (value) {
-        if (value == null) return;
-
-        if (value == 'es') {
-          MyApp.setLocale(context, const Locale('es'));
-        } else {
-          MyApp.setLocale(context, const Locale('en'));
-        }
-
-        setState(() {});
-      },
-    ),
-    onTap: () {},
-  );
-}
+        ],
+        onChanged: (value) {
+          if (value == null) return;
+          MyApp.setLocale(context, Locale(value));
+          setState(() {});
+        },
+      ),
+      onTap: () {},
+    );
+  }
 
   Widget _buildMenuItem({
     required IconData icon,
@@ -321,7 +329,8 @@ Widget _buildLanguageSelector(S l) {
             fontSize: 14,
           ),
         ),
-        trailing: trailing ??
+        trailing:
+            trailing ??
             (isDanger
                 ? null
                 : Icon(
@@ -330,6 +339,149 @@ Widget _buildLanguageSelector(S l) {
                     size: 20,
                   )),
         onTap: onTap,
+      ),
+    );
+  }
+
+  void _showEditProfileSheet(BuildContext context) {
+    final l = S.of(context);
+    final firstName = _userData?['firstName'] ?? '';
+    final lastName = _userData?['lastName'] ?? '';
+
+    final firstNameController = TextEditingController(text: firstName);
+    final lastNameController = TextEditingController(text: lastName);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.surface(context),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (_) => Padding(
+        padding: EdgeInsets.only(
+          left: 24,
+          right: 24,
+          top: 24,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.inputBorder(context),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              l.editProfile,
+              style: TextStyle(
+                color: AppColors.textPrimary(context),
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              l.firstName,
+              style: TextStyle(
+                color: AppColors.textSecondary(context),
+                fontSize: 13,
+              ),
+            ),
+            const SizedBox(height: 6),
+            TextField(
+              controller: firstNameController,
+              style: TextStyle(color: AppColors.textPrimary(context)),
+              decoration: InputDecoration(
+                hintText: l.enterFirstName,
+                hintStyle: TextStyle(color: AppColors.textSecondary(context)),
+                filled: true,
+                fillColor: AppColors.inputBorder(context).withOpacity(0.3),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                    color: AppColors.primary,
+                    width: 1.5,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              l.lastName,
+              style: TextStyle(
+                color: AppColors.textSecondary(context),
+                fontSize: 13,
+              ),
+            ),
+            const SizedBox(height: 6),
+            TextField(
+              controller: lastNameController,
+              style: TextStyle(color: AppColors.textPrimary(context)),
+              decoration: InputDecoration(
+                hintText: l.enterLastName,
+                hintStyle: TextStyle(color: AppColors.textSecondary(context)),
+                filled: true,
+                fillColor: AppColors.inputBorder(context).withOpacity(0.3),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                    color: AppColors.primary,
+                    width: 1.5,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 0,
+                ),
+                onPressed: () async {
+                  await UserService.updateUserName(
+                    firstNameController.text.trim(),
+                    lastNameController.text.trim(),
+                  );
+                  if (!mounted) return;
+                  Navigator.pop(context);
+                  _loadUser();
+                },
+                child: Text(
+                  l.saveChanges,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }

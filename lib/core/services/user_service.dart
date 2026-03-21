@@ -13,8 +13,16 @@ class UserService {
           .doc(user.uid)
           .get();
 
-      if (doc.exists) {
-        return doc.data();
+      if (doc.exists && doc.data() != null) {
+        final data = doc.data()!;
+        // Si firstName está vacío usa displayName de Auth
+        if ((data['firstName'] ?? '').isEmpty) {
+          final displayName = user.displayName ?? '';
+          final parts = displayName.split(' ');
+          data['firstName'] = parts.isNotEmpty ? parts[0] : '';
+          data['lastName'] = parts.length > 1 ? parts.sublist(1).join(' ') : '';
+        }
+        return data;
       }
       return null;
     } catch (e) {
@@ -27,5 +35,18 @@ class UserService {
     if (firstName.isNotEmpty) initials += firstName[0].toUpperCase();
     if (lastName.isNotEmpty) initials += lastName[0].toUpperCase();
     return initials;
+  }
+
+  static Future<void> updateUserName(String firstName, String lastName) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).update(
+        {'firstName': firstName, 'lastName': lastName},
+      );
+    } catch (e) {
+      // handle error
+    }
   }
 }
