@@ -1,4 +1,5 @@
 // lib/home/screens/home_screen.dart
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/services/user_service.dart';
@@ -46,16 +47,17 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final l = S.of(context);
-    final firstName = _userData?['first_name'] ?? '';
-    final lastName = _userData?['last_name'] ?? '';
+    final firstName = _userData?['firstName'] ?? _userData?['first_name'] ?? '';
+    final lastName = _userData?['lastName'] ?? _userData?['last_name'] ?? '';
     final initials = UserService.getInitials(firstName, lastName);
+    final photoUrl = _userData?['photoUrl'] as String?;
 
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(l, firstName, initials),
+            _buildHeader(l, firstName, initials, photoUrl),
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -82,7 +84,22 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildHeader(S l, String firstName, String initials) {
+  Widget _buildHeader(
+    S l,
+    String firstName,
+    String initials,
+    String? photoUrl,
+  ) {
+    ImageProvider? imageProvider;
+    if (photoUrl != null && photoUrl.isNotEmpty) {
+      if (photoUrl.startsWith('data:image')) {
+        final base64Data = photoUrl.split(',').last;
+        imageProvider = MemoryImage(base64Decode(base64Data));
+      } else {
+        imageProvider = NetworkImage(photoUrl);
+      }
+    }
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 16, 80, 20),
@@ -107,7 +124,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 2),
-
               _loading
                   ? SizedBox(
                       width: 160,
@@ -143,14 +159,17 @@ class _HomeScreenState extends State<HomeScreen> {
               : CircleAvatar(
                   radius: 22,
                   backgroundColor: AppColors.primary,
-                  child: Text(
-                    initials.isNotEmpty ? initials : '?',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
+                  backgroundImage: imageProvider,
+                  child: imageProvider == null
+                      ? Text(
+                          initials.isNotEmpty ? initials : '?',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        )
+                      : null,
                 ),
         ],
       ),
@@ -215,7 +234,11 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.camera_alt_rounded, color: Colors.white, size: 14),
+                const Icon(
+                  Icons.camera_alt_rounded,
+                  color: Colors.white,
+                  size: 14,
+                ),
                 const SizedBox(width: 6),
                 Text(
                   l.openCamera,
@@ -237,27 +260,48 @@ class _HomeScreenState extends State<HomeScreen> {
     return Row(
       children: [
         Expanded(
-          child: _buildStatCard(l.projects, '3', l.thisMonth, AppColors.passwordStrong),
+          child: _buildStatCard(
+            l.projects,
+            '3',
+            l.thisMonth,
+            AppColors.passwordStrong,
+          ),
         ),
         const SizedBox(width: 12),
         Expanded(
-          child: _buildStatCard(l.favorites, '12', l.newItems, AppColors.primary),
+          child: _buildStatCard(
+            l.favorites,
+            '12',
+            l.newItems,
+            AppColors.primary,
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildStatCard(String title, String value, String sub, Color subColor) {
+  Widget _buildStatCard(
+    String title,
+    String value,
+    String sub,
+    Color subColor,
+  ) {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.surface(context), // ✅ dinámico
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: TextStyle(color: AppColors.textSecondary(context), fontSize: 11)),
+          Text(
+            title,
+            style: TextStyle(
+              color: AppColors.textSecondary(context),
+              fontSize: 11,
+            ),
+          ),
           const SizedBox(height: 4),
           Text(
             value,
@@ -307,7 +351,7 @@ class _HomeScreenState extends State<HomeScreen> {
           margin: const EdgeInsets.only(bottom: 8),
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: AppColors.surface(context), // ✅ dinámico
+            color: AppColors.surface(context),
             borderRadius: BorderRadius.circular(14),
           ),
           child: Row(
@@ -316,11 +360,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: AppColors.header(context), // ✅ dinámico
+                  color: AppColors.header(context),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(
-                  child: Text(p['icon'] as String, style: const TextStyle(fontSize: 22)),
+                  child: Text(
+                    p['icon'] as String,
+                    style: const TextStyle(fontSize: 22),
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -339,7 +386,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 3),
                     Text(
                       p['time'] as String,
-                      style: TextStyle(color: AppColors.textSecondary(context), fontSize: 11),
+                      style: TextStyle(
+                        color: AppColors.textSecondary(context),
+                        fontSize: 11,
+                      ),
                     ),
                   ],
                 ),
@@ -377,7 +427,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: styles.map((s) {
         return Container(
           decoration: BoxDecoration(
-            color: AppColors.surface(context), // ✅ dinámico
+            color: AppColors.surface(context),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
@@ -387,7 +437,10 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(width: 8),
               Text(
                 s['name'] as String,
-                style: TextStyle(color: AppColors.textPrimary(context), fontSize: 13),
+                style: TextStyle(
+                  color: AppColors.textPrimary(context),
+                  fontSize: 13,
+                ),
               ),
             ],
           ),

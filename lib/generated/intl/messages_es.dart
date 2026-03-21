@@ -32,6 +32,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Cuenta eliminada correctamente",
     ),
     "andThe": MessageLookupByLibrary.simpleMessage(" y la "),
+    "appUpdates": MessageLookupByLibrary.simpleMessage("Novedades de la app"),
+    "appUpdatesDesc": MessageLookupByLibrary.simpleMessage(
+      "Nuevas funciones y mejoras",
+    ),
     "bedroom": MessageLookupByLibrary.simpleMessage("Dormitorio"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancelar"),
     "changePassword": MessageLookupByLibrary.simpleMessage(
@@ -49,6 +53,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "createAccount": MessageLookupByLibrary.simpleMessage("Crear Cuenta"),
     "createAccountButton": MessageLookupByLibrary.simpleMessage("Crear Cuenta"),
+    "currentPassword": MessageLookupByLibrary.simpleMessage(
+      "Contraseña actual",
+    ),
     "darkMode": MessageLookupByLibrary.simpleMessage("Modo oscuro"),
     "decorate": MessageLookupByLibrary.simpleMessage("Decora con IA"),
     "decorateDesc": MessageLookupByLibrary.simpleMessage(
@@ -67,25 +74,57 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "editProfile": MessageLookupByLibrary.simpleMessage("Editar perfil"),
     "email": MessageLookupByLibrary.simpleMessage("Correo electrónico"),
+    "emailChangeInfo": MessageLookupByLibrary.simpleMessage(
+      "Se enviará un correo de verificación a la nueva dirección",
+    ),
+    "emailChanged": MessageLookupByLibrary.simpleMessage(
+      "Correo de verificación enviado, revisa tu bandeja",
+    ),
     "emailSent": MessageLookupByLibrary.simpleMessage(
       "¡Correo enviado! Revisa tu bandeja de entrada",
     ),
     "emptyFieldsError": MessageLookupByLibrary.simpleMessage(
       "Por favor ingresa correo y contraseña",
     ),
+    "enterCurrentPassword": MessageLookupByLibrary.simpleMessage(
+      "Ingresa tu contraseña actual",
+    ),
     "enterEmail": MessageLookupByLibrary.simpleMessage("Digita tu email aquí"),
     "enterFirstName": MessageLookupByLibrary.simpleMessage("Ingresa tu nombre"),
     "enterLastName": MessageLookupByLibrary.simpleMessage(
       "Ingresa tu apellido",
     ),
+    "enterNewEmail": MessageLookupByLibrary.simpleMessage(
+      "Ingresa tu nuevo correo",
+    ),
     "enterPassword": MessageLookupByLibrary.simpleMessage(
       "Crea una contraseña segura",
     ),
     "exploreStyles": MessageLookupByLibrary.simpleMessage("Explorar estilos"),
+    "faq": MessageLookupByLibrary.simpleMessage("Preguntas frecuentes"),
+    "faqA1": MessageLookupByLibrary.simpleMessage(
+      "Ve a la pestaña Proyectos y toca el botón Nuevo para iniciar un proyecto de decoración.",
+    ),
+    "faqA2": MessageLookupByLibrary.simpleMessage(
+      "Apunta tu cámara a cualquier espacio y nuestra IA detectará objetos y sugerirá muebles en 3D.",
+    ),
+    "faqA3": MessageLookupByLibrary.simpleMessage(
+      "Sí, ve a Perfil → Editar perfil y despliega la sección de correo para cambiarlo.",
+    ),
+    "faqA4": MessageLookupByLibrary.simpleMessage(
+      "Ve a Perfil → Privacidad → Eliminar cuenta. Esta acción es permanente.",
+    ),
+    "faqQ1": MessageLookupByLibrary.simpleMessage("¿Cómo creo un proyecto?"),
+    "faqQ2": MessageLookupByLibrary.simpleMessage(
+      "¿Cómo funciona la cámara IA?",
+    ),
+    "faqQ3": MessageLookupByLibrary.simpleMessage("¿Puedo cambiar mi correo?"),
+    "faqQ4": MessageLookupByLibrary.simpleMessage("¿Cómo elimino mi cuenta?"),
     "favorites": MessageLookupByLibrary.simpleMessage("Favoritos"),
     "firstName": MessageLookupByLibrary.simpleMessage("Nombre"),
     "helloUser": MessageLookupByLibrary.simpleMessage("Hola"),
     "helpSupport": MessageLookupByLibrary.simpleMessage("Ayuda y soporte"),
+    "helpSupportTitle": MessageLookupByLibrary.simpleMessage("Ayuda y soporte"),
     "home": MessageLookupByLibrary.simpleMessage("Inicio"),
     "homeUser": MessageLookupByLibrary.simpleMessage("Usuario hogar"),
     "hoursAgo": MessageLookupByLibrary.simpleMessage("hace 2h"),
@@ -113,16 +152,32 @@ class MessageLookup extends MessageLookupByLibrary {
     "modifiedAgo": MessageLookupByLibrary.simpleMessage("Modificado"),
     "natural": MessageLookupByLibrary.simpleMessage("Natural"),
     "newBadge": MessageLookupByLibrary.simpleMessage("Nuevo"),
+    "newEmail": MessageLookupByLibrary.simpleMessage("Nuevo correo"),
     "newItems": MessageLookupByLibrary.simpleMessage("5 nuevos"),
     "notifications": MessageLookupByLibrary.simpleMessage("Notificaciones"),
+    "notificationsSaved": MessageLookupByLibrary.simpleMessage(
+      "Preferencias guardadas",
+    ),
+    "notificationsTitle": MessageLookupByLibrary.simpleMessage(
+      "Notificaciones",
+    ),
     "openCamera": MessageLookupByLibrary.simpleMessage("Abrir cámara IA"),
     "password": MessageLookupByLibrary.simpleMessage("Contraseña"),
     "privacy": MessageLookupByLibrary.simpleMessage("Privacidad"),
+    "privacyContent": MessageLookupByLibrary.simpleMessage(
+      "Recopilamos tu nombre, correo y datos de uso para mejorar tu experiencia. Nunca vendemos tus datos a terceros. Puedes eliminar tu cuenta y todos los datos asociados en cualquier momento.",
+    ),
     "privacyPolicy": MessageLookupByLibrary.simpleMessage(
       "Política de privacidad",
     ),
     "privacyTitle": MessageLookupByLibrary.simpleMessage("Privacidad"),
     "profile": MessageLookupByLibrary.simpleMessage("Perfil"),
+    "projectNotifications": MessageLookupByLibrary.simpleMessage(
+      "Notificaciones de proyectos",
+    ),
+    "projectNotificationsDesc": MessageLookupByLibrary.simpleMessage(
+      "Actualizaciones sobre tus proyectos de decoración",
+    ),
     "projects": MessageLookupByLibrary.simpleMessage("Proyectos"),
     "recentProjects": MessageLookupByLibrary.simpleMessage(
       "Proyectos recientes",
@@ -134,6 +189,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Enviar correo de restablecimiento",
     ),
     "step1of1": MessageLookupByLibrary.simpleMessage("Paso 1 de 1"),
+    "termsAndConditions": MessageLookupByLibrary.simpleMessage(
+      "Términos y condiciones",
+    ),
+    "termsContent": MessageLookupByLibrary.simpleMessage(
+      "Al usar RyzeAI aceptas usar la app de forma responsable. No nos hacemos responsables de decisiones de decoración basadas en sugerencias de IA. Todo el contenido es solo para inspiración.",
+    ),
     "termsIntro": MessageLookupByLibrary.simpleMessage(
       "Al registrarte aceptas los ",
     ),

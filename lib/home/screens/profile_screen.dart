@@ -1,11 +1,14 @@
 // lib/home/screens/profile_screen.dart
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/services/user_service.dart';
 import '../../generated/l10n.dart';
 import '../../main.dart';
 import 'privacy_screen.dart';
+import 'notifications_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -31,6 +34,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _userData = data;
         _loading = false;
       });
+    }
+  }
+
+  Future<void> _pickAndUploadPhoto() async {
+    try {
+      final picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 300,
+        maxHeight: 300,
+        imageQuality: 60,
+      );
+
+      if (image == null) return;
+
+      final bytes = await image.readAsBytes();
+
+      if (bytes.length > 700000) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Image too large. Please choose a smaller one.'),
+            backgroundColor: AppColors.passwordWeak,
+          ),
+        );
+        return;
+      }
+
+      setState(() => _loading = true);
+
+      final url = await UserService.uploadProfilePhoto(bytes);
+
+      if (url != null) {
+        await _loadUser();
+      } else {
+        setState(() => _loading = false);
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error uploading photo. Try a smaller image.'),
+            backgroundColor: AppColors.passwordWeak,
+          ),
+        );
+      }
+    } catch (e) {
+      setState(() => _loading = false);
     }
   }
 
@@ -67,6 +116,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildHeader(S l, String fullName, String email, String initials) {
+    final photoUrl = _userData?['photoUrl'] as String?;
+
+    ImageProvider? imageProvider;
+    if (photoUrl != null && photoUrl.isNotEmpty) {
+      if (photoUrl.startsWith('data:image')) {
+        final base64Data = photoUrl.split(',').last;
+        imageProvider = MemoryImage(base64Decode(base64Data));
+      } else {
+        imageProvider = NetworkImage(photoUrl);
+      }
+    }
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
@@ -80,23 +141,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         children: [
           const SizedBox(height: 8),
-          _loading
-              ? CircleAvatar(
-                  radius: 36,
-                  backgroundColor: AppColors.inputBorder(context),
-                )
-              : CircleAvatar(
-                  radius: 36,
-                  backgroundColor: AppColors.primary,
-                  child: Text(
-                    initials.isNotEmpty ? initials : '?',
-                    style: const TextStyle(
+          // En _buildHeader reemplaza el Stack completo
+          Stack(
+            children: [
+              _loading
+                  ? CircleAvatar(
+                      radius: 36,
+                      backgroundColor: AppColors.inputBorder(context),
+                    )
+                  : GestureDetector(
+                      // ← agrega esto
+                      onTap: imageProvider != null
+                          ? () => _showFullPhoto(context, imageProvider!)
+                          : null,
+                      child: CircleAvatar(
+                        radius: 36,
+                        backgroundColor: AppColors.primary,
+                        backgroundImage: imageProvider,
+                        child: imageProvider == null
+                            ? Text(
+                                initials.isNotEmpty ? initials : '?',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            : null,
+                      ),
+                    ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: GestureDetector(
+                  onTap: _pickAndUploadPhoto,
+                  child: Container(
+                    width: 28,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.header(context),
+                        width: 2,
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.camera_alt_rounded,
                       color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                      size: 14,
                     ),
                   ),
                 ),
+              ),
+            ],
+          ),
           const SizedBox(height: 12),
           _loading
               ? SizedBox(
@@ -221,6 +320,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     context,
                     MaterialPageRoute(builder: (_) => const PrivacyScreen()),
                   )
+                : label == l.notifications
+                ? () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const NotificationsScreen(),
+                    ),
+                  )
+                : label ==
+                      l
+                          .helpSupport // ← agrega esto
+                ? () => _showHelpSheet(context)
                 : () {},
           );
         }),
@@ -347,9 +457,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final l = S.of(context);
     final firstName = _userData?['firstName'] ?? '';
     final lastName = _userData?['lastName'] ?? '';
+    final currentEmail =
+        _userData?['email'] ?? FirebaseAuth.instance.currentUser?.email ?? '';
 
     final firstNameController = TextEditingController(text: firstName);
     final lastNameController = TextEditingController(text: lastName);
+    final newEmailController = TextEditingController();
+    final passwordController = TextEditingController();
+    bool showEmailFields = false;
+    bool obscurePassword = true;
 
     showModalBottomSheet(
       context: context,
@@ -358,131 +474,557 @@ class _ProfileScreenState extends State<ProfileScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (_) => Padding(
-        padding: EdgeInsets.only(
-          left: 24,
-          right: 24,
-          top: 24,
-          bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 36,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.inputBorder(context),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              l.editProfile,
-              style: TextStyle(
-                color: AppColors.textPrimary(context),
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              l.firstName,
-              style: TextStyle(
-                color: AppColors.textSecondary(context),
-                fontSize: 13,
-              ),
-            ),
-            const SizedBox(height: 6),
-            TextField(
-              controller: firstNameController,
-              style: TextStyle(color: AppColors.textPrimary(context)),
-              decoration: InputDecoration(
-                hintText: l.enterFirstName,
-                hintStyle: TextStyle(color: AppColors.textSecondary(context)),
-                filled: true,
-                fillColor: AppColors.inputBorder(context).withOpacity(0.3),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(
-                    color: AppColors.primary,
-                    width: 1.5,
+      builder: (_) => StatefulBuilder(
+        builder: (context, setModalState) => Padding(
+          padding: EdgeInsets.only(
+            left: 24,
+            right: 24,
+            top: 24,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 36,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: AppColors.inputBorder(context),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              l.lastName,
-              style: TextStyle(
-                color: AppColors.textSecondary(context),
-                fontSize: 13,
-              ),
-            ),
-            const SizedBox(height: 6),
-            TextField(
-              controller: lastNameController,
-              style: TextStyle(color: AppColors.textPrimary(context)),
-              decoration: InputDecoration(
-                hintText: l.enterLastName,
-                hintStyle: TextStyle(color: AppColors.textSecondary(context)),
-                filled: true,
-                fillColor: AppColors.inputBorder(context).withOpacity(0.3),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(
-                    color: AppColors.primary,
-                    width: 1.5,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 0,
-                ),
-                onPressed: () async {
-                  await UserService.updateUserName(
-                    firstNameController.text.trim(),
-                    lastNameController.text.trim(),
-                  );
-                  if (!mounted) return;
-                  Navigator.pop(context);
-                  _loadUser();
-                },
-                child: Text(
-                  l.saveChanges,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
+                const SizedBox(height: 20),
+                Text(
+                  l.editProfile,
+                  style: TextStyle(
+                    color: AppColors.textPrimary(context),
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                const SizedBox(height: 20),
+                Text(
+                  l.firstName,
+                  style: TextStyle(
+                    color: AppColors.textSecondary(context),
+                    fontSize: 13,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                _buildSheetTextField(
+                  context: context,
+                  controller: firstNameController,
+                  hint: l.enterFirstName,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  l.lastName,
+                  style: TextStyle(
+                    color: AppColors.textSecondary(context),
+                    fontSize: 13,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                _buildSheetTextField(
+                  context: context,
+                  controller: lastNameController,
+                  hint: l.enterLastName,
+                ),
+                const SizedBox(height: 20),
+
+                // Toggle cambiar correo
+                GestureDetector(
+                  onTap: () =>
+                      setModalState(() => showEmailFields = !showEmailFields),
+                  child: Row(
+                    children: [
+                      Icon(
+                        showEmailFields
+                            ? Icons.keyboard_arrow_up_rounded
+                            : Icons.keyboard_arrow_down_rounded,
+                        color: AppColors.primary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        l.newEmail,
+                        style: const TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                if (showEmailFields) ...[
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: AppColors.primary.withOpacity(0.3),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.info_outline_rounded,
+                          color: AppColors.primary,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            l.emailChangeInfo,
+                            style: const TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    l.email,
+                    style: TextStyle(
+                      color: AppColors.textSecondary(context),
+                      fontSize: 13,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.inputBorder(context).withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      currentEmail,
+                      style: TextStyle(
+                        color: AppColors.textSecondary(context),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    l.newEmail,
+                    style: TextStyle(
+                      color: AppColors.textSecondary(context),
+                      fontSize: 13,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  _buildSheetTextField(
+                    context: context,
+                    controller: newEmailController,
+                    hint: l.enterNewEmail,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    l.currentPassword,
+                    style: TextStyle(
+                      color: AppColors.textSecondary(context),
+                      fontSize: 13,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  _buildSheetTextField(
+                    context: context,
+                    controller: passwordController,
+                    hint: l.enterCurrentPassword,
+                    obscureText: obscurePassword,
+                    suffix: IconButton(
+                      icon: Icon(
+                        obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: AppColors.textSecondary(context),
+                        size: 18,
+                      ),
+                      onPressed: () => setModalState(
+                        () => obscurePassword = !obscurePassword,
+                      ),
+                    ),
+                  ),
+                ],
+
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
+                    ),
+                    onPressed: () async {
+                      await UserService.updateUserName(
+                        firstNameController.text.trim(),
+                        lastNameController.text.trim(),
+                      );
+
+                      if (showEmailFields &&
+                          newEmailController.text.trim().isNotEmpty &&
+                          passwordController.text.trim().isNotEmpty) {
+                        try {
+                          final user = FirebaseAuth.instance.currentUser!;
+                          final credential = EmailAuthProvider.credential(
+                            email: currentEmail,
+                            password: passwordController.text.trim(),
+                          );
+                          await user.reauthenticateWithCredential(credential);
+                          await user.verifyBeforeUpdateEmail(
+                            newEmailController.text.trim(),
+                          );
+                          await UserService.updateUserEmail(
+                            newEmailController.text.trim(),
+                          );
+
+                          if (!mounted) return;
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(l.emailChanged),
+                              backgroundColor: AppColors.passwordStrong,
+                            ),
+                          );
+                        } catch (e) {
+                          if (!mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(e.toString()),
+                              backgroundColor: AppColors.passwordWeak,
+                            ),
+                          );
+                        }
+                      } else {
+                        if (!mounted) return;
+                        Navigator.pop(context);
+                        _loadUser();
+                      }
+                    },
+                    child: Text(
+                      l.saveChanges,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSheetTextField({
+    required BuildContext context,
+    required TextEditingController controller,
+    required String hint,
+    bool obscureText = false,
+    TextInputType? keyboardType,
+    Widget? suffix,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
+      style: TextStyle(color: AppColors.textPrimary(context)),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: TextStyle(color: AppColors.textSecondary(context)),
+        suffixIcon: suffix,
+        filled: true,
+        fillColor: AppColors.inputBorder(context).withOpacity(0.3),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+        ),
+      ),
+    );
+  }
+
+  void _showFullPhoto(BuildContext context, ImageProvider imageProvider) {
+    showDialog(
+      context: context,
+      builder: (_) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.all(20),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // Foto grande
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image(
+                image: imageProvider,
+                fit: BoxFit.contain,
+                width: double.infinity,
               ),
             ),
-            const SizedBox(height: 8),
+            // Botón cerrar
+            Positioned(
+              top: 8,
+              right: 8,
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 32,
+                  height: 32,
+                  decoration: const BoxDecoration(
+                    color: Colors.black54,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.close_rounded,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  void _showHelpSheet(BuildContext context) {
+    final l = S.of(context);
+    int _expandedFaq = -1;
+
+    final faqs = [
+      {'q': l.faqQ1, 'a': l.faqA1},
+      {'q': l.faqQ2, 'a': l.faqA2},
+      {'q': l.faqQ3, 'a': l.faqA3},
+      {'q': l.faqQ4, 'a': l.faqA4},
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.surface(context),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (_) => StatefulBuilder(
+        builder: (context, setSheetState) => DraggableScrollableSheet(
+          initialChildSize: 0.75,
+          maxChildSize: 0.95,
+          minChildSize: 0.5,
+          expand: false,
+          builder: (_, scrollController) => Column(
+            children: [
+              // Handle
+              Padding(
+                padding: const EdgeInsets.only(top: 16, bottom: 8),
+                child: Center(
+                  child: Container(
+                    width: 36,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: AppColors.inputBorder(context),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+              ),
+              // Título
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        Icons.help_outline_rounded,
+                        color: AppColors.primary,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      l.helpSupportTitle,
+                      style: TextStyle(
+                        color: AppColors.textPrimary(context),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView(
+                  controller: scrollController,
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  children: [
+                    // ── FAQ ──────────────────────────────
+                    _buildHelpSection(
+                      context,
+                      l.faq,
+                      Icons.question_answer_outlined,
+                    ),
+                    const SizedBox(height: 8),
+                    ...List.generate(faqs.length, (i) {
+                      final isExpanded = _expandedFaq == i;
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        decoration: BoxDecoration(
+                          color: AppColors.background(context),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          children: [
+                            ListTile(
+                              title: Text(
+                                faqs[i]['q']!,
+                                style: TextStyle(
+                                  color: AppColors.textPrimary(context),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              trailing: Icon(
+                                isExpanded
+                                    ? Icons.keyboard_arrow_up_rounded
+                                    : Icons.keyboard_arrow_down_rounded,
+                                color: AppColors.primary,
+                              ),
+                              onTap: () => setSheetState(() {
+                                _expandedFaq = isExpanded ? -1 : i;
+                              }),
+                            ),
+                            if (isExpanded)
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  16,
+                                  0,
+                                  16,
+                                  14,
+                                ),
+                                child: Text(
+                                  faqs[i]['a']!,
+                                  style: TextStyle(
+                                    color: AppColors.textSecondary(context),
+                                    fontSize: 13,
+                                    height: 1.5,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      );
+                    }),
+
+                    const SizedBox(height: 16),
+
+                    // ── Términos ─────────────────────────
+                    _buildHelpSection(
+                      context,
+                      l.termsAndConditions,
+                      Icons.description_outlined,
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AppColors.background(context),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        l.termsContent,
+                        style: TextStyle(
+                          color: AppColors.textSecondary(context),
+                          fontSize: 13,
+                          height: 1.6,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // ── Política de privacidad ───────────
+                    _buildHelpSection(
+                      context,
+                      l.privacyPolicy,
+                      Icons.privacy_tip_outlined,
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AppColors.background(context),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        l.privacyContent,
+                        style: TextStyle(
+                          color: AppColors.textSecondary(context),
+                          fontSize: 13,
+                          height: 1.6,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 40),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHelpSection(BuildContext context, String title, IconData icon) {
+    return Row(
+      children: [
+        Icon(icon, color: AppColors.primary, size: 18),
+        const SizedBox(width: 8),
+        Text(
+          title,
+          style: TextStyle(
+            color: AppColors.textPrimary(context),
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 }

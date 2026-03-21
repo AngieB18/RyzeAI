@@ -1,6 +1,7 @@
 // lib/home/screens/privacy_screen.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/constants/app_colors.dart';
 import '../../generated/l10n.dart';
 
@@ -181,60 +182,145 @@ class PrivacyScreen extends StatelessWidget {
   }
 
   void _confirmDeleteAccount(BuildContext context, S l) {
+    final passwordController = TextEditingController();
+    bool obscurePassword = true;
+
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        backgroundColor: AppColors.surface(context),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(
-          l.deleteAccount,
-          style: TextStyle(
-            color: AppColors.passwordWeak,
-            fontWeight: FontWeight.bold,
+      builder: (_) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          backgroundColor: AppColors.surface(context),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
-        ),
-        content: Text(
-          l.deleteAccountConfirm,
-          style: TextStyle(color: AppColors.textSecondary(context)),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              l.cancel,
-              style: TextStyle(color: AppColors.textSecondary(context)),
+          title: Text(
+            l.deleteAccount,
+            style: const TextStyle(
+              color: AppColors.passwordWeak,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.passwordWeak,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l.deleteAccountConfirm,
+                style: TextStyle(color: AppColors.textSecondary(context)),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: passwordController,
+                obscureText: obscurePassword,
+                style: TextStyle(color: AppColors.textPrimary(context)),
+                decoration: InputDecoration(
+                  hintText: l.enterCurrentPassword,
+                  hintStyle: TextStyle(color: AppColors.textSecondary(context)),
+                  filled: true,
+                  fillColor: AppColors.inputBorder(context).withOpacity(0.3),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(
+                      color: AppColors.passwordWeak,
+                      width: 1.5,
+                    ),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      obscurePassword ? Icons.visibility_off : Icons.visibility,
+                      color: AppColors.textSecondary(context),
+                      size: 18,
+                    ),
+                    onPressed: () => setDialogState(
+                      () => obscurePassword = !obscurePassword,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                l.cancel,
+                style: TextStyle(color: AppColors.textSecondary(context)),
               ),
             ),
-            onPressed: () async {
-              try {
-                await FirebaseAuth.instance.currentUser?.delete();
-                if (!context.mounted) return;
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  '/',
-                  (route) => false,
-                );
-              } catch (e) {
-                if (!context.mounted) return;
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(e.toString()),
-                    backgroundColor: AppColors.passwordWeak,
-                  ),
-                );
-              }
-            },
-            child: Text(l.delete, style: const TextStyle(color: Colors.white)),
-          ),
-        ],
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.passwordWeak,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: () async {
+                final password = passwordController.text.trim();
+                if (password.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(l.enterCurrentPassword),
+                      backgroundColor: AppColors.passwordWeak,
+                    ),
+                  );
+                  return;
+                }
+
+                try {
+                  final user = FirebaseAuth.instance.currentUser!;
+                  final email = user.email!;
+
+                  // Reautenticar
+                  final credential = EmailAuthProvider.credential(
+                    email: email,
+                    password: password,
+                  );
+                  await user.reauthenticateWithCredential(credential);
+
+                  // Eliminar datos de Firestore
+                  await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(user.uid)
+                      .delete();
+
+                  // Eliminar cuenta
+                  await user.delete();
+
+                  if (!context.mounted) return;
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/',
+                    (route) => false,
+                  );
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(l.accountDeleted),
+                      backgroundColor: AppColors.passwordStrong,
+                    ),
+                  );
+                } catch (e) {
+                  if (!context.mounted) return;
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(e.toString()),
+                      backgroundColor: AppColors.passwordWeak,
+                    ),
+                  );
+                }
+              },
+              child: Text(
+                l.delete,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
