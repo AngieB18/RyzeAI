@@ -45,6 +45,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "changePasswordDesc": MessageLookupByLibrary.simpleMessage(
       "Te enviaremos un correo para restablecer tu contraseña",
     ),
+    "chooseSpace": MessageLookupByLibrary.simpleMessage("Elige un espacio"),
+    "chooseSpaceDesc": MessageLookupByLibrary.simpleMessage(
+      "¿Dónde quieres aplicar este estilo?",
+    ),
     "colorful": MessageLookupByLibrary.simpleMessage("Colorido"),
     "confirmPassword": MessageLookupByLibrary.simpleMessage(
       "Confirmar contraseña",
@@ -124,12 +128,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "faqQ4": MessageLookupByLibrary.simpleMessage("¿Cómo elimino mi cuenta?"),
     "favorites": MessageLookupByLibrary.simpleMessage("Favoritos"),
     "firstName": MessageLookupByLibrary.simpleMessage("Nombre"),
+    "generateIdeas": MessageLookupByLibrary.simpleMessage("Generar ideas"),
+    "generatingIdeas": MessageLookupByLibrary.simpleMessage(
+      "Generando ideas...",
+    ),
     "helloUser": MessageLookupByLibrary.simpleMessage("Hola"),
     "helpSupport": MessageLookupByLibrary.simpleMessage("Ayuda y soporte"),
     "helpSupportTitle": MessageLookupByLibrary.simpleMessage("Ayuda y soporte"),
     "home": MessageLookupByLibrary.simpleMessage("Inicio"),
     "homeUser": MessageLookupByLibrary.simpleMessage("Usuario hogar"),
     "hoursAgo": MessageLookupByLibrary.simpleMessage("hace 2h"),
+    "inspirationFor": MessageLookupByLibrary.simpleMessage("Inspiración para"),
     "invalidEmail": MessageLookupByLibrary.simpleMessage(
       "Por favor ingresa un correo válido",
     ),
@@ -157,6 +166,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "newBadge": MessageLookupByLibrary.simpleMessage("Nuevo"),
     "newEmail": MessageLookupByLibrary.simpleMessage("Nuevo correo"),
     "newItems": MessageLookupByLibrary.simpleMessage("5 nuevos"),
+    "noIdeasYet": MessageLookupByLibrary.simpleMessage(
+      "Selecciona un estilo y espacio para generar ideas",
+    ),
     "noStylesSelected": MessageLookupByLibrary.simpleMessage(
       "Aún no has seleccionado estilos",
     ),
@@ -200,6 +212,27 @@ class MessageLookup extends MessageLookupByLibrary {
     "sendResetEmail": MessageLookupByLibrary.simpleMessage(
       "Enviar correo de restablecimiento",
     ),
+    "spaceBar": MessageLookupByLibrary.simpleMessage("Zona de bar"),
+    "spaceBathroom": MessageLookupByLibrary.simpleMessage("Baño"),
+    "spaceCafeteria": MessageLookupByLibrary.simpleMessage("Cafetería"),
+    "spaceCustom": MessageLookupByLibrary.simpleMessage("Otro espacio"),
+    "spaceCustomHint": MessageLookupByLibrary.simpleMessage(
+      "Describe tu espacio...",
+    ),
+    "spaceDiningRoom": MessageLookupByLibrary.simpleMessage("Comedor"),
+    "spaceHome": MessageLookupByLibrary.simpleMessage("Casa"),
+    "spaceKitchen": MessageLookupByLibrary.simpleMessage("Cocina"),
+    "spaceLiving": MessageLookupByLibrary.simpleMessage("Sala"),
+    "spaceMeeting": MessageLookupByLibrary.simpleMessage("Sala de reuniones"),
+    "spaceOffice": MessageLookupByLibrary.simpleMessage("Oficina"),
+    "spaceReception": MessageLookupByLibrary.simpleMessage("Recepción"),
+    "spaceRestaurant": MessageLookupByLibrary.simpleMessage(
+      "Restaurante / Café",
+    ),
+    "spaceRoom": MessageLookupByLibrary.simpleMessage("Dormitorio"),
+    "spaceShop": MessageLookupByLibrary.simpleMessage("Piso de ventas"),
+    "spaceStore": MessageLookupByLibrary.simpleMessage("Tienda / Local"),
+    "spaceStorefront": MessageLookupByLibrary.simpleMessage("Vitrina"),
     "step1of1": MessageLookupByLibrary.simpleMessage("Paso 1 de 1"),
     "styleColorful": MessageLookupByLibrary.simpleMessage("Colorido"),
     "styleMinimal": MessageLookupByLibrary.simpleMessage("Mínimal"),

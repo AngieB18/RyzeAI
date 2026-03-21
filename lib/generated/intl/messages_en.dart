@@ -43,6 +43,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "changePasswordDesc": MessageLookupByLibrary.simpleMessage(
       "We will send you an email to reset your password",
     ),
+    "chooseSpace": MessageLookupByLibrary.simpleMessage("Choose a Space"),
+    "chooseSpaceDesc": MessageLookupByLibrary.simpleMessage(
+      "Where do you want to apply this style?",
+    ),
     "colorful": MessageLookupByLibrary.simpleMessage("Colorful"),
     "confirmPassword": MessageLookupByLibrary.simpleMessage("Confirm Password"),
     "confirmPasswordHint": MessageLookupByLibrary.simpleMessage(
@@ -124,12 +128,17 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
     "firstName": MessageLookupByLibrary.simpleMessage("First Name"),
+    "generateIdeas": MessageLookupByLibrary.simpleMessage("Generate Ideas"),
+    "generatingIdeas": MessageLookupByLibrary.simpleMessage(
+      "Generating ideas...",
+    ),
     "helloUser": MessageLookupByLibrary.simpleMessage("Hello"),
     "helpSupport": MessageLookupByLibrary.simpleMessage("Help & Support"),
     "helpSupportTitle": MessageLookupByLibrary.simpleMessage("Help & Support"),
     "home": MessageLookupByLibrary.simpleMessage("Home"),
     "homeUser": MessageLookupByLibrary.simpleMessage("Home User"),
     "hoursAgo": MessageLookupByLibrary.simpleMessage("2h ago"),
+    "inspirationFor": MessageLookupByLibrary.simpleMessage("Inspiration for"),
     "invalidEmail": MessageLookupByLibrary.simpleMessage(
       "Please enter a valid email",
     ),
@@ -155,6 +164,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "newBadge": MessageLookupByLibrary.simpleMessage("New"),
     "newEmail": MessageLookupByLibrary.simpleMessage("New Email"),
     "newItems": MessageLookupByLibrary.simpleMessage("5 new"),
+    "noIdeasYet": MessageLookupByLibrary.simpleMessage(
+      "Select a style and space to generate ideas",
+    ),
     "noStylesSelected": MessageLookupByLibrary.simpleMessage(
       "You haven\'t selected any styles yet",
     ),
@@ -192,6 +204,27 @@ class MessageLookup extends MessageLookupByLibrary {
       "Select all that apply",
     ),
     "sendResetEmail": MessageLookupByLibrary.simpleMessage("Send Reset Email"),
+    "spaceBar": MessageLookupByLibrary.simpleMessage("Bar Area"),
+    "spaceBathroom": MessageLookupByLibrary.simpleMessage("Bathroom"),
+    "spaceCafeteria": MessageLookupByLibrary.simpleMessage("Cafeteria"),
+    "spaceCustom": MessageLookupByLibrary.simpleMessage("Other Space"),
+    "spaceCustomHint": MessageLookupByLibrary.simpleMessage(
+      "Describe your space...",
+    ),
+    "spaceDiningRoom": MessageLookupByLibrary.simpleMessage("Dining Room"),
+    "spaceHome": MessageLookupByLibrary.simpleMessage("Home"),
+    "spaceKitchen": MessageLookupByLibrary.simpleMessage("Kitchen"),
+    "spaceLiving": MessageLookupByLibrary.simpleMessage("Living Room"),
+    "spaceMeeting": MessageLookupByLibrary.simpleMessage("Meeting Room"),
+    "spaceOffice": MessageLookupByLibrary.simpleMessage("Office"),
+    "spaceReception": MessageLookupByLibrary.simpleMessage("Reception"),
+    "spaceRestaurant": MessageLookupByLibrary.simpleMessage(
+      "Restaurant / Café",
+    ),
+    "spaceRoom": MessageLookupByLibrary.simpleMessage("Bedroom"),
+    "spaceShop": MessageLookupByLibrary.simpleMessage("Shop Floor"),
+    "spaceStore": MessageLookupByLibrary.simpleMessage("Store / Shop"),
+    "spaceStorefront": MessageLookupByLibrary.simpleMessage("Storefront"),
     "step1of1": MessageLookupByLibrary.simpleMessage("Step 1 of 1"),
     "styleColorful": MessageLookupByLibrary.simpleMessage("Colorful"),
     "styleMinimal": MessageLookupByLibrary.simpleMessage("Minimal"),
