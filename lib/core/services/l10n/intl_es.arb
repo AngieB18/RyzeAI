@@ -98,5 +98,19 @@
 "faqQ4": "¿Cómo elimino mi cuenta?",
 "faqA4": "Ve a Perfil → Privacidad → Eliminar cuenta. Esta acción es permanente.",
 "termsContent": "Al usar RyzeAI aceptas usar la app de forma responsable. No nos hacemos responsables de decisiones de decoración basadas en sugerencias de IA. Todo el contenido es solo para inspiración.",
-"privacyContent": "Recopilamos tu nombre, correo y datos de uso para mejorar tu experiencia. Nunca vendemos tus datos a terceros. Puedes eliminar tu cuenta y todos los datos asociados en cualquier momento."
+"privacyContent": "Recopilamos tu nombre, correo y datos de uso para mejorar tu experiencia. Nunca vendemos tus datos a terceros. Puedes eliminar tu cuenta y todos los datos asociados en cualquier momento.",
+"welcomeTitle": "¡Bienvenido a RyzeAI! 🎉",
+"welcomeSubtitle": "Cuéntanos tu estilo para personalizar tu experiencia",
+"selectStyles": "¿Qué estilos te gustan?",
+"selectStylesHint": "Selecciona todos los que apliquen",
+"styleModern": "Moderno",
+"styleNatural": "Natural",
+"styleMinimal": "Mínimal",
+"styleColorful": "Colorido",
+"styleRustic": "Rústico",
+"styleScandinavian": "Escandinavo",
+"continueButton": "Continuar",
+"myStyles": "Mis estilos",
+"noStylesSelected": "Aún no has seleccionado estilos",
+"acceptAndClose": "Aceptar y cerrar"
 } 

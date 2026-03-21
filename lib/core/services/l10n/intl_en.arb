@@ -98,5 +98,19 @@
 "faqQ4": "How do I delete my account?",
 "faqA4": "Go to Profile → Privacy → Delete Account. This action is permanent.",
 "termsContent": "By using RyzeAI you agree to use the app responsibly. We are not responsible for decoration decisions made based on AI suggestions. All content is for inspiration purposes only.",
-"privacyContent": "We collect your name, email and usage data to improve your experience. We never sell your data to third parties. You can delete your account and all associated data at any time."
+"privacyContent": "We collect your name, email and usage data to improve your experience. We never sell your data to third parties. You can delete your account and all associated data at any time.",
+"welcomeTitle": "Welcome to RyzeAI! 🎉",
+"welcomeSubtitle": "Tell us your style so we can personalize your experience",
+"selectStyles": "What styles do you like?",
+"selectStylesHint": "Select all that apply",
+"styleModern": "Modern",
+"styleNatural": "Natural",
+"styleMinimal": "Minimal",
+"styleColorful": "Colorful",
+"styleRustic": "Rustic",
+"styleScandinavian": "Scandinavian",
+"continueButton": "Continue",
+"myStyles": "My Styles",
+"noStylesSelected": "You haven't selected any styles yet",
+"acceptAndClose": "Accept & Close"
 }

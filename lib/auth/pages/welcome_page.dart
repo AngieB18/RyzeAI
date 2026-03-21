@@ -34,11 +34,13 @@ class WelcomePage extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 60),
+                const SizedBox(height: 50),
 
                 // Logo
                 Container(
-                  padding: const EdgeInsets.all(18),
+                  width: 150,
+                  height: 150,
+                  padding: const EdgeInsets.all(2),
                   decoration: BoxDecoration(
                     color: const Color.fromARGB(255, 235, 213, 178),
                     shape: BoxShape.circle,
@@ -52,10 +54,13 @@ class WelcomePage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: Image.asset("assets/LogoRyzeAI.png", height: 80),
+                  child: Image.asset(
+                    "assets/LogoRyzeAI.png",
+                    fit: BoxFit.contain,
+                  ),
                 ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 30),
 
                 Text(
                   "RyzeAI",

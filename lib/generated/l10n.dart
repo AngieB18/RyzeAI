@@ -858,6 +858,111 @@ class S {
       args: [],
     );
   }
+
+  /// `Welcome to RyzeAI! 🎉`
+  String get welcomeTitle {
+    return Intl.message(
+      'Welcome to RyzeAI! 🎉',
+      name: 'welcomeTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tell us your style so we can personalize your experience`
+  String get welcomeSubtitle {
+    return Intl.message(
+      'Tell us your style so we can personalize your experience',
+      name: 'welcomeSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What styles do you like?`
+  String get selectStyles {
+    return Intl.message(
+      'What styles do you like?',
+      name: 'selectStyles',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select all that apply`
+  String get selectStylesHint {
+    return Intl.message(
+      'Select all that apply',
+      name: 'selectStylesHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Modern`
+  String get styleModern {
+    return Intl.message('Modern', name: 'styleModern', desc: '', args: []);
+  }
+
+  /// `Natural`
+  String get styleNatural {
+    return Intl.message('Natural', name: 'styleNatural', desc: '', args: []);
+  }
+
+  /// `Minimal`
+  String get styleMinimal {
+    return Intl.message('Minimal', name: 'styleMinimal', desc: '', args: []);
+  }
+
+  /// `Colorful`
+  String get styleColorful {
+    return Intl.message('Colorful', name: 'styleColorful', desc: '', args: []);
+  }
+
+  /// `Rustic`
+  String get styleRustic {
+    return Intl.message('Rustic', name: 'styleRustic', desc: '', args: []);
+  }
+
+  /// `Scandinavian`
+  String get styleScandinavian {
+    return Intl.message(
+      'Scandinavian',
+      name: 'styleScandinavian',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue`
+  String get continueButton {
+    return Intl.message('Continue', name: 'continueButton', desc: '', args: []);
+  }
+
+  /// `My Styles`
+  String get myStyles {
+    return Intl.message('My Styles', name: 'myStyles', desc: '', args: []);
+  }
+
+  /// `You haven't selected any styles yet`
+  String get noStylesSelected {
+    return Intl.message(
+      'You haven\'t selected any styles yet',
+      name: 'noStylesSelected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accept & Close`
+  String get acceptAndClose {
+    return Intl.message(
+      'Accept & Close',
+      name: 'acceptAndClose',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

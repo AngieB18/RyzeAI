@@ -64,9 +64,12 @@ class _RegisterPageState extends State<RegisterPage> {
         await FirebaseFirestore.instance.collection('users').doc(uid).set({
           'first_name': _firstNameController.text.trim(),
           'last_name': _lastNameController.text.trim(),
+          'firstName': _firstNameController.text.trim(),
+          'lastName': _lastNameController.text.trim(),
           'email': _emailController.text.trim(),
           'language': Localizations.localeOf(context).languageCode,
           'theme': 'dark',
+          'stylesSelected': false,
           'created_at': Timestamp.now(),
         });
 
@@ -87,6 +90,127 @@ class _RegisterPageState extends State<RegisterPage> {
         );
       }
     }
+  }
+
+  void _showTermsSheet(BuildContext context, {required bool isTerms}) {
+    final l = S.of(context);
+
+    showDialog(
+      context: context,
+      builder: (_) => Dialog(
+        backgroundColor: AppColors.surface(context),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Header con color
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.1),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(
+                      isTerms
+                          ? Icons.description_outlined
+                          : Icons.privacy_tip_outlined,
+                      color: AppColors.primary,
+                      size: 22,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      isTerms ? l.termsOfService : l.privacyPolicy,
+                      style: TextStyle(
+                        color: AppColors.textPrimary(context),
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        color: AppColors.inputBorder(context),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.close_rounded,
+                        color: AppColors.textSecondary(context),
+                        size: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Contenido
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  isTerms ? l.termsContent : l.privacyContent,
+                  style: TextStyle(
+                    color: AppColors.textSecondary(context),
+                    fontSize: 14,
+                    height: 1.7,
+                  ),
+                ),
+              ),
+            ),
+
+            // Botón
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 0,
+                  ),
+                  onPressed: () {
+                    setState(() => _acceptTerms = true);
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    l.acceptAndClose,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -139,7 +263,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: LinearProgressIndicator(
                             value: 1.0,
                             backgroundColor: AppColors.inputBorder(context),
-                            valueColor: AlwaysStoppedAnimation<Color>(
+                            valueColor: const AlwaysStoppedAnimation<Color>(
                               AppColors.primary,
                             ),
                             minHeight: 6,
@@ -270,7 +394,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           const SizedBox(height: 24),
 
-                          // Términos
+                          // ── Términos ─────────────────────
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -292,29 +416,51 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                               const SizedBox(width: 10),
                               Flexible(
-                                child: RichText(
-                                  text: TextSpan(
-                                    style: TextStyle(
-                                      color: AppColors.textSecondary(context),
-                                      fontSize: 12,
+                                child: Wrap(
+                                  children: [
+                                    Text(
+                                      S.of(context).termsIntro,
+                                      style: TextStyle(
+                                        color: AppColors.textSecondary(context),
+                                        fontSize: 12,
+                                      ),
                                     ),
-                                    children: [
-                                      TextSpan(text: S.of(context).termsIntro),
-                                      TextSpan(
-                                        text: S.of(context).termsOfService,
+                                    GestureDetector(
+                                      onTap: () => _showTermsSheet(
+                                        context,
+                                        isTerms: true,
+                                      ),
+                                      child: Text(
+                                        S.of(context).termsOfService,
                                         style: const TextStyle(
                                           color: AppColors.primary,
+                                          fontSize: 12,
+                                          decoration: TextDecoration.underline,
                                         ),
                                       ),
-                                      TextSpan(text: S.of(context).andThe),
-                                      TextSpan(
-                                        text: S.of(context).privacyPolicy,
+                                    ),
+                                    Text(
+                                      S.of(context).andThe,
+                                      style: TextStyle(
+                                        color: AppColors.textSecondary(context),
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () => _showTermsSheet(
+                                        context,
+                                        isTerms: false,
+                                      ),
+                                      child: Text(
+                                        S.of(context).privacyPolicy,
                                         style: const TextStyle(
                                           color: AppColors.primary,
+                                          fontSize: 12,
+                                          decoration: TextDecoration.underline,
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],

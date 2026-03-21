@@ -5,6 +5,7 @@ import '../../core/constants/app_colors.dart';
 import '../../core/services/user_service.dart';
 import '../../generated/l10n.dart';
 import '../../main.dart';
+import 'style_selection_sheet.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -41,7 +42,29 @@ class _HomeScreenState extends State<HomeScreen> {
         _userData = data;
         _loading = false;
       });
+
+      final stylesSelected = data?['stylesSelected'] ?? false;
+      if (!stylesSelected) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _showStyleSheet();
+        });
+      }
     }
+  }
+
+  void _showStyleSheet() {
+    final currentStyles = List<String>.from(_userData?['styles'] ?? []);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: false,
+      enableDrag: false,
+      backgroundColor: Colors.transparent,
+      builder: (_) => StyleSelectionSheet(
+        initialSelected: currentStyles,
+        onSaved: () => _loadUser(),
+      ),
+    );
   }
 
   @override
@@ -71,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 10),
                   _buildRecentProjects(l),
                   const SizedBox(height: 20),
-                  _buildSectionTitle(l.exploreStyles),
+                  _buildStylesSectionTitle(l),
                   const SizedBox(height: 10),
                   _buildStylesGrid(l),
                   const SizedBox(height: 90),
@@ -329,6 +352,41 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildStylesSectionTitle(S l) {
+    final userStyles = List<String>.from(_userData?['styles'] ?? []);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          userStyles.isEmpty ? l.exploreStyles : l.myStyles,
+          style: TextStyle(
+            color: AppColors.textPrimary(context),
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (_) => StyleSelectionSheet(
+                initialSelected: userStyles,
+                onSaved: _loadUser,
+              ),
+            );
+          },
+          child: const Icon(
+            Icons.edit_outlined,
+            color: AppColors.primary,
+            size: 18,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildRecentProjects(S l) {
     final projects = [
       {
@@ -410,42 +468,133 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildStylesGrid(S l) {
-    final styles = [
-      {'icon': '🏠', 'name': l.modern},
-      {'icon': '🌿', 'name': l.natural},
-      {'icon': '🕯️', 'name': l.minimal},
-      {'icon': '🎨', 'name': l.colorful},
-    ];
+    final allStyles = {
+      'modern': {
+        'name': l.styleModern,
+        'url':
+            'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80',
+      },
+      'natural': {
+        'name': l.styleNatural,
+        'url':
+            'https://images.unsplash.com/photo-1501183638710-841dd1904471?w=400&q=80',
+      },
+      'minimal': {
+        'name': l.styleMinimal,
+        'url':
+            'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400&q=80',
+      },
+      'colorful': {
+        'name': l.styleColorful,
+        'url':
+            'https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&q=80',
+      },
+      'rustic': {
+        'name': l.styleRustic,
+        'url':
+            'https://images.unsplash.com/photo-1449247709967-d4461a6a6103?w=400&q=80',
+      },
+      'scandinavian': {
+        'name': l.styleScandinavian,
+        'url':
+            'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&q=80',
+      },
+    };
 
-    return GridView.count(
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisSpacing: 10,
-      mainAxisSpacing: 10,
-      childAspectRatio: 2.2,
-      children: styles.map((s) {
-        return Container(
-          decoration: BoxDecoration(
-            color: AppColors.surface(context),
-            borderRadius: BorderRadius.circular(12),
+    final userStyles = List<String>.from(_userData?['styles'] ?? []);
+    final stylesToShow = userStyles.isEmpty
+        ? allStyles.entries.toList()
+        : allStyles.entries.where((e) => userStyles.contains(e.key)).toList();
+
+    if (stylesToShow.isEmpty) {
+      return Center(
+        child: Text(
+          l.noStylesSelected,
+          style: TextStyle(
+            color: AppColors.textSecondary(context),
+            fontSize: 13,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(s['icon'] as String, style: const TextStyle(fontSize: 20)),
-              const SizedBox(width: 8),
-              Text(
-                s['name'] as String,
-                style: TextStyle(
-                  color: AppColors.textPrimary(context),
-                  fontSize: 13,
-                ),
+        ),
+      );
+    }
+
+    return SizedBox(
+      height: 140,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: stylesToShow.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (_, i) {
+          final entry = stylesToShow[i];
+          final name = entry.value['name']!;
+          final url = entry.value['url']!;
+
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: SizedBox(
+              width: 200,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.network(
+                    url,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (_, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        color: AppColors.surface(context),
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.primary,
+                            strokeWidth: 2,
+                          ),
+                        ),
+                      );
+                    },
+                    errorBuilder: (_, __, ___) => Container(
+                      color: AppColors.surface(context),
+                      child: const Icon(
+                        Icons.image_outlined,
+                        color: AppColors.primary,
+                        size: 32,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [
+                            Colors.black.withOpacity(0.7),
+                            Colors.transparent,
+                          ],
+                        ),
+                      ),
+                      child: Text(
+                        name,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        );
-      }).toList(),
+            ),
+          );
+        },
+      ),
     );
   }
 }
