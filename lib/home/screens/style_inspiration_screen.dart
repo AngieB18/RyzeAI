@@ -1,0 +1,547 @@
+// lib/home/screens/style_inspiration_screen.dart
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import '../../core/constants/app_colors.dart';
+import '../../generated/l10n.dart';
+
+class StyleInspirationScreen extends StatefulWidget {
+  final String styleKey;
+  final String styleName;
+
+  const StyleInspirationScreen({
+    super.key,
+    required this.styleKey,
+    required this.styleName,
+  });
+
+  @override
+  State<StyleInspirationScreen> createState() => _StyleInspirationScreenState();
+}
+
+class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
+  String? _selectedCategory;
+  String? _selectedSpace;
+  String? _customSpace;
+  bool _generating = false;
+  String? _aiDescription;
+  List<String> _images = [];
+  final _customController = TextEditingController();
+
+  @override
+  void dispose() {
+    _customController.dispose();
+    super.dispose();
+  }
+
+  Map<String, Map<String, dynamic>> _getCategories(S l) => {
+    'home': {
+      'label': l.spaceHome,
+      'icon': '🏠',
+      'spaces': [
+        {'key': 'bedroom', 'label': l.spaceRoom, 'icon': '🛏️'},
+        {'key': 'living', 'label': l.spaceLiving, 'icon': '🛋️'},
+        {'key': 'bathroom', 'label': l.spaceBathroom, 'icon': '🚿'},
+        {'key': 'kitchen', 'label': l.spaceKitchen, 'icon': '🍳'},
+      ],
+    },
+    'office': {
+      'label': l.spaceOffice,
+      'icon': '🏢',
+      'spaces': [
+        {'key': 'reception', 'label': l.spaceReception, 'icon': '🪑'},
+        {'key': 'meeting', 'label': l.spaceMeeting, 'icon': '📋'},
+        {'key': 'cafeteria', 'label': l.spaceCafeteria, 'icon': '☕'},
+      ],
+    },
+    'restaurant': {
+      'label': l.spaceRestaurant,
+      'icon': '🍽️',
+      'spaces': [
+        {'key': 'dining', 'label': l.spaceDiningRoom, 'icon': '🍽️'},
+        {'key': 'bar', 'label': l.spaceBar, 'icon': '🍸'},
+        {'key': 'cafeteria', 'label': l.spaceCafeteria, 'icon': '☕'},
+      ],
+    },
+    'store': {
+      'label': l.spaceStore,
+      'icon': '🏪',
+      'spaces': [
+        {'key': 'shop', 'label': l.spaceShop, 'icon': '🛍️'},
+        {'key': 'storefront', 'label': l.spaceStorefront, 'icon': '🪟'},
+        {'key': 'reception', 'label': l.spaceReception, 'icon': '🪑'},
+      ],
+    },
+    'custom': {'label': l.spaceCustom, 'icon': '✏️', 'spaces': []},
+  };
+
+  Future<void> _generateIdeas() async {
+    final spaceName = _selectedCategory == 'custom'
+        ? _customController.text.trim()
+        : _selectedSpace;
+
+    if (spaceName == null || spaceName.isEmpty) return;
+
+    setState(() {
+      _generating = true;
+      _aiDescription = null;
+      _images = [];
+    });
+
+    try {
+      // 1. Claude genera descripción
+      final response = await http.post(
+        Uri.parse('https://api.anthropic.com/v1/messages'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'model': 'claude-sonnet-4-20250514',
+          'max_tokens': 1000,
+          'messages': [
+            {
+              'role': 'user',
+              'content':
+                  'Give me a short and inspiring decoration description (2-3 sentences) for a $spaceName with ${widget.styleName} style. Then give me 4 specific Unsplash search keywords (comma separated) to find images of this space. Format: DESCRIPTION: [text] | KEYWORDS: [kw1,kw2,kw3,kw4]',
+            },
+          ],
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final text = data['content'][0]['text'] as String;
+
+        String description = '';
+        List<String> keywords = [];
+
+        if (text.contains('DESCRIPTION:') && text.contains('KEYWORDS:')) {
+          final parts = text.split('|');
+          description = parts[0].replaceAll('DESCRIPTION:', '').trim();
+          final kwPart = parts[1].replaceAll('KEYWORDS:', '').trim();
+          keywords = kwPart.split(',').map((k) => k.trim()).toList();
+        } else {
+          description = text;
+          keywords = [
+            '${widget.styleKey} $spaceName interior',
+            '$spaceName decoration',
+            '${widget.styleKey} room design',
+            'interior design $spaceName',
+          ];
+        }
+
+        // 2. Busca imágenes en Unsplash
+        final images = <String>[];
+        for (final kw in keywords.take(4)) {
+          final query = Uri.encodeComponent(kw);
+          images.add('https://source.unsplash.com/400x300/?$query');
+        }
+
+        setState(() {
+          _aiDescription = description;
+          _images = images;
+          _generating = false;
+        });
+      } else {
+        setState(() => _generating = false);
+      }
+    } catch (e) {
+      setState(() => _generating = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = S.of(context);
+    final categories = _getCategories(l);
+
+    return Scaffold(
+      backgroundColor: AppColors.background(context),
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(context, l),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Categorías
+                    Text(
+                      l.chooseSpace,
+                      style: TextStyle(
+                        color: AppColors.textPrimary(context),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      l.chooseSpaceDesc,
+                      style: TextStyle(
+                        color: AppColors.textSecondary(context),
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+
+                    // Grid de categorías
+                    GridView.count(
+                      crossAxisCount: 3,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 1.2,
+                      children: categories.entries.map((entry) {
+                        final isSelected = _selectedCategory == entry.key;
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedCategory = entry.key;
+                              _selectedSpace = null;
+                              _aiDescription = null;
+                              _images = [];
+                            });
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? AppColors.primary.withOpacity(0.15)
+                                  : AppColors.surface(context),
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(
+                                color: isSelected
+                                    ? AppColors.primary
+                                    : AppColors.inputBorder(context),
+                                width: isSelected ? 2 : 1,
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  entry.value['icon'] as String,
+                                  style: const TextStyle(fontSize: 24),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  entry.value['label'] as String,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: isSelected
+                                        ? AppColors.primary
+                                        : AppColors.textPrimary(context),
+                                    fontSize: 11,
+                                    fontWeight: isSelected
+                                        ? FontWeight.w600
+                                        : FontWeight.normal,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+
+                    // Subespacios
+                    if (_selectedCategory != null &&
+                        _selectedCategory != 'custom') ...[
+                      const SizedBox(height: 20),
+                      Text(
+                        'Select a room',
+                        style: TextStyle(
+                          color: AppColors.textPrimary(context),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children:
+                            (categories[_selectedCategory]!['spaces'] as List)
+                                .map((space) {
+                                  final isSelected =
+                                      _selectedSpace == space['label'];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedSpace = space['label'];
+                                        _aiDescription = null;
+                                        _images = [];
+                                      });
+                                    },
+                                    child: AnimatedContainer(
+                                      duration: const Duration(
+                                        milliseconds: 200,
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 14,
+                                        vertical: 8,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: isSelected
+                                            ? AppColors.primary.withOpacity(
+                                                0.15,
+                                              )
+                                            : AppColors.surface(context),
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(
+                                          color: isSelected
+                                              ? AppColors.primary
+                                              : AppColors.inputBorder(context),
+                                          width: isSelected ? 2 : 1,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            space['icon'] as String,
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 6),
+                                          Text(
+                                            space['label'] as String,
+                                            style: TextStyle(
+                                              color: isSelected
+                                                  ? AppColors.primary
+                                                  : AppColors.textPrimary(
+                                                      context,
+                                                    ),
+                                              fontSize: 12,
+                                              fontWeight: isSelected
+                                                  ? FontWeight.w600
+                                                  : FontWeight.normal,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                })
+                                .toList(),
+                      ),
+                    ],
+
+                    // Campo personalizado
+                    if (_selectedCategory == 'custom') ...[
+                      const SizedBox(height: 20),
+                      Text(
+                        l.spaceCustom,
+                        style: TextStyle(
+                          color: AppColors.textPrimary(context),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextField(
+                        controller: _customController,
+                        style: TextStyle(color: AppColors.textPrimary(context)),
+                        onChanged: (v) => setState(() => _customSpace = v),
+                        decoration: InputDecoration(
+                          hintText: l.spaceCustomHint,
+                          hintStyle: TextStyle(
+                            color: AppColors.textSecondary(context),
+                          ),
+                          filled: true,
+                          fillColor: AppColors.surface(context),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              color: AppColors.primary,
+                              width: 1.5,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+
+                    // Botón generar
+                    if (_selectedCategory != null &&
+                        (_selectedSpace != null ||
+                            (_selectedCategory == 'custom' &&
+                                _customController.text.trim().isNotEmpty))) ...[
+                      const SizedBox(height: 24),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            elevation: 0,
+                          ),
+                          onPressed: _generating ? null : _generateIdeas,
+                          icon: _generating
+                              ? const SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.auto_awesome,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                          label: Text(
+                            _generating ? l.generatingIdeas : l.generateIdeas,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+
+                    // Resultados
+                    if (_aiDescription != null) ...[
+                      const SizedBox(height: 24),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: AppColors.primary.withOpacity(0.3),
+                          ),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(
+                              Icons.auto_awesome,
+                              color: AppColors.primary,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                _aiDescription!,
+                                style: TextStyle(
+                                  color: AppColors.textPrimary(context),
+                                  fontSize: 13,
+                                  height: 1.5,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        '${l.inspirationFor} ${_selectedSpace ?? _customController.text}',
+                        style: TextStyle(
+                          color: AppColors.textPrimary(context),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      GridView.count(
+                        crossAxisCount: 2,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        childAspectRatio: 1.0,
+                        children: _images.map((url) {
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(14),
+                            child: Image.network(
+                              url,
+                              fit: BoxFit.cover,
+                              loadingBuilder: (_, child, loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                }
+                                return Container(
+                                  color: AppColors.surface(context),
+                                  child: const Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.primary,
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                );
+                              },
+                              errorBuilder: (_, __, ___) => Container(
+                                color: AppColors.surface(context),
+                                child: const Icon(
+                                  Icons.image_outlined,
+                                  color: AppColors.primary,
+                                  size: 32,
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+
+                    const SizedBox(height: 40),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context, S l) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+      decoration: BoxDecoration(
+        color: AppColors.header(context),
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(24),
+          bottomRight: Radius.circular(24),
+        ),
+      ),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Icon(
+              Icons.arrow_back_ios_rounded,
+              color: AppColors.textPrimary(context),
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            widget.styleName,
+            style: TextStyle(
+              color: AppColors.textPrimary(context),
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(width: 8),
+          const Icon(Icons.auto_awesome, color: AppColors.primary, size: 18),
+        ],
+      ),
+    );
+  }
+}

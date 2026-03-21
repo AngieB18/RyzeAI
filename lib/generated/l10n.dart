@@ -963,6 +963,186 @@ class S {
       args: [],
     );
   }
+
+  /// `Choose a Space`
+  String get chooseSpace {
+    return Intl.message(
+      'Choose a Space',
+      name: 'chooseSpace',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Where do you want to apply this style?`
+  String get chooseSpaceDesc {
+    return Intl.message(
+      'Where do you want to apply this style?',
+      name: 'chooseSpaceDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Home`
+  String get spaceHome {
+    return Intl.message('Home', name: 'spaceHome', desc: '', args: []);
+  }
+
+  /// `Office`
+  String get spaceOffice {
+    return Intl.message('Office', name: 'spaceOffice', desc: '', args: []);
+  }
+
+  /// `Restaurant / Café`
+  String get spaceRestaurant {
+    return Intl.message(
+      'Restaurant / Café',
+      name: 'spaceRestaurant',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Store / Shop`
+  String get spaceStore {
+    return Intl.message('Store / Shop', name: 'spaceStore', desc: '', args: []);
+  }
+
+  /// `Other Space`
+  String get spaceCustom {
+    return Intl.message('Other Space', name: 'spaceCustom', desc: '', args: []);
+  }
+
+  /// `Describe your space...`
+  String get spaceCustomHint {
+    return Intl.message(
+      'Describe your space...',
+      name: 'spaceCustomHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bedroom`
+  String get spaceRoom {
+    return Intl.message('Bedroom', name: 'spaceRoom', desc: '', args: []);
+  }
+
+  /// `Living Room`
+  String get spaceLiving {
+    return Intl.message('Living Room', name: 'spaceLiving', desc: '', args: []);
+  }
+
+  /// `Bathroom`
+  String get spaceBathroom {
+    return Intl.message('Bathroom', name: 'spaceBathroom', desc: '', args: []);
+  }
+
+  /// `Kitchen`
+  String get spaceKitchen {
+    return Intl.message('Kitchen', name: 'spaceKitchen', desc: '', args: []);
+  }
+
+  /// `Reception`
+  String get spaceReception {
+    return Intl.message(
+      'Reception',
+      name: 'spaceReception',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Meeting Room`
+  String get spaceMeeting {
+    return Intl.message(
+      'Meeting Room',
+      name: 'spaceMeeting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cafeteria`
+  String get spaceCafeteria {
+    return Intl.message(
+      'Cafeteria',
+      name: 'spaceCafeteria',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shop Floor`
+  String get spaceShop {
+    return Intl.message('Shop Floor', name: 'spaceShop', desc: '', args: []);
+  }
+
+  /// `Storefront`
+  String get spaceStorefront {
+    return Intl.message(
+      'Storefront',
+      name: 'spaceStorefront',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bar Area`
+  String get spaceBar {
+    return Intl.message('Bar Area', name: 'spaceBar', desc: '', args: []);
+  }
+
+  /// `Dining Room`
+  String get spaceDiningRoom {
+    return Intl.message(
+      'Dining Room',
+      name: 'spaceDiningRoom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Generate Ideas`
+  String get generateIdeas {
+    return Intl.message(
+      'Generate Ideas',
+      name: 'generateIdeas',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Generating ideas...`
+  String get generatingIdeas {
+    return Intl.message(
+      'Generating ideas...',
+      name: 'generatingIdeas',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Inspiration for`
+  String get inspirationFor {
+    return Intl.message(
+      'Inspiration for',
+      name: 'inspirationFor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select a style and space to generate ideas`
+  String get noIdeasYet {
+    return Intl.message(
+      'Select a style and space to generate ideas',
+      name: 'noIdeasYet',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
