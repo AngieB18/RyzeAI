@@ -618,6 +618,246 @@ class S {
       args: [],
     );
   }
+
+  /// `New Email`
+  String get newEmail {
+    return Intl.message('New Email', name: 'newEmail', desc: '', args: []);
+  }
+
+  /// `Enter your new email`
+  String get enterNewEmail {
+    return Intl.message(
+      'Enter your new email',
+      name: 'enterNewEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current Password`
+  String get currentPassword {
+    return Intl.message(
+      'Current Password',
+      name: 'currentPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your current password`
+  String get enterCurrentPassword {
+    return Intl.message(
+      'Enter your current password',
+      name: 'enterCurrentPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A verification email will be sent to the new address`
+  String get emailChangeInfo {
+    return Intl.message(
+      'A verification email will be sent to the new address',
+      name: 'emailChangeInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification email sent, please check your inbox`
+  String get emailChanged {
+    return Intl.message(
+      'Verification email sent, please check your inbox',
+      name: 'emailChanged',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notifications`
+  String get notificationsTitle {
+    return Intl.message(
+      'Notifications',
+      name: 'notificationsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Project Notifications`
+  String get projectNotifications {
+    return Intl.message(
+      'Project Notifications',
+      name: 'projectNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Updates about your decoration projects`
+  String get projectNotificationsDesc {
+    return Intl.message(
+      'Updates about your decoration projects',
+      name: 'projectNotificationsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `App Updates`
+  String get appUpdates {
+    return Intl.message('App Updates', name: 'appUpdates', desc: '', args: []);
+  }
+
+  /// `New features and improvements`
+  String get appUpdatesDesc {
+    return Intl.message(
+      'New features and improvements',
+      name: 'appUpdatesDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Preferences saved`
+  String get notificationsSaved {
+    return Intl.message(
+      'Preferences saved',
+      name: 'notificationsSaved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Help & Support`
+  String get helpSupportTitle {
+    return Intl.message(
+      'Help & Support',
+      name: 'helpSupportTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Frequently Asked Questions`
+  String get faq {
+    return Intl.message(
+      'Frequently Asked Questions',
+      name: 'faq',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Terms & Conditions`
+  String get termsAndConditions {
+    return Intl.message(
+      'Terms & Conditions',
+      name: 'termsAndConditions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How do I create a project?`
+  String get faqQ1 {
+    return Intl.message(
+      'How do I create a project?',
+      name: 'faqQ1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Go to the Projects tab and tap the New button to start a new decoration project.`
+  String get faqA1 {
+    return Intl.message(
+      'Go to the Projects tab and tap the New button to start a new decoration project.',
+      name: 'faqA1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How does the AI camera work?`
+  String get faqQ2 {
+    return Intl.message(
+      'How does the AI camera work?',
+      name: 'faqQ2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Point your camera at any space and our AI will detect objects and suggest furniture in 3D.`
+  String get faqA2 {
+    return Intl.message(
+      'Point your camera at any space and our AI will detect objects and suggest furniture in 3D.',
+      name: 'faqA2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Can I change my email?`
+  String get faqQ3 {
+    return Intl.message(
+      'Can I change my email?',
+      name: 'faqQ3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yes, go to Profile → Edit Profile and expand the email section to change it.`
+  String get faqA3 {
+    return Intl.message(
+      'Yes, go to Profile → Edit Profile and expand the email section to change it.',
+      name: 'faqA3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How do I delete my account?`
+  String get faqQ4 {
+    return Intl.message(
+      'How do I delete my account?',
+      name: 'faqQ4',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Go to Profile → Privacy → Delete Account. This action is permanent.`
+  String get faqA4 {
+    return Intl.message(
+      'Go to Profile → Privacy → Delete Account. This action is permanent.',
+      name: 'faqA4',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `By using RyzeAI you agree to use the app responsibly. We are not responsible for decoration decisions made based on AI suggestions. All content is for inspiration purposes only.`
+  String get termsContent {
+    return Intl.message(
+      'By using RyzeAI you agree to use the app responsibly. We are not responsible for decoration decisions made based on AI suggestions. All content is for inspiration purposes only.',
+      name: 'termsContent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We collect your name, email and usage data to improve your experience. We never sell your data to third parties. You can delete your account and all associated data at any time.`
+  String get privacyContent {
+    return Intl.message(
+      'We collect your name, email and usage data to improve your experience. We never sell your data to third parties. You can delete your account and all associated data at any time.',
+      name: 'privacyContent',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

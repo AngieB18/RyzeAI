@@ -1,4 +1,6 @@
 // lib/core/services/user_service.dart
+import 'dart:typed_data';
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -15,12 +17,11 @@ class UserService {
 
       if (doc.exists && doc.data() != null) {
         final data = doc.data()!;
-        // Si firstName está vacío usa displayName de Auth
         if ((data['firstName'] ?? '').isEmpty) {
-          final displayName = user.displayName ?? '';
-          final parts = displayName.split(' ');
-          data['firstName'] = parts.isNotEmpty ? parts[0] : '';
-          data['lastName'] = parts.length > 1 ? parts.sublist(1).join(' ') : '';
+          data['firstName'] = data['first_name'] ?? '';
+        }
+        if ((data['lastName'] ?? '').isEmpty) {
+          data['lastName'] = data['last_name'] ?? '';
         }
         return data;
       }
@@ -41,12 +42,47 @@ class UserService {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
-
       await FirebaseFirestore.instance.collection('users').doc(user.uid).update(
         {'firstName': firstName, 'lastName': lastName},
       );
+    } catch (e) {}
+  }
+
+  static Future<void> updateUserEmail(String newEmail) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).update(
+        {'email': newEmail},
+      );
+    } catch (e) {}
+  }
+
+  // ← Guarda foto como base64 en Firestore (sin Storage)
+  static Future<String?> uploadProfilePhoto(Uint8List imageBytes) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return null;
+
+      // Comprimir si es muy grande (max ~700KB para Firestore)
+      Uint8List compressed = imageBytes;
+      if (imageBytes.length > 700000) {
+        // Si pesa más de 700KB avisamos
+        return null;
+      }
+
+      // Convertir a base64
+      final base64String = base64Encode(compressed);
+      final dataUrl = 'data:image/jpeg;base64,$base64String';
+
+      // Guardar en Firestore
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).update(
+        {'photoUrl': dataUrl},
+      );
+
+      return dataUrl;
     } catch (e) {
-      // handle error
+      return null;
     }
   }
 }
