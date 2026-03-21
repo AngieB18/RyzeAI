@@ -48,5 +48,10 @@
   "minimal": "Mínimal",
   "colorful": "Colorido",
   "thisMonth": "+1 este mes",
-  "newItems": "5 nuevos"
+  "newItems": "5 nuevos",
+  "loginError": "Correo o contraseña incorrectos",
+  "emptyFieldsError": "Por favor ingresa correo y contraseña",
+  "loading": "Cargando...",
+  "loginSuccess": "¡Bienvenido de nuevo!",
+  "invalidEmail": "Por favor ingresa un correo válido"
 }
