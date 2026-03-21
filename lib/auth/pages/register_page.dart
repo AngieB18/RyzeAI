@@ -56,7 +56,9 @@ class _RegisterPageState extends State<RegisterPage> {
               email: _emailController.text.trim(),
               password: _passwordController.text.trim(),
             );
-
+        await userCredential.user!.updateDisplayName(
+          '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}',
+        );
         String uid = userCredential.user!.uid;
 
         await FirebaseFirestore.instance.collection('users').doc(uid).set({
@@ -377,7 +379,10 @@ class _RegisterPageState extends State<RegisterPage> {
       children: [
         Text(
           label,
-          style: TextStyle(color: AppColors.textSecondary(context), fontSize: 13),
+          style: TextStyle(
+            color: AppColors.textSecondary(context),
+            fontSize: 13,
+          ),
         ),
         const SizedBox(height: 6),
         TextFormField(

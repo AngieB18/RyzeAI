@@ -408,6 +408,216 @@ class S {
   String get newItems {
     return Intl.message('5 new', name: 'newItems', desc: '', args: []);
   }
+
+  /// `Incorrect email or password`
+  String get loginError {
+    return Intl.message(
+      'Incorrect email or password',
+      name: 'loginError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter both email and password`
+  String get emptyFieldsError {
+    return Intl.message(
+      'Please enter both email and password',
+      name: 'emptyFieldsError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading...`
+  String get loading {
+    return Intl.message('Loading...', name: 'loading', desc: '', args: []);
+  }
+
+  /// `Welcome back!`
+  String get loginSuccess {
+    return Intl.message(
+      'Welcome back!',
+      name: 'loginSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a valid email`
+  String get invalidEmail {
+    return Intl.message(
+      'Please enter a valid email',
+      name: 'invalidEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Profile`
+  String get editProfile {
+    return Intl.message(
+      'Edit Profile',
+      name: 'editProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notifications`
+  String get notifications {
+    return Intl.message(
+      'Notifications',
+      name: 'notifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Privacy`
+  String get privacy {
+    return Intl.message('Privacy', name: 'privacy', desc: '', args: []);
+  }
+
+  /// `Help & Support`
+  String get helpSupport {
+    return Intl.message(
+      'Help & Support',
+      name: 'helpSupport',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Log Out`
+  String get logOut {
+    return Intl.message('Log Out', name: 'logOut', desc: '', args: []);
+  }
+
+  /// `Home User`
+  String get homeUser {
+    return Intl.message('Home User', name: 'homeUser', desc: '', args: []);
+  }
+
+  /// `Rooms`
+  String get rooms {
+    return Intl.message('Rooms', name: 'rooms', desc: '', args: []);
+  }
+
+  /// `Dark Mode`
+  String get darkMode {
+    return Intl.message('Dark Mode', name: 'darkMode', desc: '', args: []);
+  }
+
+  /// `Light Mode`
+  String get lightMode {
+    return Intl.message('Light Mode', name: 'lightMode', desc: '', args: []);
+  }
+
+  /// `Save Changes`
+  String get saveChanges {
+    return Intl.message(
+      'Save Changes',
+      name: 'saveChanges',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Privacy`
+  String get privacyTitle {
+    return Intl.message('Privacy', name: 'privacyTitle', desc: '', args: []);
+  }
+
+  /// `Change Password`
+  String get changePassword {
+    return Intl.message(
+      'Change Password',
+      name: 'changePassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We will send you an email to reset your password`
+  String get changePasswordDesc {
+    return Intl.message(
+      'We will send you an email to reset your password',
+      name: 'changePasswordDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send Reset Email`
+  String get sendResetEmail {
+    return Intl.message(
+      'Send Reset Email',
+      name: 'sendResetEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete Account`
+  String get deleteAccount {
+    return Intl.message(
+      'Delete Account',
+      name: 'deleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This action is permanent and cannot be undone`
+  String get deleteAccountDesc {
+    return Intl.message(
+      'This action is permanent and cannot be undone',
+      name: 'deleteAccountDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to delete your account?`
+  String get deleteAccountConfirm {
+    return Intl.message(
+      'Are you sure you want to delete your account?',
+      name: 'deleteAccountConfirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete`
+  String get delete {
+    return Intl.message('Delete', name: 'delete', desc: '', args: []);
+  }
+
+  /// `Cancel`
+  String get cancel {
+    return Intl.message('Cancel', name: 'cancel', desc: '', args: []);
+  }
+
+  /// `Email sent! Check your inbox`
+  String get emailSent {
+    return Intl.message(
+      'Email sent! Check your inbox',
+      name: 'emailSent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Account deleted successfully`
+  String get accountDeleted {
+    return Intl.message(
+      'Account deleted successfully',
+      name: 'accountDeleted',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

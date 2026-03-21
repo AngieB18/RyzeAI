@@ -28,8 +28,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "accountCreated": MessageLookupByLibrary.simpleMessage(
       "Cuenta creada correctamente",
     ),
+    "accountDeleted": MessageLookupByLibrary.simpleMessage(
+      "Cuenta eliminada correctamente",
+    ),
     "andThe": MessageLookupByLibrary.simpleMessage(" y la "),
     "bedroom": MessageLookupByLibrary.simpleMessage("Dormitorio"),
+    "cancel": MessageLookupByLibrary.simpleMessage("Cancelar"),
+    "changePassword": MessageLookupByLibrary.simpleMessage(
+      "Cambiar contraseña",
+    ),
+    "changePasswordDesc": MessageLookupByLibrary.simpleMessage(
+      "Te enviaremos un correo para restablecer tu contraseña",
+    ),
     "colorful": MessageLookupByLibrary.simpleMessage("Colorido"),
     "confirmPassword": MessageLookupByLibrary.simpleMessage(
       "Confirmar contraseña",
@@ -39,6 +49,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "createAccount": MessageLookupByLibrary.simpleMessage("Crear Cuenta"),
     "createAccountButton": MessageLookupByLibrary.simpleMessage("Crear Cuenta"),
+    "darkMode": MessageLookupByLibrary.simpleMessage("Modo oscuro"),
     "decorate": MessageLookupByLibrary.simpleMessage("Decora con IA"),
     "decorateDesc": MessageLookupByLibrary.simpleMessage(
       "Toma una foto y visualiza muebles en 3D",
@@ -46,7 +57,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "decorateDesc2": MessageLookupByLibrary.simpleMessage(
       "Toma una foto de tu espacio y visualiza muebles en 3D al instante",
     ),
+    "delete": MessageLookupByLibrary.simpleMessage("Eliminar"),
+    "deleteAccount": MessageLookupByLibrary.simpleMessage("Eliminar cuenta"),
+    "deleteAccountConfirm": MessageLookupByLibrary.simpleMessage(
+      "¿Estás seguro de que quieres eliminar tu cuenta?",
+    ),
+    "deleteAccountDesc": MessageLookupByLibrary.simpleMessage(
+      "Esta acción es permanente y no se puede deshacer",
+    ),
+    "editProfile": MessageLookupByLibrary.simpleMessage("Editar perfil"),
     "email": MessageLookupByLibrary.simpleMessage("Correo electrónico"),
+    "emailSent": MessageLookupByLibrary.simpleMessage(
+      "¡Correo enviado! Revisa tu bandeja de entrada",
+    ),
+    "emptyFieldsError": MessageLookupByLibrary.simpleMessage(
+      "Por favor ingresa correo y contraseña",
+    ),
     "enterEmail": MessageLookupByLibrary.simpleMessage("Digita tu email aquí"),
     "enterFirstName": MessageLookupByLibrary.simpleMessage("Ingresa tu nombre"),
     "enterLastName": MessageLookupByLibrary.simpleMessage(
@@ -59,32 +85,54 @@ class MessageLookup extends MessageLookupByLibrary {
     "favorites": MessageLookupByLibrary.simpleMessage("Favoritos"),
     "firstName": MessageLookupByLibrary.simpleMessage("Nombre"),
     "helloUser": MessageLookupByLibrary.simpleMessage("Hola"),
+    "helpSupport": MessageLookupByLibrary.simpleMessage("Ayuda y soporte"),
     "home": MessageLookupByLibrary.simpleMessage("Inicio"),
+    "homeUser": MessageLookupByLibrary.simpleMessage("Usuario hogar"),
     "hoursAgo": MessageLookupByLibrary.simpleMessage("hace 2h"),
+    "invalidEmail": MessageLookupByLibrary.simpleMessage(
+      "Por favor ingresa un correo válido",
+    ),
     "joinRyzeAI": MessageLookupByLibrary.simpleMessage(
       "Únete a RyzeAI y empieza a decorar",
     ),
     "language": MessageLookupByLibrary.simpleMessage("Idioma"),
     "lastName": MessageLookupByLibrary.simpleMessage("Apellido"),
+    "lightMode": MessageLookupByLibrary.simpleMessage("Modo claro"),
     "livingRoom": MessageLookupByLibrary.simpleMessage("Sala principal"),
+    "loading": MessageLookupByLibrary.simpleMessage("Cargando..."),
+    "logOut": MessageLookupByLibrary.simpleMessage("Cerrar sesión"),
     "login": MessageLookupByLibrary.simpleMessage("Iniciar sesión"),
+    "loginError": MessageLookupByLibrary.simpleMessage(
+      "Correo o contraseña incorrectos",
+    ),
+    "loginSuccess": MessageLookupByLibrary.simpleMessage(
+      "¡Bienvenido de nuevo!",
+    ),
     "minimal": MessageLookupByLibrary.simpleMessage("Mínimal"),
     "modern": MessageLookupByLibrary.simpleMessage("Moderno"),
     "modifiedAgo": MessageLookupByLibrary.simpleMessage("Modificado"),
     "natural": MessageLookupByLibrary.simpleMessage("Natural"),
     "newBadge": MessageLookupByLibrary.simpleMessage("Nuevo"),
     "newItems": MessageLookupByLibrary.simpleMessage("5 nuevos"),
+    "notifications": MessageLookupByLibrary.simpleMessage("Notificaciones"),
     "openCamera": MessageLookupByLibrary.simpleMessage("Abrir cámara IA"),
     "password": MessageLookupByLibrary.simpleMessage("Contraseña"),
+    "privacy": MessageLookupByLibrary.simpleMessage("Privacidad"),
     "privacyPolicy": MessageLookupByLibrary.simpleMessage(
       "Política de privacidad",
     ),
+    "privacyTitle": MessageLookupByLibrary.simpleMessage("Privacidad"),
     "profile": MessageLookupByLibrary.simpleMessage("Perfil"),
     "projects": MessageLookupByLibrary.simpleMessage("Proyectos"),
     "recentProjects": MessageLookupByLibrary.simpleMessage(
       "Proyectos recientes",
     ),
     "registerError": MessageLookupByLibrary.simpleMessage("Error al registrar"),
+    "rooms": MessageLookupByLibrary.simpleMessage("Habitaciones"),
+    "saveChanges": MessageLookupByLibrary.simpleMessage("Guardar cambios"),
+    "sendResetEmail": MessageLookupByLibrary.simpleMessage(
+      "Enviar correo de restablecimiento",
+    ),
     "step1of1": MessageLookupByLibrary.simpleMessage("Paso 1 de 1"),
     "termsIntro": MessageLookupByLibrary.simpleMessage(
       "Al registrarte aceptas los ",
