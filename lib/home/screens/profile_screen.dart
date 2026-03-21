@@ -9,6 +9,7 @@ import '../../generated/l10n.dart';
 import '../../main.dart';
 import 'privacy_screen.dart';
 import 'notifications_screen.dart';
+import 'style_selection_sheet.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -67,7 +68,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final url = await UserService.uploadProfilePhoto(bytes);
 
       if (url != null) {
-        await _loadUser();
+        setState(() {
+          _userData = {...?_userData, 'photoUrl': url};
+          _loading = false;
+        });
       } else {
         setState(() => _loading = false);
         if (!mounted) return;
@@ -83,11 +87,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  void _showFullPhoto(BuildContext context, ImageProvider imageProvider) {
+    showDialog(
+      context: context,
+      builder: (_) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.all(20),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image(
+                image: imageProvider,
+                fit: BoxFit.contain,
+                width: double.infinity,
+              ),
+            ),
+            Positioned(
+              top: 8,
+              right: 8,
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 32,
+                  height: 32,
+                  decoration: const BoxDecoration(
+                    color: Colors.black54,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.close_rounded,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = S.of(context);
-    final firstName = _userData?['firstName'] ?? '';
-    final lastName = _userData?['lastName'] ?? '';
+    final firstName = _userData?['firstName'] ?? _userData?['first_name'] ?? '';
+    final lastName = _userData?['lastName'] ?? _userData?['last_name'] ?? '';
     final email =
         _userData?['email'] ?? FirebaseAuth.instance.currentUser?.email ?? '';
     final fullName = '$firstName $lastName'.trim();
@@ -103,6 +150,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 children: [
                   _buildInfoCard(l),
+                  const SizedBox(height: 12),
+                  _buildMyStyles(l),
                   const SizedBox(height: 16),
                   _buildMenuSection(context, l),
                   const SizedBox(height: 90),
@@ -141,7 +190,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         children: [
           const SizedBox(height: 8),
-          // En _buildHeader reemplaza el Stack completo
           Stack(
             children: [
               _loading
@@ -150,7 +198,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       backgroundColor: AppColors.inputBorder(context),
                     )
                   : GestureDetector(
-                      // ← agrega esto
                       onTap: imageProvider != null
                           ? () => _showFullPhoto(context, imageProvider!)
                           : null,
@@ -266,6 +313,115 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  Widget _buildMyStyles(S l) {
+    final styles = List<String>.from(_userData?['styles'] ?? []);
+
+    final styleData = {
+      'modern': {'icon': '🏠', 'label': l.styleModern},
+      'natural': {'icon': '🌿', 'label': l.styleNatural},
+      'minimal': {'icon': '🕯️', 'label': l.styleMinimal},
+      'colorful': {'icon': '🎨', 'label': l.styleColorful},
+      'rustic': {'icon': '🪵', 'label': l.styleRustic},
+      'scandinavian': {'icon': '❄️', 'label': l.styleScandinavian},
+    };
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surface(context),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                l.myStyles,
+                style: TextStyle(
+                  color: AppColors.textPrimary(context),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  final currentStyles = List<String>.from(
+                    _userData?['styles'] ?? [],
+                  );
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (_) => StyleSelectionSheet(
+                      initialSelected: currentStyles,
+                      onSaved: _loadUser,
+                    ),
+                  );
+                },
+                child: const Icon(
+                  Icons.edit_outlined,
+                  color: AppColors.primary,
+                  size: 18,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          styles.isEmpty
+              ? Text(
+                  l.noStylesSelected,
+                  style: TextStyle(
+                    color: AppColors.textSecondary(context),
+                    fontSize: 12,
+                  ),
+                )
+              : Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: styles.map((key) {
+                    final data = styleData[key];
+                    if (data == null) return const SizedBox();
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: AppColors.primary.withOpacity(0.4),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            data['icon']!,
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            data['label']!,
+                            style: const TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildStat(String value, String label) {
     return Column(
       children: [
@@ -327,9 +483,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       builder: (_) => const NotificationsScreen(),
                     ),
                   )
-                : label ==
-                      l
-                          .helpSupport // ← agrega esto
+                : label == l.helpSupport
                 ? () => _showHelpSheet(context)
                 : () {},
           );
@@ -455,8 +609,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _showEditProfileSheet(BuildContext context) {
     final l = S.of(context);
-    final firstName = _userData?['firstName'] ?? '';
-    final lastName = _userData?['lastName'] ?? '';
+    final firstName = _userData?['firstName'] ?? _userData?['first_name'] ?? '';
+    final lastName = _userData?['lastName'] ?? _userData?['last_name'] ?? '';
     final currentEmail =
         _userData?['email'] ?? FirebaseAuth.instance.currentUser?.email ?? '';
 
@@ -535,8 +689,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   hint: l.enterLastName,
                 ),
                 const SizedBox(height: 20),
-
-                // Toggle cambiar correo
                 GestureDetector(
                   onTap: () =>
                       setModalState(() => showEmailFields = !showEmailFields),
@@ -561,7 +713,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-
                 if (showEmailFields) ...[
                   const SizedBox(height: 12),
                   Container(
@@ -663,7 +814,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ],
-
                 const SizedBox(height: 24),
                 SizedBox(
                   width: double.infinity,
@@ -681,7 +831,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         firstNameController.text.trim(),
                         lastNameController.text.trim(),
                       );
-
                       if (showEmailFields &&
                           newEmailController.text.trim().isNotEmpty &&
                           passwordController.text.trim().isNotEmpty) {
@@ -698,7 +847,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           await UserService.updateUserEmail(
                             newEmailController.text.trim(),
                           );
-
                           if (!mounted) return;
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -772,54 +920,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void _showFullPhoto(BuildContext context, ImageProvider imageProvider) {
-    showDialog(
-      context: context,
-      builder: (_) => Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: const EdgeInsets.all(20),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // Foto grande
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Image(
-                image: imageProvider,
-                fit: BoxFit.contain,
-                width: double.infinity,
-              ),
-            ),
-            // Botón cerrar
-            Positioned(
-              top: 8,
-              right: 8,
-              child: GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  width: 32,
-                  height: 32,
-                  decoration: const BoxDecoration(
-                    color: Colors.black54,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.close_rounded,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   void _showHelpSheet(BuildContext context) {
     final l = S.of(context);
-    int _expandedFaq = -1;
+    int expandedFaq = -1;
 
     final faqs = [
       {'q': l.faqQ1, 'a': l.faqA1},
@@ -843,7 +946,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           expand: false,
           builder: (_, scrollController) => Column(
             children: [
-              // Handle
               Padding(
                 padding: const EdgeInsets.only(top: 16, bottom: 8),
                 child: Center(
@@ -857,7 +959,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
-              // Título
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
                 child: Row(
@@ -892,7 +993,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   controller: scrollController,
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   children: [
-                    // ── FAQ ──────────────────────────────
                     _buildHelpSection(
                       context,
                       l.faq,
@@ -900,7 +1000,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     const SizedBox(height: 8),
                     ...List.generate(faqs.length, (i) {
-                      final isExpanded = _expandedFaq == i;
+                      final isExpanded = expandedFaq == i;
                       return Container(
                         margin: const EdgeInsets.only(bottom: 8),
                         decoration: BoxDecoration(
@@ -925,7 +1025,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 color: AppColors.primary,
                               ),
                               onTap: () => setSheetState(() {
-                                _expandedFaq = isExpanded ? -1 : i;
+                                expandedFaq = isExpanded ? -1 : i;
                               }),
                             ),
                             if (isExpanded)
@@ -949,10 +1049,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       );
                     }),
-
                     const SizedBox(height: 16),
-
-                    // ── Términos ─────────────────────────
                     _buildHelpSection(
                       context,
                       l.termsAndConditions,
@@ -974,10 +1071,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 16),
-
-                    // ── Política de privacidad ───────────
                     _buildHelpSection(
                       context,
                       l.privacyPolicy,
@@ -999,7 +1093,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 40),
                   ],
                 ),

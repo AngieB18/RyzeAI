@@ -1,43 +1,73 @@
 // lib/core/validators/register_validators.dart
 class RegisterValidators {
   static String? validateFirstName(String? value) {
-    if (value == null || value.isEmpty) return 'El nombre es obligatorio';
-    if (value.length < 2) return 'El nombre debe tener al menos 2 caracteres';
-    if (!RegExp(r"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$").hasMatch(value))
+    if (value == null || value.trim().isEmpty) {
+      return 'El nombre es obligatorio';
+    }
+    if (value.trim().length < 2) {
+      return 'El nombre debe tener al menos 2 caracteres';
+    }
+    if (!RegExp(r"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$").hasMatch(value.trim())) {
       return 'El nombre solo puede contener letras';
+    }
+    if (value.contains(RegExp(r'\s{2,}'))) {
+      return 'El nombre no puede tener espacios consecutivos';
+    }
     return null;
   }
 
   static String? validateLastName(String? value) {
-    if (value == null || value.isEmpty) return 'El apellido es obligatorio';
-    if (!RegExp(r"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$").hasMatch(value))
+    if (value == null || value.trim().isEmpty) {
+      return 'El apellido es obligatorio';
+    }
+    if (value.trim().length < 2) {
+      return 'El apellido debe tener al menos 2 caracteres';
+    }
+    if (!RegExp(r"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$").hasMatch(value.trim())) {
       return 'El apellido solo puede contener letras';
+    }
+    if (value.contains(RegExp(r'\s{2,}'))) {
+      return 'El apellido no puede tener espacios consecutivos';
+    }
     return null;
   }
 
   static String? validateEmail(String? value) {
-    if (value == null || value.isEmpty)
+    if (value == null || value.trim().isEmpty) {
       return 'El correo electrónico es obligatorio';
-    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value))
+    }
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value.trim())) {
       return 'Ingresa un correo electrónico válido';
+    }
     return null;
   }
 
   static String? validatePassword(String? value) {
-    if (value == null || value.isEmpty) return 'La contraseña es obligatoria';
-    if (value.length < 8)
+    if (value == null || value.isEmpty) {
+      return 'La contraseña es obligatoria';
+    }
+    if (value.length < 8) {
       return 'La contraseña debe tener al menos 8 caracteres';
-    if (!value.contains(RegExp(r'[A-Z]')))
+    }
+    if (!value.contains(RegExp(r'[A-Z]'))) {
       return 'Incluye al menos una letra mayúscula';
-    if (!value.contains(RegExp(r'[0-9]'))) return 'Incluye al menos un número';
-    if (!value.contains(RegExp(r'[!@#\$%^&*]')))
+    }
+    if (!value.contains(RegExp(r'[0-9]'))) {
+      return 'Incluye al menos un número';
+    }
+    if (!value.contains(RegExp(r'[!@#\$%^&*]'))) {
       return 'Incluye al menos un carácter especial (!@#\$...)';
+    }
     return null;
   }
 
   static String? validateConfirmPassword(String? value, String password) {
-    if (value == null || value.isEmpty) return 'La contraseña es obligatoria';
-    if (value != password) return 'Las contraseñas no coinciden';
+    if (value == null || value.isEmpty) {
+      return 'La contraseña es obligatoria';
+    }
+    if (value != password) {
+      return 'Las contraseñas no coinciden';
+    }
     return null;
   }
 
@@ -46,8 +76,8 @@ class RegisterValidators {
     bool hasUpper = password.contains(RegExp(r'[A-Z]'));
     bool hasNumber = password.contains(RegExp(r'[0-9]'));
     bool hasSpecial = password.contains(RegExp(r'[!@#\$%^&*]'));
-    if (hasUpper && hasNumber && hasSpecial) return 2; // fuerte
-    if (hasNumber || hasUpper) return 1; // media
-    return 0; // débil
+    if (hasUpper && hasNumber && hasSpecial) return 2;
+    if (hasNumber || hasUpper) return 1;
+    return 0;
   }
 }

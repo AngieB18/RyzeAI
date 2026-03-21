@@ -22,6 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "acceptAndClose": MessageLookupByLibrary.simpleMessage("Accept & Close"),
     "acceptTermsError": MessageLookupByLibrary.simpleMessage(
       "You must accept the terms to continue",
     ),
@@ -47,6 +48,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirmPasswordHint": MessageLookupByLibrary.simpleMessage(
       "Confirm your password",
     ),
+    "continueButton": MessageLookupByLibrary.simpleMessage("Continue"),
     "createAccount": MessageLookupByLibrary.simpleMessage("Create Account"),
     "createAccountButton": MessageLookupByLibrary.simpleMessage(
       "Create Account",
@@ -148,10 +150,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "minimal": MessageLookupByLibrary.simpleMessage("Minimal"),
     "modern": MessageLookupByLibrary.simpleMessage("Modern"),
     "modifiedAgo": MessageLookupByLibrary.simpleMessage("Modified"),
+    "myStyles": MessageLookupByLibrary.simpleMessage("My Styles"),
     "natural": MessageLookupByLibrary.simpleMessage("Natural"),
     "newBadge": MessageLookupByLibrary.simpleMessage("New"),
     "newEmail": MessageLookupByLibrary.simpleMessage("New Email"),
     "newItems": MessageLookupByLibrary.simpleMessage("5 new"),
+    "noStylesSelected": MessageLookupByLibrary.simpleMessage(
+      "You haven\'t selected any styles yet",
+    ),
     "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
     "notificationsSaved": MessageLookupByLibrary.simpleMessage(
       "Preferences saved",
@@ -179,8 +185,20 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "rooms": MessageLookupByLibrary.simpleMessage("Rooms"),
     "saveChanges": MessageLookupByLibrary.simpleMessage("Save Changes"),
+    "selectStyles": MessageLookupByLibrary.simpleMessage(
+      "What styles do you like?",
+    ),
+    "selectStylesHint": MessageLookupByLibrary.simpleMessage(
+      "Select all that apply",
+    ),
     "sendResetEmail": MessageLookupByLibrary.simpleMessage("Send Reset Email"),
     "step1of1": MessageLookupByLibrary.simpleMessage("Step 1 of 1"),
+    "styleColorful": MessageLookupByLibrary.simpleMessage("Colorful"),
+    "styleMinimal": MessageLookupByLibrary.simpleMessage("Minimal"),
+    "styleModern": MessageLookupByLibrary.simpleMessage("Modern"),
+    "styleNatural": MessageLookupByLibrary.simpleMessage("Natural"),
+    "styleRustic": MessageLookupByLibrary.simpleMessage("Rustic"),
+    "styleScandinavian": MessageLookupByLibrary.simpleMessage("Scandinavian"),
     "termsAndConditions": MessageLookupByLibrary.simpleMessage(
       "Terms & Conditions",
     ),
@@ -196,6 +214,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Welcome! Get inspired and design your ideal space in 3D",
     ),
     "welcomeBack": MessageLookupByLibrary.simpleMessage("Welcome back"),
+    "welcomeSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Tell us your style so we can personalize your experience",
+    ),
+    "welcomeTitle": MessageLookupByLibrary.simpleMessage(
+      "Welcome to RyzeAI! 🎉",
+    ),
     "yesterday": MessageLookupByLibrary.simpleMessage("yesterday"),
   };
 }
