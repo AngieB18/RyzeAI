@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ryzeai/core/constants/app_colors.dart';
-import 'package:ryzeai/auth/pages/recover_password_page.dart';
-import 'package:ryzeai/home/home_page.dart';
-import '../../generated/l10n.dart'; // Importación tal cual la usa tu compañera
+
+import '../../generated/l10n.dart'; 
+import 'package:ryzeai/core/widgets/global_loader.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,11 +22,13 @@ class _LoginPageState extends State<LoginPage> {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    // Usamos 'acceptTermsError' porque 'emptyFieldsError' no existe en tu archivo S
     if (email.isEmpty || password.isEmpty) {
       _mostrarError(s.acceptTermsError); 
       return;
     }
+
+    // Mostrar el loader global
+    GlobalLoader.show(context);
 
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -34,14 +36,23 @@ class _LoginPageState extends State<LoginPage> {
         password: password,
       );
 
+      // Ocultar el loader antes de navegar
       if (mounted) {
+        GlobalLoader.hide(context);
         Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
       }
     } on FirebaseAuthException catch (e) {
-      // Usamos 'registerError' porque 'loginError' no existe en tu archivo S
-      _mostrarError(e.message ?? s.registerError);
+      // Ocultar el loader antes de mostrar el error
+      if (mounted) {
+        GlobalLoader.hide(context);
+        _mostrarError(e.message ?? s.registerError);
+      }
     } catch (e) {
-      _mostrarError(s.registerError);
+      // Ocultar el loader antes de mostrar el error
+      if (mounted) {
+        GlobalLoader.hide(context);
+        _mostrarError(s.registerError);
+      }
     }
   }
 
