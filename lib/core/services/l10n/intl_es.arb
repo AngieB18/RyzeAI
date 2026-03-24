@@ -142,6 +142,6 @@
   "sendEmail": "Enviar correo",
   "emailNotFound": "No existe un usuario con este correo",
   "invalidEmail": "Correo inválido",
-  "emailSentFull": "Te enviamos un correo 📩. Revisa tu bandeja de entrada o la carpeta de spam. Allí encontrarás las instrucciones para restablecer tu contraseña.",
+  "emailSentFull": "Correo enviado exitosamente! Revisa tu bandeja de entrada o spam para las instrucciones de restablecimiento.",
   "passwordChangedSuccess": "Tu contraseña ha sido cambiada exitosamente 🎉. Ahora puedes iniciar sesión con tu nueva contraseña."
 } 

@@ -89,7 +89,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Email sent! Check your inbox",
     ),
     "emailSentFull": MessageLookupByLibrary.simpleMessage(
-      "We’ve sent you an email 📩. Check your inbox or spam folder. There you’ll find instructions to reset your password.",
+      "Email sent successfully! Check your inbox or spam for the password reset instructions.",
     ),
     "emptyFieldsError": MessageLookupByLibrary.simpleMessage(
       "Please enter both email and password",

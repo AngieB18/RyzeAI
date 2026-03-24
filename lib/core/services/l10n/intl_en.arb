@@ -142,6 +142,6 @@
   "sendEmail": "Send Email",
   "emailNotFound": "No user found with this email",
   "invalidEmail": "Invalid email",
-  "emailSentFull": "We’ve sent you an email 📩. Check your inbox or spam folder. There you’ll find instructions to reset your password.",
+  "emailSentFull": "Email sent successfully! Check your inbox or spam for the password reset instructions.",
   "passwordChangedSuccess": "Your password has been successfully changed 🎉. You can now log in with your new password."
 }

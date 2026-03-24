@@ -1189,10 +1189,10 @@ class S {
     );
   }
 
-  /// `We’ve sent you an email 📩. Check your inbox or spam folder. There you’ll find instructions to reset your password.`
+  /// `Email sent successfully! Check your inbox or spam for the password reset instructions.`
   String get emailSentFull {
     return Intl.message(
-      'We’ve sent you an email 📩. Check your inbox or spam folder. There you’ll find instructions to reset your password.',
+      'Email sent successfully! Check your inbox or spam for the password reset instructions.',
       name: 'emailSentFull',
       desc: '',
       args: [],
