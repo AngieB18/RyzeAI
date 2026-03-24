@@ -93,7 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "¡Correo enviado! Revisa tu bandeja de entrada",
     ),
     "emailSentFull": MessageLookupByLibrary.simpleMessage(
-      "Te enviamos un correo 📩. Revisa tu bandeja de entrada o la carpeta de spam. Allí encontrarás las instrucciones para restablecer tu contraseña.",
+      "Correo enviado exitosamente! Revisa tu bandeja de entrada o spam para las instrucciones de restablecimiento.",
     ),
     "emptyFieldsError": MessageLookupByLibrary.simpleMessage(
       "Por favor ingresa correo y contraseña",
