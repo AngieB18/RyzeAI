@@ -135,5 +135,13 @@
 "generateIdeas": "Generate Ideas",
 "generatingIdeas": "Generating ideas...",
 "inspirationFor": "Inspiration for",
-"noIdeasYet": "Select a style and space to generate ideas"
+"noIdeasYet": "Select a style and space to generate ideas",
+"forgotPassword": "Forgot your password?",
+"recoverPassword": "Recover Password",
+ "enterYourEmail": "Enter your email to receive instructions",
+  "sendEmail": "Send Email",
+  "emailNotFound": "No user found with this email",
+  "invalidEmail": "Invalid email",
+  "emailSentFull": "We’ve sent you an email 📩. Check your inbox or spam folder. There you’ll find instructions to reset your password.",
+  "passwordChangedSuccess": "Your password has been successfully changed 🎉. You can now log in with your new password."
 }

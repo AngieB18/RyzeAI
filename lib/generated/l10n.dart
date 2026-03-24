@@ -444,10 +444,10 @@ class S {
     );
   }
 
-  /// `Please enter a valid email`
+  /// `Invalid email`
   String get invalidEmail {
     return Intl.message(
-      'Please enter a valid email',
+      'Invalid email',
       name: 'invalidEmail',
       desc: '',
       args: [],
@@ -1139,6 +1139,71 @@ class S {
     return Intl.message(
       'Select a style and space to generate ideas',
       name: 'noIdeasYet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Forgot your password?`
+  String get forgotPassword {
+    return Intl.message(
+      'Forgot your password?',
+      name: 'forgotPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recover Password`
+  String get recoverPassword {
+    return Intl.message(
+      'Recover Password',
+      name: 'recoverPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your email to receive instructions`
+  String get enterYourEmail {
+    return Intl.message(
+      'Enter your email to receive instructions',
+      name: 'enterYourEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send Email`
+  String get sendEmail {
+    return Intl.message('Send Email', name: 'sendEmail', desc: '', args: []);
+  }
+
+  /// `No user found with this email`
+  String get emailNotFound {
+    return Intl.message(
+      'No user found with this email',
+      name: 'emailNotFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We’ve sent you an email 📩. Check your inbox or spam folder. There you’ll find instructions to reset your password.`
+  String get emailSentFull {
+    return Intl.message(
+      'We’ve sent you an email 📩. Check your inbox or spam folder. There you’ll find instructions to reset your password.',
+      name: 'emailSentFull',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your password has been successfully changed 🎉. You can now log in with your new password.`
+  String get passwordChangedSuccess {
+    return Intl.message(
+      'Your password has been successfully changed 🎉. You can now log in with your new password.',
+      name: 'passwordChangedSuccess',
       desc: '',
       args: [],
     );

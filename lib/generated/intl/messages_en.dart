@@ -82,8 +82,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "emailChanged": MessageLookupByLibrary.simpleMessage(
       "Verification email sent, please check your inbox",
     ),
+    "emailNotFound": MessageLookupByLibrary.simpleMessage(
+      "No user found with this email",
+    ),
     "emailSent": MessageLookupByLibrary.simpleMessage(
       "Email sent! Check your inbox",
+    ),
+    "emailSentFull": MessageLookupByLibrary.simpleMessage(
+      "We’ve sent you an email 📩. Check your inbox or spam folder. There you’ll find instructions to reset your password.",
     ),
     "emptyFieldsError": MessageLookupByLibrary.simpleMessage(
       "Please enter both email and password",
@@ -103,6 +109,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "enterPassword": MessageLookupByLibrary.simpleMessage(
       "Create a secure password",
+    ),
+    "enterYourEmail": MessageLookupByLibrary.simpleMessage(
+      "Enter your email to receive instructions",
     ),
     "exploreStyles": MessageLookupByLibrary.simpleMessage("Explore Styles"),
     "faq": MessageLookupByLibrary.simpleMessage("Frequently Asked Questions"),
@@ -128,6 +137,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
     "firstName": MessageLookupByLibrary.simpleMessage("First Name"),
+    "forgotPassword": MessageLookupByLibrary.simpleMessage(
+      "Forgot your password?",
+    ),
     "generateIdeas": MessageLookupByLibrary.simpleMessage("Generate Ideas"),
     "generatingIdeas": MessageLookupByLibrary.simpleMessage(
       "Generating ideas...",
@@ -139,9 +151,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "homeUser": MessageLookupByLibrary.simpleMessage("Home User"),
     "hoursAgo": MessageLookupByLibrary.simpleMessage("2h ago"),
     "inspirationFor": MessageLookupByLibrary.simpleMessage("Inspiration for"),
-    "invalidEmail": MessageLookupByLibrary.simpleMessage(
-      "Please enter a valid email",
-    ),
+    "invalidEmail": MessageLookupByLibrary.simpleMessage("Invalid email"),
     "joinRyzeAI": MessageLookupByLibrary.simpleMessage(
       "Join RyzeAI and start decorating",
     ),
@@ -177,6 +187,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "notificationsTitle": MessageLookupByLibrary.simpleMessage("Notifications"),
     "openCamera": MessageLookupByLibrary.simpleMessage("Open AI Camera"),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
+    "passwordChangedSuccess": MessageLookupByLibrary.simpleMessage(
+      "Your password has been successfully changed 🎉. You can now log in with your new password.",
+    ),
     "privacy": MessageLookupByLibrary.simpleMessage("Privacy"),
     "privacyContent": MessageLookupByLibrary.simpleMessage(
       "We collect your name, email and usage data to improve your experience. We never sell your data to third parties. You can delete your account and all associated data at any time.",
@@ -192,6 +205,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "projects": MessageLookupByLibrary.simpleMessage("Projects"),
     "recentProjects": MessageLookupByLibrary.simpleMessage("Recent Projects"),
+    "recoverPassword": MessageLookupByLibrary.simpleMessage("Recover Password"),
     "registerError": MessageLookupByLibrary.simpleMessage(
       "Error while registering",
     ),
@@ -203,6 +217,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectStylesHint": MessageLookupByLibrary.simpleMessage(
       "Select all that apply",
     ),
+    "sendEmail": MessageLookupByLibrary.simpleMessage("Send Email"),
     "sendResetEmail": MessageLookupByLibrary.simpleMessage("Send Reset Email"),
     "spaceBar": MessageLookupByLibrary.simpleMessage("Bar Area"),
     "spaceBathroom": MessageLookupByLibrary.simpleMessage("Bathroom"),
