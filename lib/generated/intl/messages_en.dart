@@ -113,6 +113,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterYourEmail": MessageLookupByLibrary.simpleMessage(
       "Enter your email to receive instructions",
     ),
+    "enterYourPassword": MessageLookupByLibrary.simpleMessage(
+      "Enter your password",
+    ),
     "exploreStyles": MessageLookupByLibrary.simpleMessage("Explore Styles"),
     "faq": MessageLookupByLibrary.simpleMessage("Frequently Asked Questions"),
     "faqA1": MessageLookupByLibrary.simpleMessage(
@@ -261,7 +264,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "welcome": MessageLookupByLibrary.simpleMessage(
       "Welcome! Get inspired and design your ideal space in 3D",
     ),
-    "welcomeBack": MessageLookupByLibrary.simpleMessage("Welcome back"),
+    "welcomeBack": MessageLookupByLibrary.simpleMessage("Welcome back!"),
     "welcomeSubtitle": MessageLookupByLibrary.simpleMessage(
       "Tell us your style so we can personalize your experience",
     ),
