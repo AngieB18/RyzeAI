@@ -86,8 +86,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "emailChanged": MessageLookupByLibrary.simpleMessage(
       "Correo de verificación enviado, revisa tu bandeja",
     ),
+    "emailNotFound": MessageLookupByLibrary.simpleMessage(
+      "No existe un usuario con este correo",
+    ),
     "emailSent": MessageLookupByLibrary.simpleMessage(
       "¡Correo enviado! Revisa tu bandeja de entrada",
+    ),
+    "emailSentFull": MessageLookupByLibrary.simpleMessage(
+      "Te enviamos un correo 📩. Revisa tu bandeja de entrada o la carpeta de spam. Allí encontrarás las instrucciones para restablecer tu contraseña.",
     ),
     "emptyFieldsError": MessageLookupByLibrary.simpleMessage(
       "Por favor ingresa correo y contraseña",
@@ -105,6 +111,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "enterPassword": MessageLookupByLibrary.simpleMessage(
       "Crea una contraseña segura",
+    ),
+    "enterYourEmail": MessageLookupByLibrary.simpleMessage(
+      "Ingresa tu correo para recibir instrucciones",
     ),
     "exploreStyles": MessageLookupByLibrary.simpleMessage("Explorar estilos"),
     "faq": MessageLookupByLibrary.simpleMessage("Preguntas frecuentes"),
@@ -128,6 +137,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "faqQ4": MessageLookupByLibrary.simpleMessage("¿Cómo elimino mi cuenta?"),
     "favorites": MessageLookupByLibrary.simpleMessage("Favoritos"),
     "firstName": MessageLookupByLibrary.simpleMessage("Nombre"),
+    "forgotPassword": MessageLookupByLibrary.simpleMessage(
+      "¿Olvidaste tu contraseña?",
+    ),
     "generateIdeas": MessageLookupByLibrary.simpleMessage("Generar ideas"),
     "generatingIdeas": MessageLookupByLibrary.simpleMessage(
       "Generando ideas...",
@@ -139,9 +151,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "homeUser": MessageLookupByLibrary.simpleMessage("Usuario hogar"),
     "hoursAgo": MessageLookupByLibrary.simpleMessage("hace 2h"),
     "inspirationFor": MessageLookupByLibrary.simpleMessage("Inspiración para"),
-    "invalidEmail": MessageLookupByLibrary.simpleMessage(
-      "Por favor ingresa un correo válido",
-    ),
+    "invalidEmail": MessageLookupByLibrary.simpleMessage("Correo inválido"),
     "joinRyzeAI": MessageLookupByLibrary.simpleMessage(
       "Únete a RyzeAI y empieza a decorar",
     ),
@@ -181,6 +191,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "openCamera": MessageLookupByLibrary.simpleMessage("Abrir cámara IA"),
     "password": MessageLookupByLibrary.simpleMessage("Contraseña"),
+    "passwordChangedSuccess": MessageLookupByLibrary.simpleMessage(
+      "Tu contraseña ha sido cambiada exitosamente 🎉. Ahora puedes iniciar sesión con tu nueva contraseña.",
+    ),
     "privacy": MessageLookupByLibrary.simpleMessage("Privacidad"),
     "privacyContent": MessageLookupByLibrary.simpleMessage(
       "Recopilamos tu nombre, correo y datos de uso para mejorar tu experiencia. Nunca vendemos tus datos a terceros. Puedes eliminar tu cuenta y todos los datos asociados en cualquier momento.",
@@ -200,6 +213,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "recentProjects": MessageLookupByLibrary.simpleMessage(
       "Proyectos recientes",
     ),
+    "recoverPassword": MessageLookupByLibrary.simpleMessage(
+      "Recuperar contraseña",
+    ),
     "registerError": MessageLookupByLibrary.simpleMessage("Error al registrar"),
     "rooms": MessageLookupByLibrary.simpleMessage("Habitaciones"),
     "saveChanges": MessageLookupByLibrary.simpleMessage("Guardar cambios"),
@@ -209,6 +225,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectStylesHint": MessageLookupByLibrary.simpleMessage(
       "Selecciona todos los que apliquen",
     ),
+    "sendEmail": MessageLookupByLibrary.simpleMessage("Enviar correo"),
     "sendResetEmail": MessageLookupByLibrary.simpleMessage(
       "Enviar correo de restablecimiento",
     ),

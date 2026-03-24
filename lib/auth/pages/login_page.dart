@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ryzeai/core/constants/app_colors.dart';
-
-import '../../generated/l10n.dart'; 
-import 'package:ryzeai/core/widgets/global_loader.dart';
+import 'package:ryzeai/auth/pages/recover_password_page.dart';
+import '../../generated/l10n.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -23,12 +22,9 @@ class _LoginPageState extends State<LoginPage> {
     final password = _passwordController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
-      _mostrarError(s.acceptTermsError); 
+      _mostrarError(s.acceptTermsError);
       return;
     }
-
-    // Mostrar el loader global
-    GlobalLoader.show(context);
 
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -36,36 +32,38 @@ class _LoginPageState extends State<LoginPage> {
         password: password,
       );
 
-      // Ocultar el loader antes de navegar
       if (mounted) {
-        GlobalLoader.hide(context);
         Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
       }
     } on FirebaseAuthException catch (e) {
-      // Ocultar el loader antes de mostrar el error
-      if (mounted) {
-        GlobalLoader.hide(context);
-        _mostrarError(e.message ?? s.registerError);
-      }
+      _mostrarError(e.message ?? s.registerError);
     } catch (e) {
-      // Ocultar el loader antes de mostrar el error
-      if (mounted) {
-        GlobalLoader.hide(context);
-        _mostrarError(s.registerError);
-      }
+      _mostrarError(s.registerError);
     }
   }
 
   void _mostrarError(String mensaje) {
+    final s = S.of(context);
+
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(S.of(context).login),
-        content: Text(mensaje),
+        backgroundColor: AppColors.surface(context),
+        title: Text(
+          s.login,
+          style: TextStyle(color: AppColors.textPrimary(context)),
+        ),
+        content: Text(
+          mensaje,
+          style: TextStyle(color: AppColors.textPrimary(context)),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text("OK", style: TextStyle(color: AppColors.primary)),
+            child: Text(
+              "OK",
+              style: TextStyle(color: AppColors.primary),
+            ),
           ),
         ],
       ),
@@ -75,13 +73,15 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+
     return Scaffold(
       backgroundColor: AppColors.background(context),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: AppColors.textPrimary(context)),
+          icon: Icon(Icons.arrow_back_ios,
+              color: AppColors.textPrimary(context)),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -93,54 +93,114 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               Text(
                 s.welcomeBack,
-                style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary(context),
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 s.joinRyzeAI,
-                style: const TextStyle(fontSize: 14),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppColors.textSecondary(context),
+                ),
               ),
               const SizedBox(height: 32),
 
-              Text(s.email),
+              /// EMAIL
+              Text(
+                s.email,
+                style: TextStyle(color: AppColors.textPrimary(context)),
+              ),
               const SizedBox(height: 8),
               TextField(
                 controller: _emailController,
+                style: TextStyle(color: AppColors.textPrimary(context)),
                 decoration: InputDecoration(
                   hintText: s.enterEmail,
+                  hintStyle:
+                      TextStyle(color: AppColors.textSecondary(context)),
                   filled: true,
                   fillColor: AppColors.surface(context),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
 
-              Text(s.password),
+              /// PASSWORD
+              Text(
+                s.password,
+                style: TextStyle(color: AppColors.textPrimary(context)),
+              ),
               const SizedBox(height: 8),
               TextField(
                 controller: _passwordController,
                 obscureText: _obscurePassword,
+                style: TextStyle(color: AppColors.textPrimary(context)),
                 decoration: InputDecoration(
                   hintText: s.enterPassword,
+                  hintStyle:
+                      TextStyle(color: AppColors.textSecondary(context)),
                   filled: true,
                   fillColor: AppColors.surface(context),
                   suffixIcon: IconButton(
-                    icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
-                    onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                      color: AppColors.textSecondary(context),
+                    ),
+                    onPressed: () =>
+                        setState(() => _obscurePassword = !_obscurePassword),
                   ),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
-              
+
+              /// RECUPERAR CONTRASEÑA
+              const SizedBox(height: 10),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const RecoverPasswordPage(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    s.forgotPassword, 
+                    style: TextStyle(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+
               const SizedBox(height: 24),
 
+              /// BOTÓN LOGIN
               SizedBox(
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                  ),
                   onPressed: _iniciarSesion,
-                  child: Text(s.login, style: const TextStyle(color: Colors.white)),
+                  child: Text(
+                    s.login,
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ],
