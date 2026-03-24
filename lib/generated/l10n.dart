@@ -254,10 +254,10 @@ class S {
     );
   }
 
-  /// `Welcome back`
+  /// `Welcome back!`
   String get welcomeBack {
     return Intl.message(
-      'Welcome back',
+      'Welcome back!',
       name: 'welcomeBack',
       desc: '',
       args: [],
@@ -1204,6 +1204,16 @@ class S {
     return Intl.message(
       'Your password has been successfully changed 🎉. You can now log in with your new password.',
       name: 'passwordChangedSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your password`
+  String get enterYourPassword {
+    return Intl.message(
+      'Enter your password',
+      name: 'enterYourPassword',
       desc: '',
       args: [],
     );
