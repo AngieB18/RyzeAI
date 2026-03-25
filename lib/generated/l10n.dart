@@ -1218,6 +1218,411 @@ class S {
       args: [],
     );
   }
+
+  /// `Traditional`
+  String get styleTraditional {
+    return Intl.message(
+      'Traditional',
+      name: 'styleTraditional',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Japanese`
+  String get styleJapanese {
+    return Intl.message('Japanese', name: 'styleJapanese', desc: '', args: []);
+  }
+
+  /// `Contemporary`
+  String get styleContemporary {
+    return Intl.message(
+      'Contemporary',
+      name: 'styleContemporary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bohemian`
+  String get styleBohemian {
+    return Intl.message('Bohemian', name: 'styleBohemian', desc: '', args: []);
+  }
+
+  /// `Farmhouse`
+  String get styleFarmhouse {
+    return Intl.message(
+      'Farmhouse',
+      name: 'styleFarmhouse',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vintage`
+  String get styleVintage {
+    return Intl.message('Vintage', name: 'styleVintage', desc: '', args: []);
+  }
+
+  /// `Industrial`
+  String get styleIndustrial {
+    return Intl.message(
+      'Industrial',
+      name: 'styleIndustrial',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Retro`
+  String get styleRetro {
+    return Intl.message('Retro', name: 'styleRetro', desc: '', args: []);
+  }
+
+  /// `Cyberpunk`
+  String get styleCyberpunk {
+    return Intl.message(
+      'Cyberpunk',
+      name: 'styleCyberpunk',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Christmas`
+  String get styleChristmas {
+    return Intl.message(
+      'Christmas',
+      name: 'styleChristmas',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tropical`
+  String get styleTropical {
+    return Intl.message('Tropical', name: 'styleTropical', desc: '', args: []);
+  }
+
+  /// `Brutalist`
+  String get styleBrutalist {
+    return Intl.message(
+      'Brutalist',
+      name: 'styleBrutalist',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Southwest`
+  String get styleSouthwest {
+    return Intl.message(
+      'Southwest',
+      name: 'styleSouthwest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Baroque`
+  String get styleBaroque {
+    return Intl.message('Baroque', name: 'styleBaroque', desc: '', args: []);
+  }
+
+  /// `Futuristic`
+  String get styleFuturistic {
+    return Intl.message(
+      'Futuristic',
+      name: 'styleFuturistic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Colonial`
+  String get styleColonial {
+    return Intl.message('Colonial', name: 'styleColonial', desc: '', args: []);
+  }
+
+  /// `Rococo`
+  String get styleRococo {
+    return Intl.message('Rococo', name: 'styleRococo', desc: '', args: []);
+  }
+
+  /// `Valentine's Day`
+  String get styleValentine {
+    return Intl.message(
+      'Valentine\'s Day',
+      name: 'styleValentine',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My Designs`
+  String get myDesigns {
+    return Intl.message('My Designs', name: 'myDesigns', desc: '', args: []);
+  }
+
+  /// `You haven't generated any designs yet`
+  String get noDesignsYet {
+    return Intl.message(
+      'You haven\'t generated any designs yet',
+      name: 'noDesignsYet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Saved to My Designs`
+  String get savedToDesigns {
+    return Intl.message(
+      'Saved to My Designs',
+      name: 'savedToDesigns',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Generate Design`
+  String get generateDesign {
+    return Intl.message(
+      'Generate Design',
+      name: 'generateDesign',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Generating...`
+  String get generatingDesign {
+    return Intl.message(
+      'Generating...',
+      name: 'generatingDesign',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose Room Type`
+  String get chooseRoomType {
+    return Intl.message(
+      'Choose Room Type',
+      name: 'chooseRoomType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose Style`
+  String get chooseStyle {
+    return Intl.message(
+      'Choose Style',
+      name: 'chooseStyle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose Color Palette`
+  String get chooseColorPalette {
+    return Intl.message(
+      'Choose Color Palette',
+      name: 'chooseColorPalette',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Features`
+  String get addFeatures {
+    return Intl.message(
+      'Add Features',
+      name: 'addFeatures',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lighting & Atmosphere`
+  String get lighting {
+    return Intl.message(
+      'Lighting & Atmosphere',
+      name: 'lighting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Architectural Elements`
+  String get architecture {
+    return Intl.message(
+      'Architectural Elements',
+      name: 'architecture',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Decoration & Details`
+  String get decoration {
+    return Intl.message(
+      'Decoration & Details',
+      name: 'decoration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ambient Lighting`
+  String get ambientLight {
+    return Intl.message(
+      'Ambient Lighting',
+      name: 'ambientLight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Natural Light`
+  String get naturalLight {
+    return Intl.message(
+      'Natural Light',
+      name: 'naturalLight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cozy Atmosphere`
+  String get cozyAtmosphere {
+    return Intl.message(
+      'Cozy Atmosphere',
+      name: 'cozyAtmosphere',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accent Wall`
+  String get accentWall {
+    return Intl.message('Accent Wall', name: 'accentWall', desc: '', args: []);
+  }
+
+  /// `Built-in Shelves`
+  String get builtInShelves {
+    return Intl.message(
+      'Built-in Shelves',
+      name: 'builtInShelves',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exposed Beams`
+  String get exposedBeams {
+    return Intl.message(
+      'Exposed Beams',
+      name: 'exposedBeams',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Arches`
+  String get arches {
+    return Intl.message('Arches', name: 'arches', desc: '', args: []);
+  }
+
+  /// `Plants & Vegetation`
+  String get plants {
+    return Intl.message(
+      'Plants & Vegetation',
+      name: 'plants',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mirrors`
+  String get mirrors {
+    return Intl.message('Mirrors', name: 'mirrors', desc: '', args: []);
+  }
+
+  /// `Textured Walls`
+  String get texturedWalls {
+    return Intl.message(
+      'Textured Walls',
+      name: 'texturedWalls',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Area Rugs`
+  String get rugs {
+    return Intl.message('Area Rugs', name: 'rugs', desc: '', args: []);
+  }
+
+  /// `Neutral`
+  String get colorPaletteNeutral {
+    return Intl.message(
+      'Neutral',
+      name: 'colorPaletteNeutral',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Warm`
+  String get colorPaletteWarm {
+    return Intl.message('Warm', name: 'colorPaletteWarm', desc: '', args: []);
+  }
+
+  /// `Cool`
+  String get colorPaletteCool {
+    return Intl.message('Cool', name: 'colorPaletteCool', desc: '', args: []);
+  }
+
+  /// `Earthy`
+  String get colorPaletteEarthy {
+    return Intl.message(
+      'Earthy',
+      name: 'colorPaletteEarthy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Monochrome`
+  String get colorPaletteMonochrome {
+    return Intl.message(
+      'Monochrome',
+      name: 'colorPaletteMonochrome',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vibrant`
+  String get colorPaletteVibrant {
+    return Intl.message(
+      'Vibrant',
+      name: 'colorPaletteVibrant',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Required`
+  String get required {
+    return Intl.message('Required', name: 'required', desc: '', args: []);
+  }
+
+  /// `Optional`
+  String get optional {
+    return Intl.message('Optional', name: 'optional', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
