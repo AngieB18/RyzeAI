@@ -1,6 +1,8 @@
 // lib/home/screens/home_screen.dart
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/services/user_service.dart';
 import '../../generated/l10n.dart';
@@ -66,6 +68,116 @@ class _HomeScreenState extends State<HomeScreen> {
         onSaved: () => _loadUser(),
       ),
     );
+  }
+
+  void _showImagePickerOptions() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surface(context),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (_) => Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Selecciona una opción',
+              style: TextStyle(
+                color: AppColors.textPrimary(context),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.camera);
+                },
+                icon: const Icon(Icons.camera_alt_rounded, size: 20),
+                label: const Text(
+                  'Tomar foto',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.gallery);
+                },
+                icon: const Icon(Icons.image_rounded, size: 20),
+                label: const Text(
+                  'Cargar imagen',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: source,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 80,
+      );
+
+      if (image != null) {
+        final imageFile = File(image.path);
+        if (!mounted) return;
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => StyleInspirationScreen(initialImage: imageFile),
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          backgroundColor: AppColors.passwordWeak,
+        ),
+      );
+    }
   }
 
   @override
@@ -148,31 +260,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 2),
-              _loading
-                  ? SizedBox(
-                      width: 160,
-                      height: 26,
-                      child: LinearProgressIndicator(
-                        backgroundColor: AppColors.inputBorder(context),
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                          AppColors.primary,
-                        ),
-                      ),
-                    )
-                  : Row(
-                      children: [
-                        Text(
-                          '${l.helloUser} $firstName',
-                          style: TextStyle(
-                            color: AppColors.textPrimary(context),
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        const Text('👋', style: TextStyle(fontSize: 20)),
-                      ],
+              Row(
+                children: [
+                  Text(
+                    '${l.helloUser} $firstName',
+                    style: TextStyle(
+                      color: AppColors.textPrimary(context),
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
                     ),
+                  ),
+                  const SizedBox(width: 6),
+                  const Text('👋', style: TextStyle(fontSize: 20)),
+                ],
+              ),
             ],
           ),
           _loading
@@ -249,30 +350,33 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const SizedBox(height: 14),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white24,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.camera_alt_rounded,
-                  color: Colors.white,
-                  size: 14,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  l.openCamera,
-                  style: const TextStyle(
+          GestureDetector(
+            onTap: _showImagePickerOptions,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white24,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.camera_alt_rounded,
                     color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                    size: 14,
                   ),
-                ),
-              ],
+                  const SizedBox(width: 6),
+                  Text(
+                    l.openCamera,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -500,6 +604,96 @@ class _HomeScreenState extends State<HomeScreen> {
         'url':
             'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&q=80',
       },
+      'traditional': {
+        'name': l.styleTraditional,
+        'url':
+            'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=400&q=80',
+      },
+      'japanese': {
+        'name': l.styleJapanese,
+        'url':
+            'https://images.unsplash.com/photo-1604014237800-1c9102c219da?w=400&q=80',
+      },
+      'contemporary': {
+        'name': l.styleContemporary,
+        'url':
+            'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400&q=80',
+      },
+      'bohemian': {
+        'name': l.styleBohemian,
+        'url':
+            'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400&q=80',
+      },
+      'farmhouse': {
+        'name': l.styleFarmhouse,
+        'url':
+            'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&q=80',
+      },
+      'vintage': {
+        'name': l.styleVintage,
+        'url':
+            'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=400&q=80',
+      },
+      'industrial': {
+        'name': l.styleIndustrial,
+        'url':
+            'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=400&q=80',
+      },
+      'retro': {
+        'name': l.styleRetro,
+        'url':
+            'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=400&q=80',
+      },
+      'cyberpunk': {
+        'name': l.styleCyberpunk,
+        'url':
+            'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&q=80',
+      },
+      'christmas': {
+        'name': l.styleChristmas,
+        'url':
+            'https://images.unsplash.com/photo-1543589077-47d81606c1bf?w=400&q=80',
+      },
+      'tropical': {
+        'name': l.styleTropical,
+        'url':
+            'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=400&q=80',
+      },
+      'brutalist': {
+        'name': l.styleBrutalist,
+        'url':
+            'https://images.unsplash.com/photo-1486304873000-235643847519?w=400&q=80',
+      },
+      'southwest': {
+        'name': l.styleSouthwest,
+        'url':
+            'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80',
+      },
+      'baroque': {
+        'name': l.styleBaroque,
+        'url':
+            'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=400&q=80',
+      },
+      'futuristic': {
+        'name': l.styleFuturistic,
+        'url':
+            'https://images.unsplash.com/photo-1535223289827-42f1e9919769?w=400&q=80',
+      },
+      'colonial': {
+        'name': l.styleColonial,
+        'url':
+            'https://images.unsplash.com/photo-1505691723518-36a5ac3be353?w=400&q=80',
+      },
+      'rococo': {
+        'name': l.styleRococo,
+        'url':
+            'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=400&q=80',
+      },
+      'valentine': {
+        'name': l.styleValentine,
+        'url':
+            'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80',
+      },
     };
 
     final userStyles = List<String>.from(_userData?['styles'] ?? []);
@@ -535,10 +729,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => StyleInspirationScreen(
-                  styleKey: entry.key,
-                  styleName: name,
-                ),
+                builder: (_) => const StyleInspirationScreen(),
               ),
             ),
             child: ClipRRect(
