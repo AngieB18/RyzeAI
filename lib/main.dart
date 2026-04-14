@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'auth/pages/welcome_page.dart';
-import 'auth/pages/login_page.dart';
-import 'auth/pages/register_page.dart';
-import 'home/home_page.dart'; 
+import 'presentation/pages/auth/welcome_page.dart';
+import 'presentation/pages/auth/login_page.dart';
+import 'presentation/pages/auth/register_page.dart';
+import 'presentation/pages/home/home_page.dart'; 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'generated/l10n.dart';
 import 'core/theme/theme_provider.dart';

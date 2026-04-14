@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
-import '../../core/validators/register_validators.dart';
-import '../widgets/password_strength_indicator.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../../core/validators/register_validators.dart';
+import '../../widgets/auth/password_strength_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../generated/l10n.dart';
-import '../../core/settings/language_selector.dart';
+import '../../../generated/l10n.dart';
+import '../../../core/settings/language_selector.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});

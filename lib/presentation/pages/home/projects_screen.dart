@@ -1,7 +1,7 @@
 // lib/home/screens/projects_screen.dart
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
-import '../../generated/l10n.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../../generated/l10n.dart';
 
 class ProjectsScreen extends StatelessWidget {
   const ProjectsScreen({super.key});

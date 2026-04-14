@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../core/constants/app_colors.dart';
-import '../generated/l10n.dart';
-import 'screens/home_screen.dart';
-import 'screens/favorites_screen.dart';
-import 'screens/projects_screen.dart';
-import 'screens/profile_screen.dart';
-import '../main.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../../generated/l10n.dart';
+import 'home_screen.dart';
+import 'favorites_screen.dart';
+import 'projects_screen.dart';
+import 'profile_screen.dart';
+import '../../../main.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
