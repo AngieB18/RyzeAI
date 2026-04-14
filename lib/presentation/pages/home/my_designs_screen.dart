@@ -2,8 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/app_colors.dart';
-import '../../generated/l10n.dart';
+import 'package:ryzeai/core/constants/app_colors.dart';
+import 'package:ryzeai/generated/l10n.dart';
+
 
 class MyDesignsScreen extends StatelessWidget {
   const MyDesignsScreen({super.key});

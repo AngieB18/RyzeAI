@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../core/constants/app_colors.dart';
-import '../../core/services/user_service.dart';
-import '../../generated/l10n.dart';
-import '../../main.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../../core/services/user_service.dart';
+import '../../../generated/l10n.dart';
+import '../../../main.dart';
 import 'style_selection_sheet.dart';
 import 'style_inspiration_screen.dart';
 

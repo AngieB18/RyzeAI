@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
-import '../../core/constants/app_colors.dart';
-import '../../core/services/remote_config_service.dart';
-import '../../generated/l10n.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../../core/services/remote_config_service.dart';
+import '../../../generated/l10n.dart';
 
 class StyleInspirationScreen extends StatefulWidget {
   final File? initialImage;

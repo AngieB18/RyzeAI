@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../core/constants/app_colors.dart';
-import '../../core/services/remote_config_service.dart';
-import '../../generated/l10n.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:ryzeai/core/constants/app_colors.dart';
+import 'package:ryzeai/core/services/remote_config_service.dart';
+import 'package:ryzeai/generated/l10n.dart';
 
 class DesignGeneratorScreen extends StatefulWidget {
   final File? initialImage;

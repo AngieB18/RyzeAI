@@ -1,6 +1,6 @@
 // lib/auth/widgets/user_type_selector.dart
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
+import '../../../core/constants/app_colors.dart';
 
 enum UserType { HOME, DESIGNER, STORE }
 

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import '../core/constants/app_colors.dart';
-import '../generated/l10n.dart';
-import 'screens/home_screen.dart';
-import 'screens/favorites_screen.dart';
-import 'screens/projects_screen.dart';
-import 'screens/profile_screen.dart';
-import '../main.dart';
-import 'screens/my_designs_screen.dart';
-import 'screens/style_inspiration_screen.dart';
+import 'package:ryzeai/core/constants/app_colors.dart';
+import 'package:ryzeai/generated/l10n.dart';
+import 'package:ryzeai/main.dart';
+import 'package:ryzeai/presentation/pages/home/favorites_screen.dart';
+import 'dart:io';
+
+import 'package:ryzeai/presentation/pages/home/home_screen.dart';
+import 'package:ryzeai/presentation/pages/home/my_designs_screen.dart';
+import 'package:ryzeai/presentation/pages/home/profile_screen.dart';
+import 'package:ryzeai/presentation/pages/home/projects_screen.dart';
+import 'package:ryzeai/presentation/pages/home/style_inspiration_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

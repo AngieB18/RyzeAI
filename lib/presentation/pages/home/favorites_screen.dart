@@ -1,7 +1,7 @@
 // lib/home/screens/favorites_screen.dart
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
-import '../../generated/l10n.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../../generated/l10n.dart';
 
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
