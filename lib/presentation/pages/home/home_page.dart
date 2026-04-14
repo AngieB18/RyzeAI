@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../generated/l10n.dart';
-import 'home_screen.dart';
-import 'favorites_screen.dart';
-import 'projects_screen.dart';
-import 'profile_screen.dart';
-import '../../../main.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:ryzeai/core/constants/app_colors.dart';
+import 'package:ryzeai/generated/l10n.dart';
+import 'package:ryzeai/main.dart';
+import 'package:ryzeai/presentation/pages/home/favorites_screen.dart';
+import 'dart:io';
+
+import 'package:ryzeai/presentation/pages/home/home_screen.dart';
+import 'package:ryzeai/presentation/pages/home/my_designs_screen.dart';
+import 'package:ryzeai/presentation/pages/home/profile_screen.dart';
+import 'package:ryzeai/presentation/pages/home/projects_screen.dart';
+import 'package:ryzeai/presentation/pages/home/style_inspiration_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,9 +27,14 @@ class _HomePageState extends State<HomePage> {
     FavoritesScreen(),
     ProjectsScreen(),
     ProfileScreen(),
+    MyDesignsScreen(),
   ];
 
   void _onCameraPressed() {
+    _showImagePickerOptions();
+  }
+
+  void _showImagePickerOptions() {
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.surface(context),
@@ -32,75 +42,106 @@ class _HomePageState extends State<HomePage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (_) => Padding(
-        padding: const EdgeInsets.all(28),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: AppColors.inputBorder(context),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 24),
-            const Icon(
-              Icons.camera_alt_rounded,
-              color: AppColors.primary,
-              size: 48,
-            ),
-            const SizedBox(height: 12),
             Text(
-              'AI Camera',
+              'Selecciona una opción',
               style: TextStyle(
                 color: AppColors.textPrimary(context),
-                fontSize: 20,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Point your camera at any space and\nvisualize furniture in 3D instantly',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: AppColors.textSecondary(context),
-                fontSize: 13,
-                height: 1.5,
-              ),
-            ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             SizedBox(
               width: double.infinity,
               height: 50,
               child: ElevatedButton.icon(
-                onPressed: () => Navigator.pop(context),
-                icon: const Icon(
-                  Icons.camera_alt_rounded,
-                  color: Colors.white,
-                  size: 18,
-                ),
-                label: const Text(
-                  'Open Camera',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.camera);
+                },
+                icon: const Icon(Icons.camera_alt_rounded, size: 20),
+                label: const Text(
+                  'Tomar foto',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
             const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.gallery);
+                },
+                icon: const Icon(Icons.image_rounded, size: 20),
+                label: const Text(
+                  'Cargar imagen',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: source,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 80,
+      );
+
+      if (image != null) {
+        final imageFile = File(image.path);
+        if (!mounted) return;
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => StyleInspirationScreen(initialImage: imageFile),
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          backgroundColor: AppColors.passwordWeak,
+        ),
+      );
+    }
   }
 
   @override
@@ -134,10 +175,7 @@ class _HomePageState extends State<HomePage> {
         decoration: BoxDecoration(
           color: AppColors.primary,
           shape: BoxShape.circle,
-          border: Border.all(
-            color: AppColors.background(context),
-            width: 3,
-          ),
+          border: Border.all(color: AppColors.background(context), width: 3),
         ),
         child: const Icon(
           Icons.camera_alt_rounded,
@@ -156,12 +194,13 @@ class _HomePageState extends State<HomePage> {
       child: SizedBox(
         height: 60,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _buildNavItem(0, Icons.home_rounded, l.home),
             _buildNavItem(1, Icons.favorite_rounded, l.favorites),
             const SizedBox(width: 58),
             _buildNavItem(2, Icons.folder_rounded, l.projects),
+            _buildNavItem(4, Icons.palette_rounded, 'Diseños'),
             _buildNavItem(3, Icons.person_rounded, l.profile),
           ],
         ),
@@ -196,8 +235,7 @@ class _HomePageState extends State<HomePage> {
                     ? AppColors.primary
                     : AppColors.textSecondary(context),
                 fontSize: 10,
-                fontWeight:
-                    isActive ? FontWeight.w600 : FontWeight.normal,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
           ],

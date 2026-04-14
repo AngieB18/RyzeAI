@@ -30,6 +30,24 @@ class _StyleSelectionSheetState extends State<StyleSelectionSheet> {
     {'key': 'colorful', 'icon': '🎨'},
     {'key': 'rustic', 'icon': '🪵'},
     {'key': 'scandinavian', 'icon': '❄️'},
+    {'key': 'traditional', 'icon': '🏛️'},
+    {'key': 'japanese', 'icon': '🎌'},
+    {'key': 'contemporary', 'icon': '⚡'},
+    {'key': 'bohemian', 'icon': '🌸'},
+    {'key': 'farmhouse', 'icon': '🚜'},
+    {'key': 'vintage', 'icon': '📻'},
+    {'key': 'industrial', 'icon': '🔧'},
+    {'key': 'retro', 'icon': '🎪'},
+    {'key': 'cyberpunk', 'icon': '🤖'},
+    {'key': 'christmas', 'icon': '🎄'},
+    {'key': 'tropical', 'icon': '🌴'},
+    {'key': 'brutalist', 'icon': '🧱'},
+    {'key': 'southwest', 'icon': '🌞'},
+    {'key': 'baroque', 'icon': '👑'},
+    {'key': 'futuristic', 'icon': '🚀'},
+    {'key': 'colonial', 'icon': '🏰'},
+    {'key': 'rococo', 'icon': '💎'},
+    {'key': 'valentine', 'icon': '💝'},
   ];
 
   @override
@@ -53,6 +71,42 @@ class _StyleSelectionSheetState extends State<StyleSelectionSheet> {
         return l.styleRustic;
       case 'scandinavian':
         return l.styleScandinavian;
+      case 'traditional':
+        return l.styleTraditional;
+      case 'japanese':
+        return l.styleJapanese;
+      case 'contemporary':
+        return l.styleContemporary;
+      case 'bohemian':
+        return l.styleBohemian;
+      case 'farmhouse':
+        return l.styleFarmhouse;
+      case 'vintage':
+        return l.styleVintage;
+      case 'industrial':
+        return l.styleIndustrial;
+      case 'retro':
+        return l.styleRetro;
+      case 'cyberpunk':
+        return l.styleCyberpunk;
+      case 'christmas':
+        return l.styleChristmas;
+      case 'tropical':
+        return l.styleTropical;
+      case 'brutalist':
+        return l.styleBrutalist;
+      case 'southwest':
+        return l.styleSouthwest;
+      case 'baroque':
+        return l.styleBaroque;
+      case 'futuristic':
+        return l.styleFuturistic;
+      case 'colonial':
+        return l.styleColonial;
+      case 'rococo':
+        return l.styleRococo;
+      case 'valentine':
+        return l.styleValentine;
       default:
         return key;
     }
@@ -161,38 +215,53 @@ class _StyleSelectionSheetState extends State<StyleSelectionSheet> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Máximo 4 estilos',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AppColors.textSecondary(context),
+                      fontSize: 11,
+                    ),
+                  ),
                   const SizedBox(height: 20),
 
                   // Grid de estilos
                   GridView.count(
-                    crossAxisCount: 3,
+                    crossAxisCount: 4,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
-                    childAspectRatio: 1.1,
+                    childAspectRatio: 1.0,
                     children: _styles.map((style) {
                       final key = style['key']!;
                       final icon = style['icon']!;
                       final isSelected = _selected.contains(key);
                       final label = _getStyleLabel(context, key);
+                      final maxReached = _selected.length >= 4 && !isSelected;
 
                       return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            if (isSelected) {
-                              _selected.remove(key);
-                            } else {
-                              _selected.add(key);
-                            }
-                          });
-                        },
+                        onTap: maxReached
+                            ? null
+                            : () {
+                                setState(() {
+                                  if (isSelected) {
+                                    _selected.remove(key);
+                                  } else if (_selected.length < 4) {
+                                    _selected.add(key);
+                                  }
+                                });
+                              },
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? AppColors.primary.withOpacity(0.15)
-                                : AppColors.background(context),
+                                : maxReached
+                                    ? AppColors.background(context)
+                                        .withOpacity(0.5)
+                                    : AppColors.background(context),
                             borderRadius: BorderRadius.circular(14),
                             border: Border.all(
                               color: isSelected
@@ -204,19 +273,28 @@ class _StyleSelectionSheetState extends State<StyleSelectionSheet> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(icon, style: const TextStyle(fontSize: 26)),
+                              Opacity(
+                                opacity: maxReached ? 0.5 : 1.0,
+                                child: Text(
+                                  icon,
+                                  style: const TextStyle(fontSize: 22),
+                                ),
+                              ),
                               const SizedBox(height: 4),
-                              Text(
-                                label,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: isSelected
-                                      ? AppColors.primary
-                                      : AppColors.textPrimary(context),
-                                  fontSize: 11,
-                                  fontWeight: isSelected
-                                      ? FontWeight.w600
-                                      : FontWeight.normal,
+                              Opacity(
+                                opacity: maxReached ? 0.5 : 1.0,
+                                child: Text(
+                                  label,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: isSelected
+                                        ? AppColors.primary
+                                        : AppColors.textPrimary(context),
+                                    fontSize: 10,
+                                    fontWeight: isSelected
+                                        ? FontWeight.w600
+                                        : FontWeight.normal,
+                                  ),
                                 ),
                               ),
                               if (isSelected)

@@ -1,20 +1,18 @@
 // lib/home/screens/style_inspiration_screen.dart
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import '../../../core/constants/app_colors.dart';
 import '../../../core/services/remote_config_service.dart';
 import '../../../generated/l10n.dart';
 
 class StyleInspirationScreen extends StatefulWidget {
-  final String styleKey;
-  final String styleName;
+  final File? initialImage;
 
-  const StyleInspirationScreen({
-    super.key,
-    required this.styleKey,
-    required this.styleName,
-  });
+  const StyleInspirationScreen({super.key, this.initialImage});
 
   @override
   State<StyleInspirationScreen> createState() => _StyleInspirationScreenState();
@@ -23,10 +21,37 @@ class StyleInspirationScreen extends StatefulWidget {
 class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
   String? _selectedCategory;
   String? _selectedSpace;
+  String? _selectedPalette;
   bool _generating = false;
   String? _aiDescription;
   List<String> _images = [];
   final _customController = TextEditingController();
+  List<String> _userStyles = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserStyles();
+  }
+
+  Future<void> _loadUserStyles() async {
+    try {
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+      if (uid != null) {
+        final doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .get();
+        if (doc.exists && doc.data()?['styles'] != null) {
+          setState(() {
+            _userStyles = List<String>.from(doc.data()!['styles'] as List);
+          });
+        }
+      }
+    } catch (e) {
+      // Silently fail
+    }
+  }
 
   @override
   void dispose() {
@@ -75,6 +100,69 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
     'custom': {'label': l.spaceCustom, 'icon': '✏️', 'spaces': []},
   };
 
+  List<Map<String, dynamic>> _getPalettes() => [
+    {
+      'key': 'neutral',
+      'label': 'Neutral',
+      'colors': [
+        const Color(0xFFF5F5F5),
+        const Color(0xFFE0E0E0),
+        const Color(0xFF9E9E9E),
+        const Color(0xFF616161),
+      ],
+    },
+    {
+      'key': 'warm',
+      'label': 'Warm',
+      'colors': [
+        const Color(0xFFFFE0B2),
+        const Color(0xFFFFCC80),
+        const Color(0xFFFF8A65),
+        const Color(0xFFE64A19),
+      ],
+    },
+    {
+      'key': 'cool',
+      'label': 'Cool',
+      'colors': [
+        const Color(0xFFE3F2FD),
+        const Color(0xFF90CAF9),
+        const Color(0xFF42A5F5),
+        const Color(0xFF1565C0),
+      ],
+    },
+    {
+      'key': 'earthy',
+      'label': 'Earthy',
+      'colors': [
+        const Color(0xFFEFEBE9),
+        const Color(0xFFBCAAA4),
+        const Color(0xFF8D6E63),
+        const Color(0xFF4E342E),
+      ],
+    },
+    {
+      'key': 'monochrome',
+      'label': 'Monochrome',
+      'colors': [
+        const Color(0xFFFFFFFF),
+        const Color(0xFFBDBDBD),
+        const Color(0xFF616161),
+        const Color(0xFF212121),
+      ],
+    },
+    {
+      'key': 'vibrant',
+      'label': 'Vibrant',
+      'colors': [
+        const Color(0xFFFF1744),
+        const Color(0xFFFF9100),
+        const Color(0xFF00E676),
+        const Color(0xFF2979FF),
+      ],
+    },
+  ];
+
   Future<void> _generateIdeas() async {
     final spaceName = _selectedCategory == 'custom'
         ? _customController.text.trim()
@@ -119,7 +207,7 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
                 {
                   'role': 'user',
                   'content':
-                      'Give me a short and inspiring decoration description (2-3 sentences) for a $spaceName with ${widget.styleName} style. Then give me 4 specific Unsplash search keywords (comma separated) to find images of this space. Format: DESCRIPTION: [text] | KEYWORDS: [kw1,kw2,kw3,kw4]',
+                      'Give me a short and inspiring decoration description (2-3 sentences) for a $spaceName. ${_userStyles.isNotEmpty ? 'Consider ${_userStyles.join(', ')} styles.' : ''} ${_selectedPalette != null ? 'Use $_selectedPalette color palette.' : ''} Then give me 4 specific Unsplash search keywords (comma separated) to find images of this space. Format: DESCRIPTION: [text] | KEYWORDS: [kw1,kw2,kw3,kw4]',
                 },
               ],
             }),
@@ -146,9 +234,9 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
         } else {
           description = text;
           keywords = [
-            '${widget.styleKey} $spaceName interior',
-            '$spaceName decoration',
-            '${widget.styleKey} room design',
+            '$spaceName interior design',
+            '$spaceName decoration ideas',
+            '$spaceName room design',
             'interior design $spaceName',
           ];
         }
@@ -190,6 +278,7 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
   Widget build(BuildContext context) {
     final l = S.of(context);
     final categories = _getCategories(l);
+    final palettes = _getPalettes();
 
     return Scaffold(
       backgroundColor: AppColors.background(context),
@@ -203,6 +292,154 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Imagen capturada
+                    if (widget.initialImage != null) ...[
+                      Container(
+                        width: double.infinity,
+                        height: 220,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: AppColors.primary,
+                            width: 2,
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(14),
+                          child: Image.file(
+                            widget.initialImage!,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+
+                    // Mis Estilos
+                    if (_userStyles.isNotEmpty) ...[
+                      Text(
+                        'Mis Estilos',
+                        style: TextStyle(
+                          color: AppColors.textPrimary(context),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: _userStyles.map((style) {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: AppColors.primary,
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Text(
+                              style,
+                              style: const TextStyle(
+                                color: AppColors.primary,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+
+                    // Paleta de colores
+                    Text(
+                      'Choose Color Palette',
+                      style: TextStyle(
+                        color: AppColors.textPrimary(context),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: palettes.map((palette) {
+                          final isSelected = _selectedPalette == palette['key'];
+                          final colors = palette['colors'] as List<Color>;
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() => _selectedPalette = palette['key']);
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              margin: const EdgeInsets.only(right: 12),
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? AppColors.primary.withOpacity(0.15)
+                                    : AppColors.surface(context),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? AppColors.primary
+                                      : AppColors.inputBorder(context),
+                                  width: isSelected ? 2 : 1,
+                                ),
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: colors
+                                        .map(
+                                          (c) => Container(
+                                            width: 14,
+                                            height: 14,
+                                            margin: const EdgeInsets.only(
+                                              right: 2,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: c,
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: Colors.white24,
+                                                width: 0.5,
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    palette['label'] as String,
+                                    style: TextStyle(
+                                      color: isSelected
+                                          ? AppColors.primary
+                                          : AppColors.textPrimary(context),
+                                      fontSize: 10,
+                                      fontWeight: isSelected
+                                          ? FontWeight.w600
+                                          : FontWeight.normal,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
                     Text(
                       l.chooseSpace,
                       style: TextStyle(
@@ -567,7 +804,7 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
           ),
           const SizedBox(width: 12),
           Text(
-            widget.styleName,
+            'Inspírate',
             style: TextStyle(
               color: AppColors.textPrimary(context),
               fontSize: 20,
