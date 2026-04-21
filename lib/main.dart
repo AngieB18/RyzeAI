@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'presentation/pages/auth/welcome_page.dart';
-import 'presentation/pages/auth/login_page.dart';
-import 'presentation/pages/auth/register_page.dart';
-import 'presentation/pages/home/home_page.dart'; 
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'presentation/features/auth/screens/welcome_page.dart';
+import 'presentation/features/auth/screens/login_page.dart';
+import 'presentation/features/auth/screens/register_page.dart';
+import 'presentation/features/home/screens/home_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'generated/l10n.dart';
 import 'core/theme/theme_provider.dart';
 import 'core/theme/app_theme.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+
+  // Inicializar Supabase
+  await Supabase.initialize(
+    url: 'https://xejcfclltcnigufcsqvb.supabase.co',
+    anonKey: 'sb_publishable_tbu_TdCUp-6Ft6wTgEfxDQ_5Yxdesfw', // ← pega tu key real
   );
 
-  //Cargar tema desde Firebase
+  // Mantienes tu lógica de tema
   await themeProvider.loadTheme();
 
   runApp(const MyApp());
@@ -46,7 +47,7 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-@override
+  @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: themeProvider,
@@ -56,7 +57,7 @@ class _MyAppState extends State<MyApp> {
           locale: _locale,
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
-          themeMode: themeProvider.themeMode, 
+          themeMode: themeProvider.themeMode,
           supportedLocales: S.delegate.supportedLocales,
           localizationsDelegates: const [
             S.delegate,

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../main.dart';
 import '../../generated/l10n.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LanguageSelector extends StatefulWidget {
   const LanguageSelector({super.key});
@@ -13,6 +12,7 @@ class LanguageSelector extends StatefulWidget {
 
 class _LanguageSelectorState extends State<LanguageSelector> {
   String? selected;
+  final _supabase = Supabase.instance.client;
 
   @override
   void initState() {
@@ -20,18 +20,19 @@ class _LanguageSelectorState extends State<LanguageSelector> {
     _loadCurrentLanguage();
   }
 
-  // Carga idioma guardado en Firebase
+  // Carga idioma guardado en Supabase
   Future<void> _loadCurrentLanguage() async {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final uid = _supabase.auth.currentUser?.id;
 
     if (uid != null) {
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .get();
+      final response = await _supabase
+          .from('users')
+          .select()
+          .eq('id', uid)
+          .single();
 
-      if (doc.exists && doc.data() != null) {
-        final lang = doc.data()!['language'];
+      if (response != null) {
+        final lang = (response as Map<String, dynamic>)['language'];
 
         setState(() {
           selected = lang;
@@ -66,15 +67,14 @@ class _LanguageSelectorState extends State<LanguageSelector> {
 
         MyApp.setLocale(context, Locale(value));
 
-        final uid = FirebaseAuth.instance.currentUser?.uid;
+        final uid = _supabase.auth.currentUser?.id;
 
         if (uid != null) {
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(uid)
+          await _supabase
+              .from('users')
               .update({
             'language': value,
-          });
+          }).eq('id', uid);
         }
       },
     );

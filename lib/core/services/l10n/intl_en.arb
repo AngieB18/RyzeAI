@@ -52,7 +52,6 @@
   "emptyFieldsError": "Please enter both email and password",
   "loading": "Loading...",
   "loginSuccess": "Welcome back!",
-  "invalidEmail": "Please enter a valid email",
   "editProfile": "Edit Profile",
   "notifications": "Notifications",
   "privacy": "Privacy",
@@ -193,5 +192,11 @@
 "colorPaletteMonochrome": "Monochrome",
 "colorPaletteVibrant": "Vibrant",
 "required": "Required",
-"optional": "Optional"
+"optional": "Optional",
+"ok": "OK",
+"emailAlreadyExists": "This email is already registered",
+"passwordTooWeak": "Password is too weak",
+"registrationError": "Registration error",
+"profileCreationFailed": "Failed to create user profile",
+"creatingAccount": "Creating account..."
 }

@@ -79,6 +79,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "createAccountButton": MessageLookupByLibrary.simpleMessage(
       "Create Account",
     ),
+    "creatingAccount": MessageLookupByLibrary.simpleMessage(
+      "Creating account...",
+    ),
     "currentPassword": MessageLookupByLibrary.simpleMessage("Current Password"),
     "darkMode": MessageLookupByLibrary.simpleMessage("Dark Mode"),
     "decorate": MessageLookupByLibrary.simpleMessage("Decorate with AI"),
@@ -99,6 +102,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "editProfile": MessageLookupByLibrary.simpleMessage("Edit Profile"),
     "email": MessageLookupByLibrary.simpleMessage("Email"),
+    "emailAlreadyExists": MessageLookupByLibrary.simpleMessage(
+      "This email is already registered",
+    ),
     "emailChangeInfo": MessageLookupByLibrary.simpleMessage(
       "A verification email will be sent to the new address",
     ),
@@ -221,11 +227,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "Preferences saved",
     ),
     "notificationsTitle": MessageLookupByLibrary.simpleMessage("Notifications"),
+    "ok": MessageLookupByLibrary.simpleMessage("OK"),
     "openCamera": MessageLookupByLibrary.simpleMessage("Open AI Camera"),
     "optional": MessageLookupByLibrary.simpleMessage("Optional"),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
     "passwordChangedSuccess": MessageLookupByLibrary.simpleMessage(
       "Your password has been successfully changed 🎉. You can now log in with your new password.",
+    ),
+    "passwordTooWeak": MessageLookupByLibrary.simpleMessage(
+      "Password is too weak",
     ),
     "plants": MessageLookupByLibrary.simpleMessage("Plants & Vegetation"),
     "privacy": MessageLookupByLibrary.simpleMessage("Privacy"),
@@ -235,6 +245,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
     "privacyTitle": MessageLookupByLibrary.simpleMessage("Privacy"),
     "profile": MessageLookupByLibrary.simpleMessage("Profile"),
+    "profileCreationFailed": MessageLookupByLibrary.simpleMessage(
+      "Failed to create user profile",
+    ),
     "projectNotifications": MessageLookupByLibrary.simpleMessage(
       "Project Notifications",
     ),
@@ -246,6 +259,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "recoverPassword": MessageLookupByLibrary.simpleMessage("Recover Password"),
     "registerError": MessageLookupByLibrary.simpleMessage(
       "Error while registering",
+    ),
+    "registrationError": MessageLookupByLibrary.simpleMessage(
+      "Registration error",
     ),
     "required": MessageLookupByLibrary.simpleMessage("Required"),
     "rooms": MessageLookupByLibrary.simpleMessage("Rooms"),
