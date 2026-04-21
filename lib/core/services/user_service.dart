@@ -25,6 +25,16 @@ class UserService {
         if ((data['lastName'] ?? '').isEmpty) {
           data['lastName'] = data['last_name'] ?? '';
         }
+
+        // Safe parsing for styles column
+        if (data['styles'] is String) {
+          try {
+            data['styles'] = jsonDecode(data['styles'] as String);
+          } catch (_) {
+            data['styles'] = [];
+          }
+        }
+        
         return data;
       }
       return null;
@@ -85,6 +95,31 @@ class UserService {
       return dataUrl;
     } catch (e) {
       return null;
+    }
+  }
+
+  static Future<void> updateUserStyles(List<String> styles) async {
+    try {
+      final user = _supabase.auth.currentUser;
+      if (user == null) return;
+      await _supabase.from('users').update({
+        'styles': styles,
+        'styles_selected': true,
+      }).eq('id', user.id);
+    } catch (e) {
+      print('Error updating user styles: $e');
+    }
+  }
+
+  static Future<void> setStylesSelected(bool selected) async {
+    try {
+      final user = _supabase.auth.currentUser;
+      if (user == null) return;
+      await _supabase.from('users').update({
+        'styles_selected': selected,
+      }).eq('id', user.id);
+    } catch (e) {
+      print('Error updating styles_selected: $e');
     }
   }
 }

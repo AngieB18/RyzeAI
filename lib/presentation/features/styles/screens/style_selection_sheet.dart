@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../generated/l10n.dart';
+import '../../../../presentation/widgets/emojis/app_emojis.dart';
+import '../../../../core/services/user_service.dart';
 
 class StyleSelectionSheet extends StatefulWidget {
   final List<String> initialSelected;
@@ -23,30 +25,30 @@ class _StyleSelectionSheetState extends State<StyleSelectionSheet> {
   bool _saving = false;
 
   final List<Map<String, String>> _styles = [
-    {'key': 'modern', 'icon': '🏠'},
-    {'key': 'natural', 'icon': '🌿'},
-    {'key': 'minimal', 'icon': '🕯️'},
-    {'key': 'colorful', 'icon': '🎨'},
-    {'key': 'rustic', 'icon': '🪵'},
-    {'key': 'scandinavian', 'icon': '❄️'},
-    {'key': 'traditional', 'icon': '🏛️'},
-    {'key': 'japanese', 'icon': '🎌'},
-    {'key': 'contemporary', 'icon': '⚡'},
-    {'key': 'bohemian', 'icon': '🌸'},
-    {'key': 'farmhouse', 'icon': '🚜'},
-    {'key': 'vintage', 'icon': '📻'},
-    {'key': 'industrial', 'icon': '🔧'},
-    {'key': 'retro', 'icon': '🎪'},
-    {'key': 'cyberpunk', 'icon': '🤖'},
-    {'key': 'christmas', 'icon': '🎄'},
-    {'key': 'tropical', 'icon': '🌴'},
-    {'key': 'brutalist', 'icon': '🧱'},
-    {'key': 'southwest', 'icon': '🌞'},
-    {'key': 'baroque', 'icon': '👑'},
-    {'key': 'futuristic', 'icon': '🚀'},
-    {'key': 'colonial', 'icon': '🏰'},
-    {'key': 'rococo', 'icon': '💎'},
-    {'key': 'valentine', 'icon': '💝'},
+    {'key': 'modern'},
+    {'key': 'natural'},
+    {'key': 'minimal'},
+    {'key': 'colorful'},
+    {'key': 'rustic'},
+    {'key': 'scandinavian'},
+    {'key': 'traditional'},
+    {'key': 'japanese'},
+    {'key': 'contemporary'},
+    {'key': 'bohemian'},
+    {'key': 'farmhouse'},
+    {'key': 'vintage'},
+    {'key': 'industrial'},
+    {'key': 'retro'},
+    {'key': 'cyberpunk'},
+    {'key': 'christmas'},
+    {'key': 'tropical'},
+    {'key': 'brutalist'},
+    {'key': 'southwest'},
+    {'key': 'baroque'},
+    {'key': 'futuristic'},
+    {'key': 'colonial'},
+    {'key': 'rococo'},
+    {'key': 'valentine'},
   ];
 
   @override
@@ -114,14 +116,7 @@ class _StyleSelectionSheetState extends State<StyleSelectionSheet> {
   Future<void> _save() async {
     setState(() => _saving = true);
     try {
-      final supabase = Supabase.instance.client;
-      final uid = supabase.auth.currentUser?.id;
-      if (uid != null) {
-        await supabase.from('users').update({
-          'styles': _selected,
-          'stylesSelected': true,
-        }).eq('id', uid);
-      }
+      await UserService.updateUserStyles(_selected);
       if (!mounted) return;
       Navigator.pop(context);
       widget.onSaved?.call();
@@ -236,7 +231,6 @@ class _StyleSelectionSheetState extends State<StyleSelectionSheet> {
                     childAspectRatio: 1.0,
                     children: _styles.map((style) {
                       final key = style['key']!;
-                      final icon = style['icon']!;
                       final isSelected = _selected.contains(key);
                       final label = _getStyleLabel(context, key);
                       final maxReached = _selected.length >= 4 && !isSelected;
@@ -276,7 +270,7 @@ class _StyleSelectionSheetState extends State<StyleSelectionSheet> {
                               Opacity(
                                 opacity: maxReached ? 0.5 : 1.0,
                                 child: Text(
-                                  icon,
+                                  AppEmojis.getStyle(key),
                                   style: const TextStyle(fontSize: 22),
                                 ),
                               ),
@@ -310,42 +304,58 @@ class _StyleSelectionSheetState extends State<StyleSelectionSheet> {
                     }).toList(),
                   ),
                   const SizedBox(height: 24),
+                ],
+              ),
+            ),
 
-                  // Botón continuar
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _selected.isEmpty
-                            ? AppColors.inputBorder(context)
-                            : AppColors.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        elevation: 0,
-                      ),
-                      onPressed: _selected.isEmpty || _saving ? null : _save,
-                      child: _saving
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : Text(
-                              l.continueButton,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                    ),
+            // Fixed Bottom Button
+            Container(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+              decoration: BoxDecoration(
+                color: AppColors.surface(context),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    offset: const Offset(0, -4),
+                    blurRadius: 10,
                   ),
                 ],
+              ),
+              child: SafeArea(
+                top: false,
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 54,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _selected.isEmpty
+                          ? AppColors.inputBorder(context)
+                          : AppColors.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 0,
+                    ),
+                    onPressed: _selected.isEmpty || _saving ? null : _save,
+                    child: _saving
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : Text(
+                            l.continueButton,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                  ),
+                ),
               ),
             ),
           ],

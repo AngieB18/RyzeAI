@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ryzeai/core/constants/app_colors.dart';
+import 'package:ryzeai/presentation/widgets/emojis/app_emojis.dart';
 
 class RoomSelector extends StatelessWidget {
   final List<Map<String, String>> rooms;
@@ -13,6 +14,8 @@ class RoomSelector extends StatelessWidget {
     required this.onRoomSelected,
   });
 
+  String _getRoomEmoji(String key) => AppEmojis.getRoom(key);
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -20,6 +23,7 @@ class RoomSelector extends StatelessWidget {
       child: Row(
         children: rooms.map((room) {
           final isSelected = selectedRoom == room['key'];
+
           return GestureDetector(
             onTap: () => onRoomSelected(room['key']),
             child: AnimatedContainer(
@@ -41,7 +45,10 @@ class RoomSelector extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(room['icon']!, style: const TextStyle(fontSize: 16)),
+                  Text(
+                    _getRoomEmoji(room['key']!),
+                    style: const TextStyle(fontSize: 16),
+                  ),
                   const SizedBox(width: 6),
                   Text(
                     room['label']!,

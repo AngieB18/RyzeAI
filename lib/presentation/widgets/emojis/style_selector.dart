@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ryzeai/core/constants/app_colors.dart';
+import 'package:ryzeai/presentation/widgets/emojis/app_emojis.dart';
 
 class StyleSelector extends StatelessWidget {
   final List<Map<String, String>> styles;
@@ -15,6 +16,8 @@ class StyleSelector extends StatelessWidget {
     required this.getStyleLabel,
   });
 
+  String _getStyleEmoji(String key) => AppEmojis.getStyle(key);
+
   @override
   Widget build(BuildContext context) {
     return Wrap(
@@ -23,6 +26,7 @@ class StyleSelector extends StatelessWidget {
       children: styles.map((style) {
         final isSelected = selectedStyle == style['key'];
         final label = getStyleLabel(style['key']!, 'label');
+
         return GestureDetector(
           onTap: () => onStyleSelected(style['key']),
           child: AnimatedContainer(
@@ -43,7 +47,10 @@ class StyleSelector extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(style['icon']!, style: const TextStyle(fontSize: 14)),
+                Text(
+                  _getStyleEmoji(style['key']!),
+                  style: const TextStyle(fontSize: 14),
+                ),
                 const SizedBox(width: 6),
                 Text(
                   label,

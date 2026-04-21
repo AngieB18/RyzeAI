@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _loading = false;
       });
 
-      final stylesSelected = data?['stylesSelected'] ?? false;
+      final stylesSelected = data?['styles_selected'] ?? false;
       if (!stylesSelected) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _showStyleSheet();
