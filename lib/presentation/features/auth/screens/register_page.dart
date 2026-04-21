@@ -128,6 +128,7 @@ class _RegisterPageState extends State<RegisterPage> {
           'language': Localizations.localeOf(context).languageCode,
           'theme': 'dark',
           'styles_selected': false,
+          'styles': [],
           'created_at': DateTime.now().toIso8601String(),
         });
       } catch (dbError) {

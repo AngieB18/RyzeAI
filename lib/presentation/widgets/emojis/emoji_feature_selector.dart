@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ryzeai/core/constants/app_colors.dart';
+import 'package:ryzeai/presentation/widgets/emojis/app_emojis.dart';
 
 class EmojiFeatureSelector extends StatelessWidget {
   final List<Map<String, dynamic>> sections;
@@ -19,7 +20,7 @@ class EmojiFeatureSelector extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: sections.map((section) {
         final color = section['color'] as Color;
-        final features = section['features'] as List<String>;
+        final features = section['features'] as List<Map<String, String>>;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -38,9 +39,12 @@ class EmojiFeatureSelector extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children: features.map((feature) {
-                final isSelected = selectedFeatures.contains(feature);
+                final key = feature['key']!;
+                final label = feature['label']!;
+                final isSelected = selectedFeatures.contains(label);
+                
                 return GestureDetector(
-                  onTap: () => onFeatureToggled(feature, !isSelected),
+                  onTap: () => onFeatureToggled(label, !isSelected),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     padding: const EdgeInsets.symmetric(
@@ -59,17 +63,27 @@ class EmojiFeatureSelector extends StatelessWidget {
                         width: isSelected ? 1.5 : 1,
                       ),
                     ),
-                    child: Text(
-                      feature,
-                      style: TextStyle(
-                        color: isSelected
-                            ? color
-                            : AppColors.textPrimary(context),
-                        fontSize: 12,
-                        fontWeight: isSelected
-                            ? FontWeight.w600
-                            : FontWeight.normal,
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          AppEmojis.getFeature(key),
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          label,
+                          style: TextStyle(
+                            color: isSelected
+                                ? color
+                                : AppColors.textPrimary(context),
+                            fontSize: 12,
+                            fontWeight: isSelected
+                                ? FontWeight.w600
+                                : FontWeight.normal,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 );

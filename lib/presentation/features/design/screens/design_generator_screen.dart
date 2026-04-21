@@ -10,6 +10,7 @@ import 'package:ryzeai/core/constants/app_colors.dart';
 import 'package:ryzeai/core/services/remote_config_service.dart';
 import 'package:ryzeai/generated/l10n.dart';
 import 'package:ryzeai/presentation/widgets/index.dart';
+import 'package:ryzeai/core/services/user_service.dart';
 
 class DesignGeneratorScreen extends StatefulWidget {
   final File? initialImage;
@@ -31,40 +32,40 @@ class _DesignGeneratorScreenState extends State<DesignGeneratorScreen> {
 
   // Room types
   final List<Map<String, String>> _rooms = [
-    {'key': 'living_room', 'label': 'Living Room', 'icon': '🛋️'},
-    {'key': 'bedroom', 'label': 'Bedroom', 'icon': '🛏️'},
-    {'key': 'kitchen', 'label': 'Kitchen', 'icon': '🍳'},
-    {'key': 'bathroom', 'label': 'Bathroom', 'icon': '🚿'},
-    {'key': 'office', 'label': 'Office', 'icon': '💼'},
-    {'key': 'dining_room', 'label': 'Dining Room', 'icon': '🍽️'},
+    {'key': 'living_room', 'label': 'Living Room'},
+    {'key': 'bedroom', 'label': 'Bedroom'},
+    {'key': 'kitchen', 'label': 'Kitchen'},
+    {'key': 'bathroom', 'label': 'Bathroom'},
+    {'key': 'office', 'label': 'Office'},
+    {'key': 'dining_room', 'label': 'Dining Room'},
   ];
 
   // All styles
   final List<Map<String, String>> _styles = [
-    {'key': 'modern', 'icon': '🏙️'},
-    {'key': 'minimal', 'icon': '🕯️'},
-    {'key': 'traditional', 'icon': '🏛️'},
-    {'key': 'japanese', 'icon': '⛩️'},
-    {'key': 'contemporary', 'icon': '🔷'},
-    {'key': 'bohemian', 'icon': '🪬'},
-    {'key': 'farmhouse', 'icon': '🌾'},
-    {'key': 'vintage', 'icon': '📻'},
-    {'key': 'industrial', 'icon': '⚙️'},
-    {'key': 'retro', 'icon': '🕹️'},
-    {'key': 'cyberpunk', 'icon': '🤖'},
-    {'key': 'christmas', 'icon': '🎄'},
-    {'key': 'tropical', 'icon': '🌴'},
-    {'key': 'scandinavian', 'icon': '❄️'},
-    {'key': 'natural', 'icon': '🌿'},
-    {'key': 'rustic', 'icon': '🪵'},
-    {'key': 'colorful', 'icon': '🎨'},
-    {'key': 'brutalist', 'icon': '🧱'},
-    {'key': 'southwest', 'icon': '🌵'},
-    {'key': 'baroque', 'icon': '👑'},
-    {'key': 'futuristic', 'icon': '🚀'},
-    {'key': 'colonial', 'icon': '🏚️'},
-    {'key': 'rococo', 'icon': '🌸'},
-    {'key': 'valentine', 'icon': '💝'},
+    {'key': 'modern'},
+    {'key': 'minimal'},
+    {'key': 'traditional'},
+    {'key': 'japanese'},
+    {'key': 'contemporary'},
+    {'key': 'bohemian'},
+    {'key': 'farmhouse'},
+    {'key': 'vintage'},
+    {'key': 'industrial'},
+    {'key': 'retro'},
+    {'key': 'cyberpunk'},
+    {'key': 'christmas'},
+    {'key': 'tropical'},
+    {'key': 'scandinavian'},
+    {'key': 'natural'},
+    {'key': 'rustic'},
+    {'key': 'colorful'},
+    {'key': 'brutalist'},
+    {'key': 'southwest'},
+    {'key': 'baroque'},
+    {'key': 'futuristic'},
+    {'key': 'colonial'},
+    {'key': 'rococo'},
+    {'key': 'valentine'},
   ];
 
   // Color palettes
@@ -137,20 +138,11 @@ class _DesignGeneratorScreenState extends State<DesignGeneratorScreen> {
 
   Future<void> _loadUserStyles() async {
     try {
-      final user = Supabase.instance.client.auth.currentUser;
-
-      if (user != null) {
-        final response = await Supabase.instance.client
-            .from('users')
-            .select('styles')
-            .eq('id', user.id)
-            .single();
-
-        if (response['styles'] != null) {
-          setState(() {
-            _userStyles = List<String>.from(response['styles']);
-          });
-        }
+      final data = await UserService.getCurrentUserData();
+      if (data != null && data['styles'] != null) {
+        setState(() {
+          _userStyles = List<String>.from(data['styles']);
+        });
       }
     } catch (e) {
       // Silently fail
@@ -237,167 +229,169 @@ class _DesignGeneratorScreenState extends State<DesignGeneratorScreen> {
   }
 
   Future<void> _generate(S l) async {
-  final user = Supabase.instance.client.auth.currentUser;
+    final user = Supabase.instance.client.auth.currentUser;
 
-  if (user == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Debes iniciar sesión'),
-        backgroundColor: AppColors.passwordWeak,
-      ),
-    );
-    return;
-  }
-
-  if (_selectedRoom == null) return;
-
-  final stylesToGenerate = _userStyles.isNotEmpty
-      ? _userStyles
-      : (_selectedStyle != null ? [_selectedStyle!] : []);
-
-  if (stylesToGenerate.isEmpty) return;
-
-  setState(() => _generating = true);
-
-  try {
-    final apiKey = RemoteConfigService.getAnthropicApiKey();
-
-    if (apiKey.isEmpty) {
-      if (mounted) {
-        setState(() => _generating = false);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('API key not configured'),
-            backgroundColor: AppColors.passwordWeak,
-          ),
-        );
-      }
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Debes iniciar sesión'),
+          backgroundColor: AppColors.passwordWeak,
+        ),
+      );
       return;
     }
 
-    final features = _selectedFeatures.isNotEmpty
-        ? 'with features: ${_selectedFeatures.join(', ')}'
-        : '';
-    final palette = _selectedPalette != null
-        ? 'color palette: $_selectedPalette'
-        : '';
+    if (_selectedRoom == null) return;
 
-    final designs = <Map<String, String>>[];
+    final stylesToGenerate = _userStyles.isNotEmpty
+        ? _userStyles
+        : (_selectedStyle != null ? [_selectedStyle!] : []);
 
-    for (final style in stylesToGenerate) {
-      String prompt;
-      Map<String, dynamic>? messageContent;
+    if (stylesToGenerate.isEmpty) return;
 
-      if (_selectedImage != null) {
-        final base64Image = await _imageToBase64(_selectedImage!);
+    setState(() => _generating = true);
 
-        prompt =
-            'Looking at this room image, give 3 decoration ideas in $style style for $_selectedRoom $palette $features. '
-            'Format: TITLE | DESC | KEYWORD separated by ---';
+    try {
+      final apiKey = RemoteConfigService.getAnthropicApiKey();
 
-        messageContent = {
-          'type': 'image',
-          'source': {
-            'type': 'base64',
-            'media_type': 'image/jpeg',
-            'data': base64Image,
-          },
-        };
-      } else {
-        prompt =
-            'Give 3 decoration ideas for $_selectedRoom in $style style $palette $features. '
-            'Format: TITLE | DESC | KEYWORD separated by ---';
+      if (apiKey.isEmpty) {
+        if (mounted) {
+          setState(() => _generating = false);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('API key not configured'),
+              backgroundColor: AppColors.passwordWeak,
+            ),
+          );
+        }
+        return;
       }
 
-      final response = await http.post(
-        Uri.parse('https://api.anthropic.com/v1/messages'),
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-        },
-        body: jsonEncode({
-          'model': 'claude-sonnet-4-20250514',
-          'max_tokens': 1500,
-          'messages': [
-            {
-              'role': 'user',
-              'content': _selectedImage != null
-                  ? [messageContent, {'type': 'text', 'text': prompt}]
-                  : prompt,
+      final features = _selectedFeatures.isNotEmpty
+          ? 'with features: ${_selectedFeatures.join(', ')}'
+          : '';
+      final palette = _selectedPalette != null
+          ? 'color palette: $_selectedPalette'
+          : '';
+
+      final designs = <Map<String, String>>[];
+
+      for (final style in stylesToGenerate) {
+        String prompt;
+        Map<String, dynamic>? messageContent;
+
+        if (_selectedImage != null) {
+          final base64Image = await _imageToBase64(_selectedImage!);
+
+          prompt =
+              'Looking at this room image, give 3 decoration ideas in $style style for $_selectedRoom $palette $features. '
+              'Format: TITLE | DESC | KEYWORD separated by ---';
+
+          messageContent = {
+            'type': 'image',
+            'source': {
+              'type': 'base64',
+              'media_type': 'image/jpeg',
+              'data': base64Image,
             },
-          ],
-        }),
-      );
+          };
+        } else {
+          prompt =
+              'Give 3 decoration ideas for $_selectedRoom in $style style $palette $features. '
+              'Format: TITLE | DESC | KEYWORD separated by ---';
+        }
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final text = data['content'][0]['text'] as String;
+        final response = await http.post(
+          Uri.parse('https://api.anthropic.com/v1/messages'),
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01',
+          },
+          body: jsonEncode({
+            'model': 'claude-sonnet-4-20250514',
+            'max_tokens': 1500,
+            'messages': [
+              {
+                'role': 'user',
+                'content': _selectedImage != null
+                    ? [
+                        messageContent,
+                        {'type': 'text', 'text': prompt},
+                      ]
+                    : prompt,
+              },
+            ],
+          }),
+        );
 
-        final ideas = text.split('---');
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          final text = data['content'][0]['text'] as String;
 
-        for (final idea in ideas) {
-          final titleMatch =
-              RegExp(r'TITLE:\s*(.+?)(?:\||$)').firstMatch(idea);
-          final descMatch =
-              RegExp(r'DESC:\s*(.+?)(?:\||$)').firstMatch(idea);
-          final kwMatch =
-              RegExp(r'KEYWORD:\s*(.+?)$').firstMatch(idea);
+          final ideas = text.split('---');
 
-          final title = titleMatch?.group(1)?.trim() ?? '';
-          final desc = descMatch?.group(1)?.trim() ?? '';
-          final keyword = kwMatch?.group(1)?.trim() ?? '';
+          for (final idea in ideas) {
+            final titleMatch = RegExp(
+              r'TITLE:\s*(.+?)(?:\||$)',
+            ).firstMatch(idea);
+            final descMatch = RegExp(r'DESC:\s*(.+?)(?:\||$)').firstMatch(idea);
+            final kwMatch = RegExp(r'KEYWORD:\s*(.+?)$').firstMatch(idea);
 
-          if (title.isNotEmpty) {
-            designs.add({
-              'title': title,
-              'description': desc,
-              'imageUrl':
-                  'https://source.unsplash.com/400x300/?${Uri.encodeComponent(keyword.isNotEmpty ? keyword : style)}',
-              'room': _selectedRoom!,
-              'style': style,
-              'palette': _selectedPalette ?? '',
-            });
+            final title = titleMatch?.group(1)?.trim() ?? '';
+            final desc = descMatch?.group(1)?.trim() ?? '';
+            final keyword = kwMatch?.group(1)?.trim() ?? '';
+
+            if (title.isNotEmpty) {
+              designs.add({
+                'title': title,
+                'description': desc,
+                'imageUrl':
+                    'https://source.unsplash.com/400x300/?${Uri.encodeComponent(keyword.isNotEmpty ? keyword : style)}',
+                'room': _selectedRoom!,
+                'style': style,
+                'palette': _selectedPalette ?? '',
+              });
+            }
           }
         }
       }
+
+      if (!mounted) return;
+
+      setState(() => _generating = false);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l.savedToDesigns),
+          backgroundColor: AppColors.passwordStrong,
+        ),
+      );
+
+      final supabase = Supabase.instance.client;
+
+      for (final design in designs) {
+        await supabase.from('my_designs').insert({
+          'user_id': user.id,
+          'image_url': design['imageUrl'],
+          'title': design['title'],
+          'style': design['style'],
+          'room': design['room'],
+          'created_at': DateTime.now().toIso8601String(),
+        });
+      }
+    } catch (e) {
+      setState(() => _generating = false);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          backgroundColor: AppColors.passwordWeak,
+        ),
+      );
     }
-
-    if (!mounted) return;
-
-    setState(() => _generating = false);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(l.savedToDesigns),
-        backgroundColor: AppColors.passwordStrong,
-      ),
-    );
-
-    final supabase = Supabase.instance.client;
-
-    for (final design in designs) {
-      await supabase.from('my_designs').insert({
-        'user_id': user.id,
-        'image_url': design['imageUrl'],
-        'title': design['title'],
-        'style': design['style'],
-        'room': design['room'],
-        'created_at': DateTime.now().toIso8601String(),
-      });
-    }
-  } catch (e) {
-    setState(() => _generating = false);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Error: $e'),
-        backgroundColor: AppColors.passwordWeak,
-      ),
-    );
   }
-}  
 
   Future<void> _pickImage(ImageSource source) async {
     try {
@@ -681,7 +675,12 @@ class _DesignGeneratorScreenState extends State<DesignGeneratorScreen> {
     return StyleSelector(
       styles: _styles,
       selectedStyle: _selectedStyle,
-      onStyleSelected: (style) => setState(() => _selectedStyle = style),
+      onStyleSelected: (style) {
+        setState(() => _selectedStyle = style);
+        if (style != null) {
+          UserService.updateUserStyles([style]);
+        }
+      },
       getStyleLabel: (key, _) => _getStyleLabel(l, key),
     );
   }
@@ -698,7 +697,8 @@ class _DesignGeneratorScreenState extends State<DesignGeneratorScreen> {
     return ColorPaletteSelector(
       palettes: _palettes,
       selectedPalette: _selectedPalette,
-      onPaletteSelected: (palette) => setState(() => _selectedPalette = palette),
+      onPaletteSelected: (palette) =>
+          setState(() => _selectedPalette = palette),
       getPaletteLabel: (key) => _getPaletteLabel(l, key),
     );
   }
@@ -708,17 +708,31 @@ class _DesignGeneratorScreenState extends State<DesignGeneratorScreen> {
       {
         'title': l.lighting,
         'color': const Color(0xFFE8A020),
-        'features': [l.ambientLight, l.naturalLight, l.cozyAtmosphere],
+        'features': [
+          {'key': 'ambient_light', 'label': l.ambientLight},
+          {'key': 'natural_light', 'label': l.naturalLight},
+          {'key': 'cozy_atmosphere', 'label': l.cozyAtmosphere},
+        ],
       },
       {
         'title': l.architecture,
         'color': const Color(0xFF7B68EE),
-        'features': [l.accentWall, l.builtInShelves, l.exposedBeams, l.arches],
+        'features': [
+          {'key': 'accent_wall', 'label': l.accentWall},
+          {'key': 'built_in_shelves', 'label': l.builtInShelves},
+          {'key': 'exposed_beams', 'label': l.exposedBeams},
+          {'key': 'arches', 'label': l.arches},
+        ],
       },
       {
         'title': l.decoration,
         'color': const Color(0xFF20B2AA),
-        'features': [l.plants, l.mirrors, l.texturedWalls, l.rugs],
+        'features': [
+          {'key': 'plants', 'label': l.plants},
+          {'key': 'mirrors', 'label': l.mirrors},
+          {'key': 'textured_walls', 'label': l.texturedWalls},
+          {'key': 'rugs', 'label': l.rugs},
+        ],
       },
     ];
 
