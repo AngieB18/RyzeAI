@@ -1,22 +1,24 @@
 // lib/core/services/user_service.dart
 import 'dart:typed_data';
 import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserService {
+  static final _supabase = Supabase.instance.client;
+
   static Future<Map<String, dynamic>?> getCurrentUserData() async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      final user = _supabase.auth.currentUser;
       if (user == null) return null;
 
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
+      final response = await _supabase
+          .from('users')
+          .select()
+          .eq('id', user.id)
+          .single();
 
-      if (doc.exists && doc.data() != null) {
-        final data = doc.data()!;
+      if (response != null) {
+        final data = response as Map<String, dynamic>;
         if ((data['firstName'] ?? '').isEmpty) {
           data['firstName'] = data['first_name'] ?? '';
         }
@@ -40,31 +42,31 @@ class UserService {
 
   static Future<void> updateUserName(String firstName, String lastName) async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      final user = _supabase.auth.currentUser;
       if (user == null) return;
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).update(
+      await _supabase.from('users').update(
         {'firstName': firstName, 'lastName': lastName},
-      );
+      ).eq('id', user.id);
     } catch (e) {}
   }
 
   static Future<void> updateUserEmail(String newEmail) async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      final user = _supabase.auth.currentUser;
       if (user == null) return;
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).update(
+      await _supabase.from('users').update(
         {'email': newEmail},
-      );
+      ).eq('id', user.id);
     } catch (e) {}
   }
 
-  // ← Guarda foto como base64 en Firestore (sin Storage)
+  // Guarda foto como base64 en Supabase (sin Storage)
   static Future<String?> uploadProfilePhoto(Uint8List imageBytes) async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      final user = _supabase.auth.currentUser;
       if (user == null) return null;
 
-      // Comprimir si es muy grande (max ~700KB para Firestore)
+      // Comprimir si es muy grande (max ~700KB para Supabase)
       Uint8List compressed = imageBytes;
       if (imageBytes.length > 700000) {
         // Si pesa más de 700KB avisamos
@@ -75,10 +77,10 @@ class UserService {
       final base64String = base64Encode(compressed);
       final dataUrl = 'data:image/jpeg;base64,$base64String';
 
-      // Guardar en Firestore
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).update(
+      // Guardar en Supabase
+      await _supabase.from('users').update(
         {'photoUrl': dataUrl},
-      );
+      ).eq('id', user.id);
 
       return dataUrl;
     } catch (e) {

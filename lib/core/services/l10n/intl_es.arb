@@ -52,7 +52,6 @@
   "emptyFieldsError": "Por favor ingresa correo y contraseña",
   "loading": "Cargando...",
   "loginSuccess": "¡Bienvenido de nuevo!",
-  "invalidEmail": "Por favor ingresa un correo válido",
   "editProfile": "Editar perfil",
   "notifications": "Notificaciones",
   "privacy": "Privacidad",
@@ -193,5 +192,11 @@
 "colorPaletteMonochrome": "Monocromática",
 "colorPaletteVibrant": "Vibrante",
 "required": "Requerido",
-"optional": "Opcional"
+"optional": "Opcional",
+"ok": "OK",
+"emailAlreadyExists": "Este correo ya está registrado",
+"passwordTooWeak": "La contraseña es muy débil",
+"registrationError": "Error en el registro",
+"profileCreationFailed": "No se pudo crear el perfil del usuario",
+"creatingAccount": "Creando cuenta..."
 } 

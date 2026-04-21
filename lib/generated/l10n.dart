@@ -444,16 +444,6 @@ class S {
     );
   }
 
-  /// `Invalid email`
-  String get invalidEmail {
-    return Intl.message(
-      'Invalid email',
-      name: 'invalidEmail',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Edit Profile`
   String get editProfile {
     return Intl.message(
@@ -1189,6 +1179,16 @@ class S {
     );
   }
 
+  /// `Invalid email`
+  String get invalidEmail {
+    return Intl.message(
+      'Invalid email',
+      name: 'invalidEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Email sent successfully! Check your inbox or spam for the password reset instructions.`
   String get emailSentFull {
     return Intl.message(
@@ -1622,6 +1622,61 @@ class S {
   /// `Optional`
   String get optional {
     return Intl.message('Optional', name: 'optional', desc: '', args: []);
+  }
+
+  /// `OK`
+  String get ok {
+    return Intl.message('OK', name: 'ok', desc: '', args: []);
+  }
+
+  /// `This email is already registered`
+  String get emailAlreadyExists {
+    return Intl.message(
+      'This email is already registered',
+      name: 'emailAlreadyExists',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password is too weak`
+  String get passwordTooWeak {
+    return Intl.message(
+      'Password is too weak',
+      name: 'passwordTooWeak',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Registration error`
+  String get registrationError {
+    return Intl.message(
+      'Registration error',
+      name: 'registrationError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to create user profile`
+  String get profileCreationFailed {
+    return Intl.message(
+      'Failed to create user profile',
+      name: 'profileCreationFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Creating account...`
+  String get creatingAccount {
+    return Intl.message(
+      'Creating account...',
+      name: 'creatingAccount',
+      desc: '',
+      args: [],
+    );
   }
 }
 

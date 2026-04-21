@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ThemeProvider extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.light;
+  final _supabase = Supabase.instance.client;
 
   ThemeMode get themeMode => _themeMode;
 
   bool get isDark => _themeMode == ThemeMode.dark;
 
-  // Cargar tema desde Firebase
+  // Cargar tema desde Supabase
   Future<void> loadTheme() async {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final uid = _supabase.auth.currentUser?.id;
 
     if (uid != null) {
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .get();
+      final response = await _supabase
+          .from('users')
+          .select()
+          .eq('id', uid)
+          .single();
 
-      if (doc.exists && doc.data() != null) {
-        final data = doc.data()!;
+      if (response != null) {
+        final data = response as Map<String, dynamic>;
         final theme = data['theme'] ?? 'light';
 
         _themeMode = theme == 'dark' ? ThemeMode.dark : ThemeMode.light;
@@ -36,33 +37,31 @@ class ThemeProvider extends ChangeNotifier {
 
     notifyListeners();
 
-    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final uid = _supabase.auth.currentUser?.id;
 
     if (uid != null) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
+      await _supabase
+          .from('users')
           .update({
         'theme': _themeMode == ThemeMode.dark ? 'dark' : 'light',
-      });
+      }).eq('id', uid);
     }
   }
 
-  // Cambiar tema directamente 
+  // Cambiar tema directamente
   Future<void> setTheme(bool isDarkMode) async {
     _themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
 
     notifyListeners();
 
-    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final uid = _supabase.auth.currentUser?.id;
 
     if (uid != null) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
+      await _supabase
+          .from('users')
           .update({
         'theme': isDarkMode ? 'dark' : 'light',
-      });
+      }).eq('id', uid);
     }
   }
 }

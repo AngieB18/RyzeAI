@@ -31,19 +31,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^1.2.0 
-  firebase_core: ^2.30.0
-  firebase_auth: ^4.19.0
-  cloud_firestore: ^4.17.0
 
-  firebase_storage: ^11.7.0  
+  http: ^1.2.0
   image_picker: ^1.1.2
-
   cupertino_icons: ^1.0.8
 
   flutter_localizations:
     sdk: flutter
   intl: ^0.20.2
+
+  # Supabase
+  supabase_flutter: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -58,7 +56,6 @@ flutter_launcher_icons:
   ios: true
   image_path: "assets/icon/iconRyzeAI.png"
   min_sdk_android: 21
-
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

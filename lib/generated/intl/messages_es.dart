@@ -89,6 +89,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "createAccount": MessageLookupByLibrary.simpleMessage("Crear Cuenta"),
     "createAccountButton": MessageLookupByLibrary.simpleMessage("Crear Cuenta"),
+    "creatingAccount": MessageLookupByLibrary.simpleMessage(
+      "Creando cuenta...",
+    ),
     "currentPassword": MessageLookupByLibrary.simpleMessage(
       "Contraseña actual",
     ),
@@ -111,6 +114,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "editProfile": MessageLookupByLibrary.simpleMessage("Editar perfil"),
     "email": MessageLookupByLibrary.simpleMessage("Correo electrónico"),
+    "emailAlreadyExists": MessageLookupByLibrary.simpleMessage(
+      "Este correo ya está registrado",
+    ),
     "emailChangeInfo": MessageLookupByLibrary.simpleMessage(
       "Se enviará un correo de verificación a la nueva dirección",
     ),
@@ -235,11 +241,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "notificationsTitle": MessageLookupByLibrary.simpleMessage(
       "Notificaciones",
     ),
+    "ok": MessageLookupByLibrary.simpleMessage("OK"),
     "openCamera": MessageLookupByLibrary.simpleMessage("Abrir cámara IA"),
     "optional": MessageLookupByLibrary.simpleMessage("Opcional"),
     "password": MessageLookupByLibrary.simpleMessage("Contraseña"),
     "passwordChangedSuccess": MessageLookupByLibrary.simpleMessage(
       "Tu contraseña ha sido cambiada exitosamente 🎉. Ahora puedes iniciar sesión con tu nueva contraseña.",
+    ),
+    "passwordTooWeak": MessageLookupByLibrary.simpleMessage(
+      "La contraseña es muy débil",
     ),
     "plants": MessageLookupByLibrary.simpleMessage("Plantas y vegetación"),
     "privacy": MessageLookupByLibrary.simpleMessage("Privacidad"),
@@ -251,6 +261,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "privacyTitle": MessageLookupByLibrary.simpleMessage("Privacidad"),
     "profile": MessageLookupByLibrary.simpleMessage("Perfil"),
+    "profileCreationFailed": MessageLookupByLibrary.simpleMessage(
+      "No se pudo crear el perfil del usuario",
+    ),
     "projectNotifications": MessageLookupByLibrary.simpleMessage(
       "Notificaciones de proyectos",
     ),
@@ -265,6 +278,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Recuperar contraseña",
     ),
     "registerError": MessageLookupByLibrary.simpleMessage("Error al registrar"),
+    "registrationError": MessageLookupByLibrary.simpleMessage(
+      "Error en el registro",
+    ),
     "required": MessageLookupByLibrary.simpleMessage("Requerido"),
     "rooms": MessageLookupByLibrary.simpleMessage("Habitaciones"),
     "rugs": MessageLookupByLibrary.simpleMessage("Alfombras de área"),
