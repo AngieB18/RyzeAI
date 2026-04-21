@@ -54,6 +54,26 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Slide to start`
+  String get slide_me {
+    return Intl.message('Slide to start', name: 'slide_me', desc: '', args: []);
+  }
+
+  /// `Welcome`
+  String get welcome_title {
+    return Intl.message('Welcome', name: 'welcome_title', desc: '', args: []);
+  }
+
+  /// `Get inspired and design your ideal space in 3D`
+  String get welcome_subtitle {
+    return Intl.message(
+      'Get inspired and design your ideal space in 3D',
+      name: 'welcome_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Welcome! Get inspired and design your ideal space in 3D`
   String get welcome {
     return Intl.message(
@@ -1674,6 +1694,46 @@ class S {
     return Intl.message(
       'Creating account...',
       name: 'creatingAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Login`
+  String get login_tab {
+    return Intl.message('Login', name: 'login_tab', desc: '', args: []);
+  }
+
+  /// `Signup`
+  String get signup_tab {
+    return Intl.message('Signup', name: 'signup_tab', desc: '', args: []);
+  }
+
+  /// `Full Name`
+  String get full_name_label {
+    return Intl.message(
+      'Full Name',
+      name: 'full_name_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Forgot Password?`
+  String get forgot_password_link {
+    return Intl.message(
+      'Forgot Password?',
+      name: 'forgot_password_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `By creating an account you are accepting our `
+  String get terms_signup_intro {
+    return Intl.message(
+      'By creating an account you are accepting our ',
+      name: 'terms_signup_intro',
       desc: '',
       args: [],
     );

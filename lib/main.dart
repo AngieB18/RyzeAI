@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'presentation/features/auth/screens/splash_page.dart';
 import 'presentation/features/auth/screens/welcome_page.dart';
 import 'presentation/features/auth/screens/login_page.dart';
 import 'presentation/features/auth/screens/register_page.dart';
@@ -69,6 +70,8 @@ class _MyAppState extends State<MyApp> {
           onGenerateRoute: (settings) {
             switch (settings.name) {
               case "/":
+                return _fadeRoute(const SplashPage());
+              case "/welcome":
                 return _fadeRoute(const WelcomePage());
               case "/login":
                 return _fadeRoute(const LoginPage());
@@ -77,7 +80,7 @@ class _MyAppState extends State<MyApp> {
               case "/home":
                 return _fadeRoute(const HomePage());
               default:
-                return _fadeRoute(const WelcomePage());
+                return _fadeRoute(const SplashPage());
             }
           },
         );

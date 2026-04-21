@@ -25,6 +25,9 @@ class UserService {
         if ((data['lastName'] ?? '').isEmpty) {
           data['lastName'] = data['last_name'] ?? '';
         }
+        if ((data['photoUrl'] ?? '').isEmpty) {
+          data['photoUrl'] = data['photo_url'] ?? '';
+        }
 
         // Safe parsing for styles column
         if (data['styles'] is String) {
@@ -55,9 +58,11 @@ class UserService {
       final user = _supabase.auth.currentUser;
       if (user == null) return;
       await _supabase.from('users').update(
-        {'firstName': firstName, 'lastName': lastName},
+        {'first_name': firstName, 'last_name': lastName},
       ).eq('id', user.id);
-    } catch (e) {}
+    } catch (e) {
+      print('Error updating user name: $e');
+    }
   }
 
   static Future<void> updateUserEmail(String newEmail) async {
@@ -67,7 +72,9 @@ class UserService {
       await _supabase.from('users').update(
         {'email': newEmail},
       ).eq('id', user.id);
-    } catch (e) {}
+    } catch (e) {
+      print('Error updating user email: $e');
+    }
   }
 
   // Guarda foto como base64 en Supabase (sin Storage)
@@ -76,24 +83,24 @@ class UserService {
       final user = _supabase.auth.currentUser;
       if (user == null) return null;
 
-      // Comprimir si es muy grande (max ~700KB para Supabase)
-      Uint8List compressed = imageBytes;
-      if (imageBytes.length > 700000) {
-        // Si pesa más de 700KB avisamos
+      // Límite de 1.2MB para base64 en columna TEXT
+      if (imageBytes.length > 1200000) {
+        print('Image too large: ${imageBytes.length} bytes');
         return null;
       }
 
       // Convertir a base64
-      final base64String = base64Encode(compressed);
+      final base64String = base64Encode(imageBytes);
       final dataUrl = 'data:image/jpeg;base64,$base64String';
 
-      // Guardar en Supabase
+      // Guardar en Supabase - Usamos photo_url (snake_case)
       await _supabase.from('users').update(
-        {'photoUrl': dataUrl},
+        {'photo_url': dataUrl},
       ).eq('id', user.id);
 
       return dataUrl;
     } catch (e) {
+      print('Error uploading profile photo: $e');
       return null;
     }
   }

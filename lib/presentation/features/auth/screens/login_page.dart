@@ -3,8 +3,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ryzeai/core/constants/app_colors.dart';
 import 'package:ryzeai/presentation/widgets/index.dart';
 import '../../../../generated/l10n.dart';
-import 'package:ryzeai/presentation/widgets/global/global_loader.dart';
-import '../widgets/widgets_login_page.dart';
+import '../../../../main.dart' show themeProvider;
+import '../widgets/auth_custom_widgets.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,155 +16,216 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   bool _obscurePassword = true;
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   Future<void> _iniciarSesion() async {
-    // "translations" en lugar de "s" → más claro para cualquier desarrollador
-    final translations = S.of(context);
+    final l = S.of(context);
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
-      _mostrarError(translations.emptyFieldsError);
+      ErrorDialog.show(context, l.emptyFieldsError);
+      return;
+    }
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+      ErrorDialog.show(context, l.invalidEmail);
       return;
     }
 
-    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
-      _mostrarError(translations.invalidEmail);
-      return;
-    }
+    setState(() => _isLoading = true);
 
     try {
-      GlobalLoader.show(context);
-
-      final supabase = Supabase.instance.client;
-
-      // LOGIN CON SUPABASE
-      await supabase.auth.signInWithPassword(
+      await Supabase.instance.client.auth.signInWithPassword(
         email: email,
         password: password,
       );
-
-      GlobalLoader.hide(context);
-
       if (mounted) {
         Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
       }
     } on AuthException catch (e) {
-      GlobalLoader.hide(context);
-
-      String mensajeFriendly;
-
-      switch (e.message.toLowerCase()) {
-        case 'invalid login credentials':
-          mensajeFriendly = translations.loginError;
-          break;
-        case 'email not confirmed':
-          mensajeFriendly = "Debes confirmar tu correo";
-          break;
-        default:
-          mensajeFriendly = translations.registerError;
-      }
-
-      _mostrarError(mensajeFriendly);
-    } catch (e) {
-      GlobalLoader.hide(context);
-      _mostrarError(translations.registerError);
+      if (!mounted) return;
+      final l2 = S.of(context);
+      final msg = e.message.toLowerCase().contains('invalid login credentials')
+          ? l2.loginError
+          : l2.registerError;
+      ErrorDialog.show(context, msg);
+    } catch (_) {
+      if (!mounted) return;
+      ErrorDialog.show(context, S.of(context).registerError);
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
-  }
-
-  void _mostrarError(String mensaje) {
-    ErrorDialog.show(context, mensaje);
   }
 
   @override
   Widget build(BuildContext context) {
-    // "translations"  sistema de idiomas
-    final translations = S.of(context);
+    final l = S.of(context);
+    final size = MediaQuery.of(context).size;
+
+    final isDark = themeProvider.isDark;
+    // Colores adaptativos: blanco en claro, oscuro en oscuro
+    final cardBg = isDark ? AppColors.darkSurface : Colors.white;
+    final textOnCard = isDark ? AppColors.darkTextPrimary : Colors.black87;
+    final hintOnCard = isDark ? AppColors.darkTextSecondary : Colors.grey.shade600;
 
     return Scaffold(
-      backgroundColor: AppColors.background(context),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            children: [
-
-              // Botón regresar
-              const LoginBackButton(),
-
-              const SizedBox(height: 20),
-
-              // Logo
-              const LoginLogo(),
-
-              const SizedBox(height: 30),
-
-              // Título y subtítulo
-              LoginHeader(
-                title: translations.welcomeBack,
-                subtitle: translations.joinRyzeAI,
-              ),
-
-              const SizedBox(height: 30),
-
-              // Tarjeta del formulario
-              LoginFormCard(
-                child: Column(
-                  children: [
-
-                    // Campo email
-                    LoginTextField(
-                      controller: _emailController,
-                      hintText: translations.enterEmail,
-                      prefixIcon: Icons.email_outlined,
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // Campo contraseña
-                    LoginTextField(
-                      controller: _passwordController,
-                      hintText: translations.enterYourPassword,
-                      prefixIcon: Icons.lock_outline,
-                      obscureText: _obscurePassword,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
+      backgroundColor: AppColors.primarySoft,
+      body: Column(
+        children: [
+          // ── CABECERA NARANJA ─────────────────────────────────
+          SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Fila: Back + "Register"
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: const Icon(Icons.arrow_back_ios_new_rounded,
+                            color: Colors.black, size: 22),
                       ),
+                      GestureDetector(
+                        onTap: () =>
+                            Navigator.pushReplacementNamed(context, '/register'),
+                        child: Text(
+                          l.signup_tab ?? "Register",
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 28),
+                  Text(
+                    l.login_tab ?? "Sign In",
+                    style: const TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
-
-                    const SizedBox(height: 8),
-
-                    // ❓ ¿Olvidaste tu contraseña?
-                    LoginForgotPasswordButton(
-                      label: translations.forgotPassword,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    l.joinRyzeAI,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.black.withOpacity(0.65),
+                      height: 1.4,
                     ),
+                  ),
+                ],
+              ),
+            ),
+          ),
 
+          // ── TARJETA BLANCA (Formulario) ─────────────────────
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: cardBg,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(36),
+                  topRight: Radius.circular(36),
+                ),
+              ),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(28, 36, 28, 32),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Campo Email
+                    AuthInputField(
+                      controller: _emailController,
+                      label: l.email,
+                      hintText: l.enterEmail,
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Campo Contraseña
+                    AuthInputField(
+                      controller: _passwordController,
+                      label: l.password,
+                      hintText: l.enterYourPassword,
+                      isPassword: true,
+                      obscureText: _obscurePassword,
+                      onToggleVisibility: () =>
+                          setState(() => _obscurePassword = !_obscurePassword),
+                    ),
                     const SizedBox(height: 10),
 
-                    // Botón iniciar sesión
-                    LoginSubmitButton(
-                      label: translations.login,
-                      onPressed: _iniciarSesion,
+                    // Olvidé mi contraseña
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          l.forgot_password_link ?? "Forgot Password?",
+                          style: TextStyle(
+                            color: textOnCard,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
                     ),
+                    const SizedBox(height: 24),
 
+                    // Botón negro principal
+                    SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(28),
+                          ),
+                        ),
+                        onPressed: _isLoading ? null : _iniciarSesion,
+                        child: _isLoading
+                            ? const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.5,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : Text(
+                                l.login_tab ?? "Sign In",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                      ),
+                    ),
                   ],
                 ),
               ),
-
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

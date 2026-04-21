@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class AppColors {
   // ── Color principal (no cambia con el tema) ──
   static const Color primary = Color(0xFFBF6D3A);
+  static const Color primarySoft = Color(0xFFFF9F66); // Soft Orange for backgrounds
 
   // ── Colores de contraseña (no cambian) ──
   static const Color passwordWeak = Color(0xFFD94F3D);
