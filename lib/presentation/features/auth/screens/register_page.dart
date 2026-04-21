@@ -96,6 +96,40 @@ class _RegisterPageState extends State<RegisterPage> {
         'created_at': DateTime.now().toIso8601String(),
       });
 
+      if (user == null) {
+        throw Exception('Registration failed: User not created');
+      }
+
+      // Step 2: Insert user profile into public.users table
+      // This creates the user record in our database
+      try {
+        await supabase.from('users').insert({
+          'id': user.id, // ✓ IMPORTANT: Must match auth.uid()
+          'first_name': _firstNameController.text.trim(),
+          'last_name': _lastNameController.text.trim(),
+          'email': normalizedEmail,
+          'language': Localizations.localeOf(context).languageCode,
+          'theme': 'dark',
+          'styles_selected': false,
+          'styles': [],
+          'created_at': DateTime.now().toIso8601String(),
+        });
+      } catch (dbError) {
+        // Database insert failed - user is in auth but not in users table
+        // This is inconsistent state. Log and inform user.
+        debugPrint('Database insert error during registration: $dbError');
+
+        if (!mounted) return;
+
+        _showErrorDialog(
+          S.of(context).registrationError,
+          S.of(context).profileCreationFailed,
+        );
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      // Success: show confirmation and navigate
       if (!mounted) return;
       Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     } on AuthException catch (e) {
