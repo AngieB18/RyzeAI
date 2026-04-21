@@ -127,7 +127,7 @@ class _RegisterPageState extends State<RegisterPage> {
           'email': normalizedEmail,
           'language': Localizations.localeOf(context).languageCode,
           'theme': 'dark',
-          'stylesSelected': false,
+          'styles_selected': false,
           'created_at': DateTime.now().toIso8601String(),
         });
       } catch (dbError) {
