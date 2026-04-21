@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../main.dart' show themeProvider;
+import '../../../../core/constants/app_assets.dart';
 
-/// ── WELCOME HEADER ────────────────────────────────────────
-/// Parte superior: fondo adaptativo al tema con el logo centrado.
+
 class WelcomeHeaderNew extends StatelessWidget {
   const WelcomeHeaderNew({super.key});
 
@@ -42,7 +42,7 @@ class WelcomeHeaderNew extends StatelessWidget {
           child: Hero(
             tag: 'auth_logo',
             child: Image.asset(
-              "assets/LogoRyzeAI.png",
+              AppAssets.logo,
               width: isDark ? 130 : 180,
               fit: BoxFit.contain,
             ),
@@ -53,8 +53,6 @@ class WelcomeHeaderNew extends StatelessWidget {
   }
 }
 
-/// ── WELCOME CONTENT ────────────────────────────────────────
-/// Parte inferior: fondo naranja suave con título, subtítulo y botones.
 class WelcomeContentNew extends StatelessWidget {
   const WelcomeContentNew({super.key});
 

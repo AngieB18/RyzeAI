@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../main.dart' show themeProvider;
+import '../../../../core/constants/app_assets.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -19,7 +20,7 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     final l = S.of(context);
 
-    // ListenableBuilder: se reconstruye cuando el tema cambia (ej. usuario regresa y tiene dark mode)
+    
     return ListenableBuilder(
       listenable: themeProvider,
       builder: (context, _) {
@@ -33,7 +34,7 @@ class _SplashPageState extends State<SplashPage> {
           backgroundColor: bgColor,
           body: Stack(
             children: [
-              // ── Círculos decorativos esquinas ─────────────
+              
               Positioned(
                 top: -80,
                 right: -60,
@@ -59,7 +60,7 @@ class _SplashPageState extends State<SplashPage> {
                 ),
               ),
 
-              // ── Logo central ──────────────────────────────
+              
               Center(
                 child: Container(
                   width: 200,
@@ -84,7 +85,7 @@ class _SplashPageState extends State<SplashPage> {
                   child: Hero(
                     tag: 'auth_logo',
                     child: Image.asset(
-                      "assets/LogoRyzeAI.png",
+                      AppAssets.logo,
                       width: isDark ? 130 : 160,
                       fit: BoxFit.contain,
                     ),
@@ -92,7 +93,7 @@ class _SplashPageState extends State<SplashPage> {
                 ),
               ),
 
-              // ── Slider "Deslízame" ────────────────────────
+             
               Positioned(
                 bottom: 80,
                 left: 0,
@@ -121,7 +122,7 @@ class _SplashPageState extends State<SplashPage> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Texto de fondo que se desvanece al deslizar
+    
           Opacity(
             opacity: (1 - progress).clamp(0.0, 1.0),
             child: Text(
@@ -134,7 +135,7 @@ class _SplashPageState extends State<SplashPage> {
             ),
           ),
 
-          // Thumb deslizable
+      
           Positioned(
             left: _dragValue,
             child: GestureDetector(

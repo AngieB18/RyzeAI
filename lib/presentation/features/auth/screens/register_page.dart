@@ -76,9 +76,17 @@ class _RegisterPageState extends State<RegisterPage> {
       final supabase = Supabase.instance.client;
       final email = _emailController.text.trim().toLowerCase();
 
+      // 1. Pick a random default avatar for the new user
+      final randomAvatar = AppAssets.defaultAvatars[DateTime.now().millisecond % AppAssets.defaultAvatars.length];
+
       final authResponse = await supabase.auth.signUp(
         email: email,
         password: _passwordController.text,
+        data: {
+          'first_name': _firstNameController.text.trim(),
+          'last_name': _lastNameController.text.trim(),
+          'photo_url': randomAvatar,
+        },
       );
 
       final user = authResponse.user;
@@ -93,6 +101,7 @@ class _RegisterPageState extends State<RegisterPage> {
         'theme': 'dark',
         'styles_selected': false,
         'styles': [],
+        'photo_url': randomAvatar,
         'created_at': DateTime.now().toIso8601String(),
       });
 
