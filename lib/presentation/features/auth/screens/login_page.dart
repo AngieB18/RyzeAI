@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ryzeai/core/constants/app_colors.dart';
-import 'package:ryzeai/presentation/features/auth/screens/recover_password_page.dart';
 import 'package:ryzeai/presentation/widgets/index.dart';
 import '../../../../generated/l10n.dart';
 import 'package:ryzeai/presentation/widgets/global/global_loader.dart';
+import '../widgets/widgets_login_page.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -13,283 +14,154 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   bool _obscurePassword = true;
 
   Future<void> _iniciarSesion() async {
-  final s = S.of(context);
-  final email = _emailController.text.trim();
-  final password = _passwordController.text.trim();
+    // "translations" en lugar de "s" → más claro para cualquier desarrollador
+    final translations = S.of(context);
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
 
-  if (email.isEmpty || password.isEmpty) {
-    _mostrarError(s.emptyFieldsError);
-    return;
-  }
-
-  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
-    _mostrarError(s.invalidEmail);
-    return;
-  }
-
-  try {
-    GlobalLoader.show(context);
-
-    final supabase = Supabase.instance.client;
-
-    // 🔐 LOGIN CON SUPABASE
-    await supabase.auth.signInWithPassword(
-      email: email,
-      password: password,
-    );
-
-    GlobalLoader.hide(context);
-
-    if (mounted) {
-      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+    if (email.isEmpty || password.isEmpty) {
+      _mostrarError(translations.emptyFieldsError);
+      return;
     }
 
-  } on AuthException catch (e) {
-    GlobalLoader.hide(context);
-
-    String mensajeFriendly;
-
-    switch (e.message.toLowerCase()) {
-      case 'invalid login credentials':
-        mensajeFriendly = s.loginError;
-        break;
-      case 'email not confirmed':
-        mensajeFriendly = "Debes confirmar tu correo";
-        break;
-      default:
-        mensajeFriendly = s.registerError;
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+      _mostrarError(translations.invalidEmail);
+      return;
     }
 
-    _mostrarError(mensajeFriendly);
+    try {
+      GlobalLoader.show(context);
 
-  } catch (e) {
-    GlobalLoader.hide(context);
-    _mostrarError(s.registerError);
+      final supabase = Supabase.instance.client;
+
+      // LOGIN CON SUPABASE
+      await supabase.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
+
+      GlobalLoader.hide(context);
+
+      if (mounted) {
+        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+      }
+    } on AuthException catch (e) {
+      GlobalLoader.hide(context);
+
+      String mensajeFriendly;
+
+      switch (e.message.toLowerCase()) {
+        case 'invalid login credentials':
+          mensajeFriendly = translations.loginError;
+          break;
+        case 'email not confirmed':
+          mensajeFriendly = "Debes confirmar tu correo";
+          break;
+        default:
+          mensajeFriendly = translations.registerError;
+      }
+
+      _mostrarError(mensajeFriendly);
+    } catch (e) {
+      GlobalLoader.hide(context);
+      _mostrarError(translations.registerError);
+    }
   }
-}
 
   void _mostrarError(String mensaje) {
     ErrorDialog.show(context, mensaje);
   }
 
-  InputDecoration _inputDecoration({
-    required String hint,
-    required IconData icon,
-  }) {
-    return InputDecoration(
-
-      hintText: hint,
-
-      prefixIcon: Icon(icon),
-
-      filled: true,
-
-      fillColor: AppColors.surface(context),
-
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide.none,
-      ),
-
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(
-          color: AppColors.primary,
-          width: 1.5,
-        ),
-      ),
-
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-
-    final s = S.of(context);
+    // "translations"  sistema de idiomas
+    final translations = S.of(context);
 
     return Scaffold(
-
       backgroundColor: AppColors.background(context),
-
       body: SafeArea(
-
         child: SingleChildScrollView(
-
           padding: const EdgeInsets.all(24),
-
           child: Column(
-
             children: [
 
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_new),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              ),
+              // Botón regresar
+              const LoginBackButton(),
 
               const SizedBox(height: 20),
 
-              /// LOGO
+              // Logo
+              const LoginLogo(),
 
-              Image.asset(
-                "assets/LogoRyzeAI.png",
-                height: 90,
+              const SizedBox(height: 30),
+
+              // Título y subtítulo
+              LoginHeader(
+                title: translations.welcomeBack,
+                subtitle: translations.joinRyzeAI,
               ),
 
               const SizedBox(height: 30),
 
-              Text(
-                s.welcomeBack,
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary(context),
-                ),
-              ),
-
-              const SizedBox(height: 6),
-
-              Text(
-                s.joinRyzeAI,
-                style: TextStyle(
-                  color: AppColors.textSecondary(context),
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              /// FORM CARD
-
-              Container(
-                padding: const EdgeInsets.all(22),
-
-                decoration: BoxDecoration(
-
-                  color: AppColors.surface(context),
-
-                  borderRadius: BorderRadius.circular(20),
-
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 20,
-                      color: Colors.black.withOpacity(.05),
-                      offset: const Offset(0, 10),
-                    )
-                  ],
-                ),
-
+              // Tarjeta del formulario
+              LoginFormCard(
                 child: Column(
                   children: [
 
-                    /// EMAIL
-
-                    TextField(
+                    // Campo email
+                    LoginTextField(
                       controller: _emailController,
-                      decoration: _inputDecoration(
-                        hint: s.enterEmail,
-                        icon: Icons.email_outlined,
-                      ),
+                      hintText: translations.enterEmail,
+                      prefixIcon: Icons.email_outlined,
                     ),
 
                     const SizedBox(height: 16),
 
-                    /// PASSWORD
-
-                    TextField(
+                    // Campo contraseña
+                    LoginTextField(
                       controller: _passwordController,
+                      hintText: translations.enterYourPassword,
+                      prefixIcon: Icons.lock_outline,
                       obscureText: _obscurePassword,
-
-                      decoration: _inputDecoration(
-                        hint: s.enterYourPassword,
-                        icon: Icons.lock_outline,
-                      ).copyWith(
-
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscurePassword
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _obscurePassword = !_obscurePassword;
-                            });
-                          },
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                         ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
                       ),
                     ),
 
                     const SizedBox(height: 8),
 
-                    /// FORGOT PASSWORD
-
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const RecoverPasswordPage(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          s.forgotPassword,
-                          style: TextStyle(
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ),
+                    // ❓ ¿Olvidaste tu contraseña?
+                    LoginForgotPasswordButton(
+                      label: translations.forgotPassword,
                     ),
 
                     const SizedBox(height: 10),
 
-                    /// LOGIN BUTTON
-
-                    SizedBox(
-                      width: double.infinity,
-                      height: 52,
-                      child: ElevatedButton(
-
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-
-                          elevation: 0,
-                        ),
-
-                        onPressed: _iniciarSesion,
-
-                        child: Text(
-                          s.login,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                    // Botón iniciar sesión
+                    LoginSubmitButton(
+                      label: translations.login,
+                      onPressed: _iniciarSesion,
                     ),
 
                   ],
                 ),
               ),
+
             ],
           ),
         ),
