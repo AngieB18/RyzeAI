@@ -53,11 +53,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       final bytes = await image.readAsBytes();
 
-      if (bytes.length > 700000) {
+      if (bytes.length > 1500000) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Image too large. Please choose a smaller one.'),
+            content: Text('Image too large. Please choose a smaller one (max 1.5MB).'),
             backgroundColor: AppColors.passwordWeak,
           ),
         );
@@ -140,22 +140,110 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _userData?['email'] ?? Supabase.instance.client.auth.currentUser?.email ?? '';
     final fullName = '$firstName $lastName'.trim();
     final initials = UserService.getInitials(firstName, lastName);
+    final bio = _userData?['bio'] ?? 'Work hard in silence. Let your success be the noise.';
 
-    return SafeArea(
-      child: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: AppColors.background(context),
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            _buildHeader(l, fullName, email, initials),
+            // ── COVER HEADER (Inspirado en la imagen) ──────────
+            _buildPremiumHeader(l, fullName, bio, initials),
+            
+            const SizedBox(height: 10),
+
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  _buildInfoCard(l),
-                  const SizedBox(height: 12),
+                  // Mis Estilos (Opcional, lo mantenemos si el usuario lo quiere)
                   _buildMyStyles(l),
                   const SizedBox(height: 16),
-                  _buildMenuSection(context, l),
-                  const SizedBox(height: 90),
+
+                  // Grupo 1: Perfil y Cuenta
+                  _buildMenuCard([
+                    _buildMenuRow(
+                      icon: Icons.person_outline,
+                      label: l.editProfile,
+                      onTap: () => _showEditProfileSheet(context),
+                    ),
+                    _buildMenuRow(
+                      icon: Icons.account_circle_outlined,
+                      label: l.homeUser, // O "Account"
+                      onTap: () {},
+                      isLast: true,
+                    ),
+                  ]),
+                  const SizedBox(height: 16),
+
+                  // Grupo 2: Ajustes
+                  _buildMenuCard([
+                    _buildMenuRow(
+                      icon: Icons.notifications_none,
+                      label: l.notifications,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => const NotificationsScreen())),
+                    ),
+                    _buildMenuRow(
+                      icon: Icons.devices_other_outlined,
+                      label: 'Devices', // O l.devices si existe
+                      onTap: () {},
+                    ),
+                    _buildMenuRow(
+                      icon: Icons.lock_outline,
+                      label: 'Passwords',
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => const PrivacyScreen())),
+                    ),
+                    _buildMenuRow(
+                      icon: Icons.language,
+                      label: l.language,
+                      trailing: _buildLangDropdown(l),
+                      onTap: () {},
+                      isLast: true,
+                    ),
+                  ]),
+                  const SizedBox(height: 16),
+
+                  // Grupo 3: Tema y Soporte
+                  _buildMenuCard([
+                    _buildMenuRow(
+                      icon: themeProvider.isDark
+                          ? Icons.nightlight_round
+                          : Icons.wb_sunny_outlined,
+                      label: themeProvider.isDark ? l.darkMode : l.lightMode,
+                      trailing: Switch(
+                        value: themeProvider.isDark,
+                        activeColor: AppColors.primarySoft,
+                        onChanged: (_) => setState(() => themeProvider.toggleTheme()),
+                      ),
+                      onTap: () => setState(() => themeProvider.toggleTheme()),
+                    ),
+                    _buildMenuRow(
+                      icon: Icons.help_outline,
+                      label: l.helpSupport,
+                      onTap: () => _showHelpSheet(context),
+                      isLast: true,
+                    ),
+                  ]),
+                  const SizedBox(height: 16),
+
+                  // Botón Cerrar Sesión
+                  _buildMenuCard([
+                    _buildMenuRow(
+                      icon: Icons.logout,
+                      label: l.logOut,
+                      isDanger: true,
+                      isLast: true,
+                      onTap: () async {
+                        await Supabase.instance.client.auth.signOut();
+                        if (!mounted) return;
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/', (route) => false);
+                      },
+                    ),
+                  ]),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),
@@ -165,9 +253,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildHeader(S l, String fullName, String email, String initials) {
+  // ── PREMIUM HEADER (MATCHING IMAGE) ────────────────────────
+  Widget _buildPremiumHeader(S l, String fullName, String bio, String initials) {
     final photoUrl = _userData?['photoUrl'] as String?;
-
     ImageProvider? imageProvider;
     if (photoUrl != null && photoUrl.isNotEmpty) {
       if (photoUrl.startsWith('data:image')) {
@@ -178,114 +266,141 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     }
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
-      decoration: BoxDecoration(
-        color: AppColors.header(context),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(24),
-          bottomRight: Radius.circular(24),
-        ),
-      ),
-      child: Column(
+    return SizedBox(
+      height: 340,
+      child: Stack(
         children: [
-          const SizedBox(height: 8),
-          Stack(
-            children: [
-              _loading
-                  ? CircleAvatar(
-                      radius: 36,
-                      backgroundColor: AppColors.inputBorder(context),
-                    )
-                  : GestureDetector(
-                      onTap: imageProvider != null
-                          ? () => _showFullPhoto(context, imageProvider!)
-                          : null,
-                      child: CircleAvatar(
-                        radius: 36,
-                        backgroundColor: AppColors.primary,
-                        backgroundImage: imageProvider,
-                        child: imageProvider == null
-                            ? Text(
-                                initials.isNotEmpty ? initials : '?',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )
-                            : null,
-                      ),
-                    ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: GestureDetector(
-                  onTap: _pickAndUploadPhoto,
-                  child: Container(
-                    width: 28,
-                    height: 28,
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.header(context),
-                        width: 2,
-                      ),
-                    ),
-                    child: const Icon(
-                      Icons.camera_alt_rounded,
-                      color: Colors.white,
-                      size: 14,
-                    ),
-                  ),
+          // Imagen de Fondo (Cover)
+          Container(
+            height: 280,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage('https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=1000&auto=format&fit=crop'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withOpacity(0.3),
+                    Colors.black.withOpacity(0.1),
+                    Colors.black.withOpacity(0.6),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
-          const SizedBox(height: 12),
-          _loading
-              ? SizedBox(
-                  width: 120,
-                  height: 20,
-                  child: LinearProgressIndicator(
-                    backgroundColor: AppColors.inputBorder(context),
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                      AppColors.primary,
+
+          // Iconos Superiores (Top Bar)
+          Positioned(
+            top: 50,
+            left: 20,
+            right: 20,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(), // Espacio para el botón de volver si fuera necesario
+                Row(
+                  children: [
+                    Icon(Icons.favorite_border, color: Colors.white, size: 26),
+                    const SizedBox(width: 20),
+                    Stack(
+                      children: [
+                        Icon(Icons.shopping_bag_outlined, color: Colors.white, size: 26),
+                        Positioned(
+                          right: 0,
+                          top: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+                            child: const Text('1', style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                      ],
                     ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          // Contenido Central (Avatar, Nombre, Bio)
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Column(
+              children: [
+                // Avatar
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 4),
+                    boxShadow: [
+                      BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 15, offset: const Offset(0, 5)),
+                    ],
                   ),
-                )
-              : Text(
-                  fullName.isNotEmpty ? fullName : 'User',
-                  style: TextStyle(
-                    color: AppColors.textPrimary(context),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundColor: AppColors.primarySoft,
+                    backgroundImage: imageProvider,
+                    child: imageProvider == null
+                        ? Text(
+                            initials.isNotEmpty ? initials : '?',
+                            style: const TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold),
+                          )
+                        : null,
                   ),
                 ),
-          const SizedBox(height: 4),
-          Text(
-            email,
-            style: TextStyle(
-              color: AppColors.textSecondary(context),
-              fontSize: 13,
+                const SizedBox(height: 12),
+                // Nombre
+                Text(
+                  fullName.isNotEmpty ? fullName : 'User',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    shadows: [Shadow(color: Colors.black45, blurRadius: 10, offset: Offset(0, 2))],
+                  ),
+                ),
+                const SizedBox(height: 6),
+                // Bio
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Text(
+                    bio,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.9),
+                      fontSize: 13,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
             ),
           ),
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: AppColors.primary),
-            ),
-            child: Text(
-              l.homeUser,
-              style: const TextStyle(
-                color: AppColors.primary,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
+          
+          // Botón Editar Foto
+          Positioned(
+            top: 250,
+            right: MediaQuery.of(context).size.width / 2 - 60,
+            child: GestureDetector(
+              onTap: _pickAndUploadPhoto,
+              child: Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2),
+                ),
+                child: const Icon(Icons.camera_alt_rounded, color: Colors.white, size: 16),
               ),
             ),
           ),
@@ -294,23 +409,96 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildInfoCard(S l) {
+  // ── MENU CARD GROUP ────────────────────────────────────────
+  Widget _buildMenuCard(List<Widget> children) {
     return Container(
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildStat('3', l.projects),
-          _buildDivider(),
-          _buildStat('12', l.favorites),
-          _buildDivider(),
-          _buildStat('2', l.rooms),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
         ],
       ),
+      child: Column(children: children),
+    );
+  }
+
+  Widget _buildMenuRow({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    Widget? trailing,
+    bool isDanger = false,
+    bool isLast = false,
+  }) {
+    final color = isDanger ? AppColors.passwordWeak : AppColors.textPrimary(context);
+    final iconColor = isDanger ? AppColors.passwordWeak : AppColors.primary;
+
+    return Column(
+      children: [
+        InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+            child: Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: iconColor.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(icon, color: iconColor, size: 19),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Text(label,
+                      style: TextStyle(
+                        color: color,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      )),
+                ),
+                trailing ??
+                    Icon(Icons.chevron_right_rounded,
+                        color: AppColors.textSecondary(context), size: 20),
+              ],
+            ),
+          ),
+        ),
+        if (!isLast)
+          Divider(
+            height: 1,
+            indent: 68,
+            endIndent: 18,
+            color: AppColors.inputBorder(context).withOpacity(0.5),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildLangDropdown(S l) {
+    final currentLang = Localizations.localeOf(context).languageCode;
+    return DropdownButton<String>(
+      value: currentLang,
+      underline: const SizedBox(),
+      dropdownColor: AppColors.surface(context),
+      style: TextStyle(color: AppColors.textPrimary(context), fontSize: 14),
+      items: const [
+        DropdownMenuItem(value: 'es', child: Text('Español')),
+        DropdownMenuItem(value: 'en', child: Text('English')),
+      ],
+      onChanged: (value) {
+        if (value == null) return;
+        MyApp.setLocale(context, Locale(value));
+        setState(() {});
+      },
     );
   }
 
@@ -441,162 +629,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildStat(String value, String label) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-            color: AppColors.textPrimary(context),
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          label,
-          style: TextStyle(
-            color: AppColors.textSecondary(context),
-            fontSize: 11,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDivider() {
-    return Container(
-      width: 1,
-      height: 32,
-      color: AppColors.inputBorder(context),
-    );
-  }
-
-  Widget _buildMenuSection(BuildContext context, S l) {
-    final items = [
-      {'icon': Icons.person_outline, 'label': l.editProfile},
-      {'icon': Icons.notifications_none, 'label': l.notifications},
-      {'icon': Icons.lock_outline, 'label': l.privacy},
-      {'icon': Icons.help_outline, 'label': l.helpSupport},
-    ];
-
-    return Column(
-      children: [
-        ...items.map((item) {
-          final label = item['label'] as String;
-          final icon = item['icon'] as IconData;
-          return _buildMenuItem(
-            icon: icon,
-            label: label,
-            onTap: label == l.editProfile
-                ? () => _showEditProfileSheet(context)
-                : label == l.privacy
-                ? () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const PrivacyScreen()),
-                  )
-                : label == l.notifications
-                ? () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const NotificationsScreen(),
-                    ),
-                  )
-                : label == l.helpSupport
-                ? () => _showHelpSheet(context)
-                : () {},
-          );
-        }),
-
-        // 🌍 IDIOMA
-        _buildLanguageSelector(l),
-
-        // 🌙 TEMA
-        _buildMenuItem(
-          icon: themeProvider.isDark ? Icons.nightlight_round : Icons.wb_sunny,
-          label: themeProvider.isDark ? l.darkMode : l.lightMode,
-          trailing: Switch(
-            value: themeProvider.isDark,
-            activeColor: AppColors.primary,
-            onChanged: (value) {
-              setState(() {
-                themeProvider.toggleTheme();
-              });
-            },
-          ),
-          onTap: () {
-            setState(() {
-              themeProvider.toggleTheme();
-            });
-          },
-        ),
-
-        // LOG OUT
-        _buildMenuItem(
-          icon: Icons.logout,
-          label: l.logOut,
-          isDanger: true,
-          onTap: () async {
-            await Supabase.instance.client.auth.signOut();
-            if (!mounted) return;
-            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLanguageSelector(S l) {
-    String currentLang = Localizations.localeOf(context).languageCode;
-
-    return _buildMenuItem(
-      icon: Icons.language,
-      label: l.language,
-      trailing: DropdownButton<String>(
-        value: currentLang,
-        underline: const SizedBox(),
-        dropdownColor: AppColors.surface(context),
-        items: [
-          DropdownMenuItem(
-            value: 'es',
-            child: Text(
-              'Español',
-              style: TextStyle(color: AppColors.textPrimary(context)),
-            ),
-          ),
-          DropdownMenuItem(
-            value: 'en',
-            child: Text(
-              'English',
-              style: TextStyle(color: AppColors.textPrimary(context)),
-            ),
-          ),
-        ],
-        onChanged: (value) {
-          if (value == null) return;
-          MyApp.setLocale(context, Locale(value));
-          setState(() {});
-        },
-      ),
-      onTap: () {},
-    );
-  }
-
-  Widget _buildMenuItem({
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-    Widget? trailing,
-    bool isDanger = false,
-  }) {
-    return MenuItemWidget(
-      icon: icon,
-      label: label,
-      onTap: onTap,
-      trailing: trailing,
-      isDanger: isDanger,
-    );
-  }
 
   void _showEditProfileSheet(BuildContext context) {
     final l = S.of(context);

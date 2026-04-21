@@ -173,6 +173,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "forgotPassword": MessageLookupByLibrary.simpleMessage(
       "Forgot your password?",
     ),
+    "forgot_password_link": MessageLookupByLibrary.simpleMessage(
+      "Forgot Password?",
+    ),
+    "full_name_label": MessageLookupByLibrary.simpleMessage("Full Name"),
     "generateDesign": MessageLookupByLibrary.simpleMessage("Generate Design"),
     "generateIdeas": MessageLookupByLibrary.simpleMessage("Generate Ideas"),
     "generatingDesign": MessageLookupByLibrary.simpleMessage("Generating..."),
@@ -202,6 +206,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Incorrect email or password",
     ),
     "loginSuccess": MessageLookupByLibrary.simpleMessage("Welcome back!"),
+    "login_tab": MessageLookupByLibrary.simpleMessage("Login"),
     "minimal": MessageLookupByLibrary.simpleMessage("Minimal"),
     "mirrors": MessageLookupByLibrary.simpleMessage("Mirrors"),
     "modern": MessageLookupByLibrary.simpleMessage("Modern"),
@@ -278,6 +283,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "sendEmail": MessageLookupByLibrary.simpleMessage("Send Email"),
     "sendResetEmail": MessageLookupByLibrary.simpleMessage("Send Reset Email"),
+    "signup_tab": MessageLookupByLibrary.simpleMessage("Signup"),
+    "slide_me": MessageLookupByLibrary.simpleMessage("Slide to start"),
     "spaceBar": MessageLookupByLibrary.simpleMessage("Bar Area"),
     "spaceBathroom": MessageLookupByLibrary.simpleMessage("Bathroom"),
     "spaceCafeteria": MessageLookupByLibrary.simpleMessage("Cafeteria"),
@@ -334,6 +341,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "By signing up you accept the ",
     ),
     "termsOfService": MessageLookupByLibrary.simpleMessage("Terms of Service"),
+    "terms_signup_intro": MessageLookupByLibrary.simpleMessage(
+      "By creating an account you are accepting our ",
+    ),
     "texturedWalls": MessageLookupByLibrary.simpleMessage("Textured Walls"),
     "thisMonth": MessageLookupByLibrary.simpleMessage("+1 this month"),
     "welcome": MessageLookupByLibrary.simpleMessage(
@@ -346,6 +356,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "welcomeTitle": MessageLookupByLibrary.simpleMessage(
       "Welcome to RyzeAI! 🎉",
     ),
+    "welcome_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Get inspired and design your ideal space in 3D",
+    ),
+    "welcome_title": MessageLookupByLibrary.simpleMessage("Welcome"),
     "yesterday": MessageLookupByLibrary.simpleMessage("yesterday"),
   };
 }

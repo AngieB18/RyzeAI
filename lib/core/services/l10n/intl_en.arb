@@ -1,5 +1,8 @@
 {
   "@@locale": "en",
+  "slide_me": "Slide to start",
+  "welcome_title": "Welcome",
+  "welcome_subtitle": "Welcome! Get inspired and design your ideal space in 3D",
   "welcome": "Welcome! Get inspired and design your ideal space in 3D",
   "login": "Log In",
   "language": "Language",
@@ -198,5 +201,10 @@
 "passwordTooWeak": "Password is too weak",
 "registrationError": "Registration error",
 "profileCreationFailed": "Failed to create user profile",
-"creatingAccount": "Creating account..."
+"creatingAccount": "Creating account...",
+  "login_tab": "Login",
+  "signup_tab": "Signup",
+  "full_name_label": "Full Name",
+  "forgot_password_link": "Forgot Password?",
+  "terms_signup_intro": "By creating an account you are accepting our "
 }

@@ -181,6 +181,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "forgotPassword": MessageLookupByLibrary.simpleMessage(
       "¿Olvidaste tu contraseña?",
     ),
+    "forgot_password_link": MessageLookupByLibrary.simpleMessage(
+      "¿Olvidaste tu contraseña?",
+    ),
+    "full_name_label": MessageLookupByLibrary.simpleMessage("Nombre completo"),
     "generateDesign": MessageLookupByLibrary.simpleMessage("Generar diseño"),
     "generateIdeas": MessageLookupByLibrary.simpleMessage("Generar ideas"),
     "generatingDesign": MessageLookupByLibrary.simpleMessage("Generando..."),
@@ -212,6 +216,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loginSuccess": MessageLookupByLibrary.simpleMessage(
       "¡Bienvenido de nuevo!",
     ),
+    "login_tab": MessageLookupByLibrary.simpleMessage("Entrar"),
     "minimal": MessageLookupByLibrary.simpleMessage("Mínimal"),
     "mirrors": MessageLookupByLibrary.simpleMessage("Espejos"),
     "modern": MessageLookupByLibrary.simpleMessage("Moderno"),
@@ -298,6 +303,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "sendResetEmail": MessageLookupByLibrary.simpleMessage(
       "Enviar correo de restablecimiento",
     ),
+    "signup_tab": MessageLookupByLibrary.simpleMessage("Registro"),
+    "slide_me": MessageLookupByLibrary.simpleMessage("Desliza para empezar"),
     "spaceBar": MessageLookupByLibrary.simpleMessage("Zona de bar"),
     "spaceBathroom": MessageLookupByLibrary.simpleMessage("Baño"),
     "spaceCafeteria": MessageLookupByLibrary.simpleMessage("Cafetería"),
@@ -356,6 +363,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "termsOfService": MessageLookupByLibrary.simpleMessage(
       "Términos de servicio",
     ),
+    "terms_signup_intro": MessageLookupByLibrary.simpleMessage(
+      "Al crear una cuenta estás aceptando nuestros ",
+    ),
     "texturedWalls": MessageLookupByLibrary.simpleMessage(
       "Paredes texturizadas",
     ),
@@ -370,6 +380,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "welcomeTitle": MessageLookupByLibrary.simpleMessage(
       "¡Bienvenido a RyzeAI! 🎉",
     ),
+    "welcome_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Inspírate y diseña tu espacio ideal en 3D",
+    ),
+    "welcome_title": MessageLookupByLibrary.simpleMessage("Bienvenido"),
     "yesterday": MessageLookupByLibrary.simpleMessage("ayer"),
   };
 }
