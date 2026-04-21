@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ryzeai/core/constants/app_colors.dart';
 import 'package:ryzeai/presentation/features/auth/screens/recover_password_page.dart';
+import '../../../../core/constants/app_assets.dart';
 
-// ─────────────────────────────────────────
-// Botón de regreso (flecha arriba izquierda)
-// ─────────────────────────────────────────
 class LoginBackButton extends StatelessWidget {
   const LoginBackButton({super.key});
 
@@ -30,7 +28,7 @@ class LoginLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      "assets/LogoRyzeAI.png",
+      AppAssets.logo,
       height: 90,
     );
   }

@@ -77,30 +77,38 @@ class UserService {
     }
   }
 
-  // Guarda foto como base64 en Supabase (sin Storage)
-  static Future<String?> uploadProfilePhoto(Uint8List imageBytes) async {
+  // Guarda foto como base64 o URL de avatar en Supabase
+  static Future<String?> uploadProfilePhoto(Uint8List? imageBytes, {String? avatarUrl}) async {
     try {
       final user = _supabase.auth.currentUser;
       if (user == null) return null;
 
-      // Límite de 1.2MB para base64 en columna TEXT
-      if (imageBytes.length > 1200000) {
-        print('Image too large: ${imageBytes.length} bytes');
+      String finalUrl = '';
+
+      if (avatarUrl != null) {
+        // Si nos pasan una URL (avatar predefinido)
+        finalUrl = avatarUrl;
+      } else if (imageBytes != null) {
+        // Límite de 1.2MB para base64 en columna TEXT
+        if (imageBytes.length > 1200000) {
+          print('Image too large: ${imageBytes.length} bytes');
+          return null;
+        }
+        // Convertir a base64
+        final base64String = base64Encode(imageBytes);
+        finalUrl = 'data:image/jpeg;base64,$base64String';
+      } else {
         return null;
       }
 
-      // Convertir a base64
-      final base64String = base64Encode(imageBytes);
-      final dataUrl = 'data:image/jpeg;base64,$base64String';
-
       // Guardar en Supabase - Usamos photo_url (snake_case)
       await _supabase.from('users').update(
-        {'photo_url': dataUrl},
+        {'photo_url': finalUrl},
       ).eq('id', user.id);
 
-      return dataUrl;
+      return finalUrl;
     } catch (e) {
-      print('Error uploading profile photo: $e');
+      print('Error updating profile photo: $e');
       return null;
     }
   }

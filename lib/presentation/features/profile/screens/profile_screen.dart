@@ -1,4 +1,3 @@
-// lib/home/screens/profile_screen.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -11,6 +10,7 @@ import 'privacy_screen.dart';
 import '../../notifications/screens/notifications_screen.dart';
 import '../../styles/screens/style_selection_sheet.dart';
 import 'package:ryzeai/presentation/widgets/index.dart';
+import '../../../../core/constants/app_assets.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -30,60 +30,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _loadUser() async {
+    // 1. First, try to get data from the local session metadata (Instant)
+    final currentUser = Supabase.instance.client.auth.currentUser;
+    if (currentUser != null && currentUser.userMetadata != null) {
+      setState(() {
+        _userData = {
+          'first_name': currentUser.userMetadata?['first_name'] ?? currentUser.userMetadata?['firstName'],
+          'last_name': currentUser.userMetadata?['last_name'] ?? currentUser.userMetadata?['lastName'],
+          'photoUrl': currentUser.userMetadata?['photo_url'] ?? currentUser.userMetadata?['photoUrl'],
+          'email': currentUser.email,
+        };
+      });
+    }
+
+    // 2. Then, fetch the fresh data from the database (Background)
     final data = await UserService.getCurrentUserData();
-    if (mounted) {
+    if (mounted && data != null) {
       setState(() {
         _userData = data;
         _loading = false;
       });
-    }
-  }
-
-  Future<void> _pickAndUploadPhoto() async {
-    try {
-      final picker = ImagePicker();
-      final XFile? image = await picker.pickImage(
-        source: ImageSource.gallery,
-        maxWidth: 300,
-        maxHeight: 300,
-        imageQuality: 60,
-      );
-
-      if (image == null) return;
-
-      final bytes = await image.readAsBytes();
-
-      if (bytes.length > 1500000) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Image too large. Please choose a smaller one (max 1.5MB).'),
-            backgroundColor: AppColors.passwordWeak,
-          ),
-        );
-        return;
-      }
-
-      setState(() => _loading = true);
-
-      final url = await UserService.uploadProfilePhoto(bytes);
-
-      if (url != null) {
-        setState(() {
-          _userData = {...?_userData, 'photoUrl': url};
-          _loading = false;
-        });
-      } else {
-        setState(() => _loading = false);
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Error uploading photo. Try a smaller image.'),
-            backgroundColor: AppColors.passwordWeak,
-          ),
-        );
-      }
-    } catch (e) {
+    } else if (mounted) {
       setState(() => _loading = false);
     }
   }
@@ -138,8 +105,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final lastName = _userData?['lastName'] ?? _userData?['last_name'] ?? '';
     final email =
         _userData?['email'] ?? Supabase.instance.client.auth.currentUser?.email ?? '';
-    final fullName = '$firstName $lastName'.trim();
     final initials = UserService.getInitials(firstName, lastName);
+    
+    final rawName = '$firstName $lastName'.trim();
+    final fullName = rawName.isNotEmpty 
+        ? rawName.split(' ').map((str) => str.isNotEmpty ? '${str[0].toUpperCase()}${str.substring(1).toLowerCase()}' : '').join(' ')
+        : 'User';
+
     final bio = _userData?['bio'] ?? 'Work hard in silence. Let your success be the noise.';
 
     return Scaffold(
@@ -147,8 +119,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // ── COVER HEADER (Inspirado en la imagen) ──────────
-            _buildPremiumHeader(l, fullName, bio, initials),
+            
+            _buildPremiumHeader(l, fullName, initials),
             
             const SizedBox(height: 10),
 
@@ -156,42 +128,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  // Mis Estilos (Opcional, lo mantenemos si el usuario lo quiere)
+                  // User Lifestyle Styles Section
                   _buildMyStyles(l),
                   const SizedBox(height: 16),
 
-                  // Grupo 1: Perfil y Cuenta
+                  
                   _buildMenuCard([
                     _buildMenuRow(
                       icon: Icons.person_outline,
                       label: l.editProfile,
                       onTap: () => _showEditProfileSheet(context),
-                    ),
-                    _buildMenuRow(
-                      icon: Icons.account_circle_outlined,
-                      label: l.homeUser, // O "Account"
-                      onTap: () {},
                       isLast: true,
                     ),
                   ]),
                   const SizedBox(height: 16),
 
-                  // Grupo 2: Ajustes
+                  
                   _buildMenuCard([
                     _buildMenuRow(
-                      icon: Icons.notifications_none,
-                      label: l.notifications,
-                      onTap: () => Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => const NotificationsScreen())),
-                    ),
-                    _buildMenuRow(
-                      icon: Icons.devices_other_outlined,
-                      label: 'Devices', // O l.devices si existe
-                      onTap: () {},
-                    ),
-                    _buildMenuRow(
                       icon: Icons.lock_outline,
-                      label: 'Passwords',
+                      label: Localizations.localeOf(context).languageCode == 'es' ? 'Privacidad' : 'Privacy',
                       onTap: () => Navigator.push(context,
                           MaterialPageRoute(builder: (_) => const PrivacyScreen())),
                     ),
@@ -205,7 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ]),
                   const SizedBox(height: 16),
 
-                  // Grupo 3: Tema y Soporte
+                  
                   _buildMenuCard([
                     _buildMenuRow(
                       icon: themeProvider.isDark
@@ -215,9 +171,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       trailing: Switch(
                         value: themeProvider.isDark,
                         activeColor: AppColors.primarySoft,
-                        onChanged: (_) => setState(() => themeProvider.toggleTheme()),
+                        onChanged: (val) async {
+                          await themeProvider.toggleTheme();
+                          if (mounted) setState(() {});
+                        },
                       ),
-                      onTap: () => setState(() => themeProvider.toggleTheme()),
+                      onTap: () async {
+                        await themeProvider.toggleTheme();
+                        if (mounted) setState(() {});
+                      },
                     ),
                     _buildMenuRow(
                       icon: Icons.help_outline,
@@ -228,7 +190,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ]),
                   const SizedBox(height: 16),
 
-                  // Botón Cerrar Sesión
+                
                   _buildMenuCard([
                     _buildMenuRow(
                       icon: Icons.logout,
@@ -253,158 +215,93 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // ── PREMIUM HEADER (MATCHING IMAGE) ────────────────────────
-  Widget _buildPremiumHeader(S l, String fullName, String bio, String initials) {
+  // ── PREMIUM HEADER (SIDE-BY-SIDE LAYOUT) ──────────────────
+  Widget _buildPremiumHeader(S l, String fullName, String initials) {
     final photoUrl = _userData?['photoUrl'] as String?;
     ImageProvider? imageProvider;
     if (photoUrl != null && photoUrl.isNotEmpty) {
       if (photoUrl.startsWith('data:image')) {
         final base64Data = photoUrl.split(',').last;
         imageProvider = MemoryImage(base64Decode(base64Data));
-      } else {
+      } else if (!photoUrl.endsWith('.svg')) {
         imageProvider = NetworkImage(photoUrl);
       }
     }
 
-    return SizedBox(
-      height: 340,
-      child: Stack(
-        children: [
-          // Imagen de Fondo (Cover)
-          Container(
-            height: 280,
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage('https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=1000&auto=format&fit=crop'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Container(
+    return Container(
+      height: 320,
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: NetworkImage(AppAssets.profileCover),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Container(
+        padding: const EdgeInsets.only(top: 50, bottom: 20),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.black.withOpacity(0.3),
+              Colors.black.withOpacity(0.1),
+              Colors.black.withOpacity(0.6),
+            ],
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Centered Large Avatar
+            Container(
+              width: 130,
+              height: 130,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.black.withOpacity(0.3),
-                    Colors.black.withOpacity(0.1),
-                    Colors.black.withOpacity(0.6),
-                  ],
-                ),
+                shape: BoxShape.circle,
+                color: AppColors.primarySoft,
+                border: Border.all(color: Colors.white, width: 4),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
               ),
-            ),
-          ),
-
-          // Iconos Superiores (Top Bar)
-          Positioned(
-            top: 50,
-            left: 20,
-            right: 20,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const SizedBox(), // Espacio para el botón de volver si fuera necesario
-                Row(
-                  children: [
-                    Icon(Icons.favorite_border, color: Colors.white, size: 26),
-                    const SizedBox(width: 20),
-                    Stack(
-                      children: [
-                        Icon(Icons.shopping_bag_outlined, color: Colors.white, size: 26),
-                        Positioned(
-                          right: 0,
-                          top: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
-                            child: const Text('1', style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
-                          ),
+              child: CircleAvatar(
+                radius: 65,
+                backgroundColor: AppColors.primarySoft,
+                backgroundImage: imageProvider,
+                child: imageProvider == null
+                    ? Text(
+                        initials.isNotEmpty ? initials : '?',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          // Contenido Central (Avatar, Nombre, Bio)
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Column(
-              children: [
-                // Avatar
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 4),
-                    boxShadow: [
-                      BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 15, offset: const Offset(0, 5)),
-                    ],
-                  ),
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundColor: AppColors.primarySoft,
-                    backgroundImage: imageProvider,
-                    child: imageProvider == null
-                        ? Text(
-                            initials.isNotEmpty ? initials : '?',
-                            style: const TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold),
-                          )
-                        : null,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                // Nombre
-                Text(
-                  fullName.isNotEmpty ? fullName : 'User',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    shadows: [Shadow(color: Colors.black45, blurRadius: 10, offset: Offset(0, 2))],
-                  ),
-                ),
-                const SizedBox(height: 6),
-                // Bio
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Text(
-                    bio,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
-                      fontSize: 13,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
-          ),
-          
-          // Botón Editar Foto
-          Positioned(
-            top: 250,
-            right: MediaQuery.of(context).size.width / 2 - 60,
-            child: GestureDetector(
-              onTap: _pickAndUploadPhoto,
-              child: Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2),
-                ),
-                child: const Icon(Icons.camera_alt_rounded, color: Colors.white, size: 16),
+                      )
+                    : null,
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 20),
+            
+            // Centered Name
+            Text(
+              fullName,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+                shadows: [
+                  Shadow(color: Colors.black45, blurRadius: 12, offset: Offset(0, 3))
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -644,6 +541,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     bool showEmailFields = false;
     bool obscurePassword = true;
 
+    final List<String> defaultAvatars = AppAssets.defaultAvatars;
+
+    String currentPhotoUrl = _userData?['photoUrl'] ?? '';
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -684,6 +585,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
+
+                // ── SECCIÓN DE AVATARES PREDEFINIDOS ──────────────
+                Text(
+                  'Selecciona tu Avatar', // O l.selectAvatar si lo añades a l10n
+                  style: TextStyle(
+                    color: AppColors.textSecondary(context),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  height: 70,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: defaultAvatars.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 12),
+                    itemBuilder: (context, index) {
+                      final avatarUrl = defaultAvatars[index];
+                      final isSelected = currentPhotoUrl == avatarUrl;
+
+                      return GestureDetector(
+                        onTap: () async {
+                          setModalState(() => currentPhotoUrl = avatarUrl);
+                          final successUrl = await UserService.uploadProfilePhoto(
+                            null, // Pasamos null para indicar que usamos URL
+                            avatarUrl: avatarUrl,
+                          );
+                          if (successUrl != null) {
+                            _loadUser(); // Recargar datos del perfil
+                          }
+                        },
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: isSelected ? AppColors.primary : Colors.transparent,
+                              width: 3,
+                            ),
+                            boxShadow: isSelected
+                                ? [BoxShadow(color: AppColors.primary.withOpacity(0.3), blurRadius: 8)]
+                                : [],
+                          ),
+                          child: CircleAvatar(
+                            radius: 28,
+                            backgroundColor: AppColors.inputBorder(context).withOpacity(0.2),
+                            backgroundImage: NetworkImage(avatarUrl),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 24),
                 Text(
                   l.firstName,
                   style: TextStyle(

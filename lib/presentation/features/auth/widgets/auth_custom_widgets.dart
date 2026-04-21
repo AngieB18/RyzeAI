@@ -2,9 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:ryzeai/core/constants/app_colors.dart';
 import '../../../../generated/l10n.dart';
-
-/// ── AUTH TAB BAR ───────────────────────────────────────────
-/// A custom tab bar to switch between Login and Signup.
+import '../../../../core/constants/app_assets.dart';
 class AuthTabBar extends StatelessWidget {
   final bool isLogin;
   final VoidCallback onTabChanged;
@@ -24,7 +22,7 @@ class AuthTabBar extends StatelessWidget {
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          // Linea de fondo
+          
           Container(
             height: 2,
             color: AppColors.inputBorder(context).withOpacity(0.3),
@@ -283,7 +281,7 @@ class AuthWavyHeader extends StatelessWidget {
           child: Hero(
             tag: 'auth_logo',
             child: Image.asset(
-              "assets/LogoRyzeAI.png",
+              AppAssets.logo,
               height: 70,
               fit: BoxFit.contain,
               // Color filter is NOT used because user wants the real logo
