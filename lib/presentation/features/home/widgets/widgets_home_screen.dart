@@ -26,7 +26,7 @@ class HomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 16, 80, 20),
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
       decoration: BoxDecoration(
         color: AppColors.header(context),
         borderRadius: const BorderRadius.only(

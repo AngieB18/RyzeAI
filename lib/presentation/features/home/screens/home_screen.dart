@@ -190,6 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final lastName  = _userData?['lastName']  ?? _userData?['last_name']  ?? '';
     final initials  = UserService.getInitials(firstName, lastName);
     final photoUrl  = _userData?['photoUrl'] as String?;
+    final userStyles = List<String>.from(_userData?['styles'] ?? []);
 
     ImageProvider? imageProvider;
     if (photoUrl != null && photoUrl.isNotEmpty) {
@@ -286,23 +287,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   const SizedBox(height: 20),
 
-                  // Mis estilos — título con botón editar
-                  // HomeStylesSectionTitle(
-                  //   title: userStyles.isEmpty
-                  //       ? translations.exploreStyles
-                  //       : translations.myStyles,
-                  //   onEditTap: () {
-                  //     showModalBottomSheet(
-                  //       context: context,
-                  //       isScrollControlled: true,
-                  //       backgroundColor: Colors.transparent,
-                  //       builder: (_) => StyleSelectionSheet(
-                  //         initialSelected: userStyles,
-                  //         onSaved: _loadUser,
-                  //       ),
-                  //     );
-                  //   },
-                  // ),
+                  
+                  HomeStylesSectionTitle(
+                   title: userStyles.isEmpty
+                   ? translations.exploreStyles
+                     : translations.myStyles,
+                  onEditTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (_) => StyleSelectionSheet(
+                        initialSelected: userStyles,
+                        onSaved: _loadUser,
+                       ),
+                     );
+                   },
+                  ),
 
                   const SizedBox(height: 90),
                 ],
