@@ -10,6 +10,7 @@ import 'package:ryzeai/presentation/features/design/screens/my_designs_screen.da
 import 'package:ryzeai/presentation/features/profile/screens/profile_screen.dart';
 import 'package:ryzeai/presentation/features/projects/screens/projects_screen.dart';
 import '../widgets/widgets_home_page.dart';
+import 'package:ryzeai/presentation/features/camera/screens/image_action_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -60,12 +61,16 @@ class _HomePageState extends State<HomePage> {
       );
 
       if (image != null) {
-        final imageFile = File(image.path);
-        if (!mounted) return;
+  final imageFile = File(image.path);
+  if (!mounted) return;
 
-        // TODO: navegar a la pantalla de inspiración cuando esté lista
-        // Navigator.push(context, MaterialPageRoute(builder: (_) => TuNuevaPantalla(image: imageFile)));
-      }
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => ImageActionScreen(image: imageFile),
+    ),
+  );
+}
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
