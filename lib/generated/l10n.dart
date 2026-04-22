@@ -64,10 +64,10 @@ class S {
     return Intl.message('Welcome', name: 'welcome_title', desc: '', args: []);
   }
 
-  /// `Get inspired and design your ideal space in 3D`
+  /// `Welcome! Get inspired and design your ideal space in 3D`
   String get welcome_subtitle {
     return Intl.message(
-      'Get inspired and design your ideal space in 3D',
+      'Welcome! Get inspired and design your ideal space in 3D',
       name: 'welcome_subtitle',
       desc: '',
       args: [],
@@ -1734,6 +1734,86 @@ class S {
     return Intl.message(
       'By creating an account you are accepting our ',
       name: 'terms_signup_intro',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New Password`
+  String get newPassword {
+    return Intl.message(
+      'New Password',
+      name: 'newPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your new password`
+  String get enterNewPassword {
+    return Intl.message(
+      'Enter your new password',
+      name: 'enterNewPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update Password`
+  String get updatePassword {
+    return Intl.message(
+      'Update Password',
+      name: 'updatePassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter both passwords`
+  String get passwordRequired {
+    return Intl.message(
+      'Please enter both passwords',
+      name: 'passwordRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Passwords do not match`
+  String get passwordsDoNotMatch {
+    return Intl.message(
+      'Passwords do not match',
+      name: 'passwordsDoNotMatch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password must be at least 6 characters`
+  String get passwordTooShort {
+    return Intl.message(
+      'Password must be at least 6 characters',
+      name: 'passwordTooShort',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password updated successfully`
+  String get passwordUpdated {
+    return Intl.message(
+      'Password updated successfully',
+      name: 'passwordUpdated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error updating password`
+  String get errorUpdatingPassword {
+    return Intl.message(
+      'Error updating password',
+      name: 'errorUpdatingPassword',
       desc: '',
       args: [],
     );
