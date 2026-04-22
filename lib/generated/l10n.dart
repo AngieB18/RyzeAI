@@ -1908,6 +1908,66 @@ class S {
       args: [],
     );
   }
+
+  /// `No saved designs`
+  String get projects_empty_title {
+    return Intl.message(
+      'No saved designs',
+      name: 'projects_empty_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your generated room designs will appear here. Start creating to see your transformations!`
+  String get projects_empty_subtitle {
+    return Intl.message(
+      'Your generated room designs will appear here. Start creating to see your transformations!',
+      name: 'projects_empty_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload a photo of the room`
+  String get projects_empty_step1 {
+    return Intl.message(
+      'Upload a photo of the room',
+      name: 'projects_empty_step1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose your style`
+  String get projects_empty_step2 {
+    return Intl.message(
+      'Choose your style',
+      name: 'projects_empty_step2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Generate and save`
+  String get projects_empty_step3 {
+    return Intl.message(
+      'Generate and save',
+      name: 'projects_empty_step3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `+ Create your first design`
+  String get projects_empty_button {
+    return Intl.message(
+      '+ Create your first design',
+      name: 'projects_empty_button',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

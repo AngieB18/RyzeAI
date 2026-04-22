@@ -226,5 +226,11 @@
   "projects_status_in_progress": "En progreso",
   "projects_error_generic": "Algo salió mal",
    "favorites": "Favoritos",
-  "favorites_empty": "Aún no tienes proyectos favoritos"
+  "favorites_empty": "Aún no tienes proyectos favoritos",
+  "projects_empty_title": "No hay diseños guardados",
+  "projects_empty_subtitle": "Tus diseños de habitaciones generados aparecerán aquí. ¡Empieza a crear para ver tus transformaciones!",
+  "projects_empty_step1": "Sube una foto de la habitación",
+  "projects_empty_step2": "Elige tu estilo",
+  "projects_empty_step3": "Genera y guarda",
+  "projects_empty_button": "+ Crea tu primer diseño"
 }

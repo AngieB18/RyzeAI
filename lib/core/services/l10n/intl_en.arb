@@ -226,5 +226,11 @@
   "projects_status_in_progress": "In progress",
   "projects_error_generic": "Something went wrong",
   "favorites": "Favorites",
-  "favorites_empty": "You don't have any favorite projects yet"
+  "favorites_empty": "You don't have any favorite projects yet",
+  "projects_empty_title": "No saved designs",
+  "projects_empty_subtitle": "Your generated room designs will appear here. Start creating to see your transformations!",
+  "projects_empty_step1": "Upload a photo of the room",
+  "projects_empty_step2": "Choose your style",
+  "projects_empty_step3": "Generate and save",
+  "projects_empty_button": "+ Create your first design"
 }

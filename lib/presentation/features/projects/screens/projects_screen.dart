@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../generated/l10n.dart';
+import '../../camera/screens/image_action_screen.dart';
 import '../widgets/widgets_projects.dart';
 
 class ProjectsScreen extends StatefulWidget {
@@ -13,6 +16,38 @@ class ProjectsScreen extends StatefulWidget {
 
 class _ProjectsScreenState extends State<ProjectsScreen> {
   final _supabase = Supabase.instance.client;
+
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: source,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 80,
+      );
+
+      if (image != null) {
+        final imageFile = File(image.path);
+        if (!mounted) return;
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ImageActionScreen(image: imageFile),
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          backgroundColor: AppColors.passwordWeak,
+        ),
+      );
+    }
+  }
 
   Future<List<Map<String, dynamic>>> _fetchProjects() async {
     final userId = _supabase.auth.currentUser?.id;
@@ -88,7 +123,9 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                 final projects = snapshot.data ?? [];
 
                 if (projects.isEmpty) {
-                  return Center(child: Text(strings.projects_empty));
+                  return ProjectsEmptyState(
+                    onCameraTap: () => _pickImage(ImageSource.camera),
+                  );
                 }
 
                 return ListView.builder(
