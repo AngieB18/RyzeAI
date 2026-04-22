@@ -59,7 +59,7 @@ class HomeHeader extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 6),
-                  const Text('', style: TextStyle(fontSize: 20)),  // ✅
+                  const Text('', style: TextStyle(fontSize: 20)),  
                 ],
               ),
             ],

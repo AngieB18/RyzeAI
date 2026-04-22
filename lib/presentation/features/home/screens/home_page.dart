@@ -6,7 +6,6 @@ import 'package:ryzeai/generated/l10n.dart';
 import 'package:ryzeai/main.dart';
 import 'package:ryzeai/presentation/features/favorites/screens/favorites_screen.dart';
 import 'package:ryzeai/presentation/features/home/screens/home_screen.dart';
-import 'package:ryzeai/presentation/features/design/screens/my_designs_screen.dart';
 import 'package:ryzeai/presentation/features/profile/screens/profile_screen.dart';
 import 'package:ryzeai/presentation/features/projects/screens/projects_screen.dart';
 import '../widgets/widgets_home_page.dart';
@@ -23,11 +22,10 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = const [
-    HomeScreen(),
-    FavoritesScreen(),
-    ProjectsScreen(),
-    ProfileScreen(),
-    MyDesignsScreen(),
+    HomeScreen(),      // index 0
+    FavoritesScreen(), // index 1
+    ProjectsScreen(),  // index 2
+    ProfileScreen(),   // index 3
   ];
 
   void _showImagePickerOptions() {
@@ -61,16 +59,16 @@ class _HomePageState extends State<HomePage> {
       );
 
       if (image != null) {
-  final imageFile = File(image.path);
-  if (!mounted) return;
+        final imageFile = File(image.path);
+        if (!mounted) return;
 
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => ImageActionScreen(image: imageFile),
-    ),
-  );
-}
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ImageActionScreen(image: imageFile),
+          ),
+        );
+      }
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

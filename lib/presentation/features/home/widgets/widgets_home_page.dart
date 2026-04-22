@@ -93,7 +93,7 @@ class HomeNavItem extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────
-// BottomAppBar completo con todos los tabs
+// BottomAppBar: 2 | FAB | 2
 // ─────────────────────────────────────────
 class HomeBottomNav extends StatelessWidget {
   final S translations;
@@ -116,43 +116,52 @@ class HomeBottomNav extends StatelessWidget {
       child: SizedBox(
         height: 60,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            HomeNavItem(
-              index: 0,
-              currentIndex: currentIndex,
-              icon: Icons.home_rounded,
-              label: translations.home,
-              onTap: onTap,
+            // ── Izquierda: Inicio + Favoritos ──
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  HomeNavItem(
+                    index: 0,
+                    currentIndex: currentIndex,
+                    icon: Icons.home_rounded,
+                    label: translations.home,
+                    onTap: onTap,
+                  ),
+                  HomeNavItem(
+                    index: 1,
+                    currentIndex: currentIndex,
+                    icon: Icons.favorite_rounded,
+                    label: translations.favorites,
+                    onTap: onTap,
+                  ),
+                ],
+              ),
             ),
-            HomeNavItem(
-              index: 1,
-              currentIndex: currentIndex,
-              icon: Icons.favorite_rounded,
-              label: translations.favorites,
-              onTap: onTap,
-            ),
-            const SizedBox(width: 58), // espacio para el FAB
-            HomeNavItem(
-              index: 2,
-              currentIndex: currentIndex,
-              icon: Icons.folder_rounded,
-              label: translations.projects,
-              onTap: onTap,
-            ),
-            HomeNavItem(
-              index: 4,
-              currentIndex: currentIndex,
-              icon: Icons.palette_rounded,
-              label: 'Diseños',
-              onTap: onTap,
-            ),
-            HomeNavItem(
-              index: 3,
-              currentIndex: currentIndex,
-              icon: Icons.person_rounded,
-              label: translations.profile,
-              onTap: onTap,
+            // ── Espacio FAB ──
+            const SizedBox(width: 72),
+            // ── Derecha: Proyectos + Perfil ──
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  HomeNavItem(
+                    index: 2,
+                    currentIndex: currentIndex,
+                    icon: Icons.folder_rounded,
+                    label: translations.projects,
+                    onTap: onTap,
+                  ),
+                  HomeNavItem(
+                    index: 3,
+                    currentIndex: currentIndex,
+                    icon: Icons.person_rounded,
+                    label: translations.profile,
+                    onTap: onTap,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -190,8 +199,6 @@ class HomeImagePickerSheet extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-
-          // Botón cámara
           SizedBox(
             width: double.infinity,
             height: 50,
@@ -214,10 +221,7 @@ class HomeImagePickerSheet extends StatelessWidget {
               ),
             ),
           ),
-
           const SizedBox(height: 12),
-
-          // Botón galería
           SizedBox(
             width: double.infinity,
             height: 50,
