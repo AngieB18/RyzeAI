@@ -33,6 +33,13 @@ class AppEmojis {
   static const String office = '💻';
   static const String diningRoom = '🍽️';
 
+  // UI / Status Emojis (Centralizados aquí)
+  static const String favoriteActive = '❤️';
+  static const String favoriteInactive = '🤍';
+  static const String emptyFavorites = '💔';
+  static const String error = '⚠️';
+  static const String success = '✅';
+
   static const Map<String, String> _styles = {
     'modern': modern,
     'minimal': minimal,
@@ -83,7 +90,20 @@ class AppEmojis {
     'rugs': '🧶',
   };
 
+  // Mapa para los elementos de la interfaz
+  static const Map<String, String> _ui = {
+    'fav_active': favoriteActive,
+    'fav_inactive': favoriteInactive,
+    'empty_fav': emptyFavorites,
+    'error': error,
+    'success': success,
+  };
+
+  // Métodos de acceso
   static String getStyle(String key) => _styles[key] ?? '✨';
   static String getRoom(String key) => _rooms[key] ?? '🏠';
   static String getFeature(String key) => _features[key] ?? '🔹';
+  
+  // Nuevo método para la UI
+  static String getUI(String key) => _ui[key] ?? '🔘';
 }
