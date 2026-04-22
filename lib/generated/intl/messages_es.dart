@@ -303,6 +303,24 @@ class MessageLookup extends MessageLookupByLibrary {
     "projects_empty": MessageLookupByLibrary.simpleMessage(
       "No tienes proyectos creados aún.",
     ),
+    "projects_empty_button": MessageLookupByLibrary.simpleMessage(
+      "+ Crea tu primer diseño",
+    ),
+    "projects_empty_step1": MessageLookupByLibrary.simpleMessage(
+      "Sube una foto de la habitación",
+    ),
+    "projects_empty_step2": MessageLookupByLibrary.simpleMessage(
+      "Elige tu estilo",
+    ),
+    "projects_empty_step3": MessageLookupByLibrary.simpleMessage(
+      "Genera y guarda",
+    ),
+    "projects_empty_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Tus diseños de habitaciones generados aparecerán aquí. ¡Empieza a crear para ver tus transformaciones!",
+    ),
+    "projects_empty_title": MessageLookupByLibrary.simpleMessage(
+      "No hay diseños guardados",
+    ),
     "projects_error_generic": MessageLookupByLibrary.simpleMessage(
       "Algo salió mal",
     ),

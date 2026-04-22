@@ -3,7 +3,7 @@ import '../../../../generated/l10n.dart';
 import '../../../../core/constants/app_colors.dart';
 import 'package:ryzeai/presentation/widgets/index.dart';
 import '../../../../presentation/widgets/emojis/app_emojis.dart';
-
+export 'projects_empty_state.dart';
 class ProjectsHeader extends StatelessWidget {
   final S strings;
 
@@ -13,32 +13,6 @@ class ProjectsHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return SimpleHeader(
       title: strings.projects,
-      trailing: GestureDetector(
-        onTap: () {
-          // navegación crear proyecto
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Row(
-            children: [
-              const Icon(Icons.add, color: Colors.white, size: 16),
-              const SizedBox(width: 4),
-              Text(
-                strings.projects_new,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
