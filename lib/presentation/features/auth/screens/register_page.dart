@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../main.dart' show themeProvider;
 import '../widgets/auth_custom_widgets.dart';
+import '../../../../core/constants/app_assets.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
