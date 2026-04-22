@@ -1818,6 +1818,11 @@ class S {
       args: [],
     );
   }
+
+  /// `Remember me`
+  String get remember_me {
+    return Intl.message('Remember me', name: 'remember_me', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

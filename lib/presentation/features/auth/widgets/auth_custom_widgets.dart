@@ -319,10 +319,14 @@ class HeaderWaveClipper extends CustomClipper<Path> {
 }
 
 class TopographyPainter extends CustomPainter {
+  final Color lineColor;
+
+  TopographyPainter({this.lineColor = const Color(0x14FFFFFF)}); // Colors.white.withOpacity(0.08)
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withOpacity(0.08)
+      ..color = lineColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
 
