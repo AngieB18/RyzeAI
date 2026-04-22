@@ -3,52 +3,57 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ryzeai/core/constants/app_colors.dart';
 import 'package:ryzeai/generated/l10n.dart';
 
-class RecoverPasswordPage extends StatefulWidget {
-  const RecoverPasswordPage({super.key});
+class NewPasswordPage extends StatefulWidget {
+  const NewPasswordPage({super.key});
 
   @override
-  State<RecoverPasswordPage> createState() => _RecoverPasswordPageState();
+  State<NewPasswordPage> createState() => _NewPasswordPageState();
 }
 
-class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
-
-  final TextEditingController _emailController = TextEditingController();
+class _NewPasswordPageState extends State<NewPasswordPage> {
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   bool _loading = false;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
-  Future<void> _recoverPassword() async {
+  Future<void> _updatePassword() async {
     final localizations = S.of(context);
-    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    final confirmPassword = _confirmPasswordController.text.trim();
 
-    /// VALIDACIONES
-    if (email.isEmpty) {
-      _showMessage(localizations.invalidEmail);
+    // Validaciones
+    if (password.isEmpty || confirmPassword.isEmpty) {
+      _showMessage(localizations.passwordRequired);
       return;
     }
 
-    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
-      _showMessage(localizations.invalidEmail);
+    if (password != confirmPassword) {
+      _showMessage(localizations.passwordsDoNotMatch);
+      return;
+    }
+
+    if (password.length < 6) {
+      _showMessage(localizations.passwordTooShort);
       return;
     }
 
     setState(() => _loading = true);
 
     try {
-      await Supabase.instance.client.auth.resetPasswordForEmail(
-        email,
-        redirectTo: 'io.supabase.flutter://reset-password', 
+      await Supabase.instance.client.auth.updateUser(
+        UserAttributes(password: password),
       );
 
-      _showMessage(localizations.emailSentFull, success: true);
+      _showMessage(localizations.passwordUpdated, success: true);
+
+      // Redirigir al login o home después de actualizar
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.of(context).pushReplacementNamed('/login');
+      });
 
     } catch (e) {
-      // Manejo de errores específicos
-      String errorMessage = localizations.registerError;
-      if (e.toString().contains('User not found') || e.toString().contains('Invalid email')) {
-        errorMessage = localizations.invalidEmail;
-      } else if (e.toString().contains('Too many requests')) {
-        errorMessage = 'Demasiadas solicitudes. Inténtalo más tarde.';
-      }
-      _showMessage(errorMessage);
+      _showMessage(localizations.errorUpdatingPassword);
     } finally {
       setState(() => _loading = false);
     }
@@ -82,10 +87,16 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
   InputDecoration _inputDecoration({
     required String hint,
     required IconData icon,
+    required bool obscureText,
+    required VoidCallback onToggleVisibility,
   }) {
     return InputDecoration(
       hintText: hint,
       prefixIcon: Icon(icon),
+      suffixIcon: IconButton(
+        icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
+        onPressed: onToggleVisibility,
+      ),
       filled: true,
       fillColor: AppColors.surface(context),
       border: OutlineInputBorder(
@@ -104,62 +115,70 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-
     final localizations = S.of(context);
 
     return Scaffold(
       backgroundColor: AppColors.background(context),
-
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: IconThemeData(color: AppColors.textPrimary(context)),
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(24),
-
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Text(
-              localizations.recoverPassword,
+              localizations.newPassword,
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textPrimary(context),
               ),
             ),
-
             const SizedBox(height: 10),
-
             Text(
-              localizations.enterYourEmail,
+              localizations.enterNewPassword,
               style: TextStyle(
                 color: AppColors.textSecondary(context),
               ),
             ),
-
             const SizedBox(height: 30),
-
-            /// EMAIL
+            // Nueva contraseña
             TextField(
-              controller: _emailController,
+              controller: _passwordController,
+              obscureText: _obscurePassword,
               style: TextStyle(color: AppColors.textPrimary(context)),
               decoration: _inputDecoration(
-                hint: localizations.email,
-                icon: Icons.email_outlined,
+                hint: localizations.password,
+                icon: Icons.lock_outline,
+                obscureText: _obscurePassword,
+                onToggleVisibility: () {
+                  setState(() => _obscurePassword = !_obscurePassword);
+                },
               ),
             ),
-
+            const SizedBox(height: 20),
+            // Confirmar contraseña
+            TextField(
+              controller: _confirmPasswordController,
+              obscureText: _obscureConfirmPassword,
+              style: TextStyle(color: AppColors.textPrimary(context)),
+              decoration: _inputDecoration(
+                hint: localizations.confirmPassword,
+                icon: Icons.lock_outline,
+                obscureText: _obscureConfirmPassword,
+                onToggleVisibility: () {
+                  setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
+                },
+              ),
+            ),
             const SizedBox(height: 30),
-
-            /// BOTÓN
+            // Botón
             SizedBox(
               width: double.infinity,
               height: 52,
-
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
@@ -167,13 +186,11 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-
-                onPressed: _loading ? null : _recoverPassword,
-
+                onPressed: _loading ? null : _updatePassword,
                 child: _loading
                     ? const CircularProgressIndicator(color: Colors.white)
                     : Text(
-                        localizations.sendEmail,
+                        localizations.updatePassword,
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
