@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../emojis/app_emojis.dart';
+import '../../../widgets/emojis/app_emojis.dart';
 
 class StyleCard extends StatelessWidget {
   final String styleKey;
