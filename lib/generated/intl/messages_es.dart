@@ -146,6 +146,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterNewEmail": MessageLookupByLibrary.simpleMessage(
       "Ingresa tu nuevo correo",
     ),
+    "enterNewPassword": MessageLookupByLibrary.simpleMessage(
+      "Ingresa tu nueva contraseña",
+    ),
     "enterPassword": MessageLookupByLibrary.simpleMessage(
       "Crea una contraseña segura",
     ),
@@ -154,6 +157,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "enterYourPassword": MessageLookupByLibrary.simpleMessage(
       "Digita tu contraseña",
+    ),
+    "errorUpdatingPassword": MessageLookupByLibrary.simpleMessage(
+      "Error al actualizar la contraseña",
     ),
     "exploreStyles": MessageLookupByLibrary.simpleMessage("Explorar estilos"),
     "exposedBeams": MessageLookupByLibrary.simpleMessage("Vigas vistas"),
@@ -230,6 +236,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "newBadge": MessageLookupByLibrary.simpleMessage("Nuevo"),
     "newEmail": MessageLookupByLibrary.simpleMessage("Nuevo correo"),
     "newItems": MessageLookupByLibrary.simpleMessage("5 nuevos"),
+    "newPassword": MessageLookupByLibrary.simpleMessage("Nueva contraseña"),
     "noDesignsYet": MessageLookupByLibrary.simpleMessage(
       "Aún no has generado diseños",
     ),
@@ -253,8 +260,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwordChangedSuccess": MessageLookupByLibrary.simpleMessage(
       "Tu contraseña ha sido cambiada exitosamente 🎉. Ahora puedes iniciar sesión con tu nueva contraseña.",
     ),
+    "passwordRequired": MessageLookupByLibrary.simpleMessage(
+      "Por favor ingresa ambas contraseñas",
+    ),
+    "passwordTooShort": MessageLookupByLibrary.simpleMessage(
+      "La contraseña debe tener al menos 6 caracteres",
+    ),
     "passwordTooWeak": MessageLookupByLibrary.simpleMessage(
       "La contraseña es muy débil",
+    ),
+    "passwordUpdated": MessageLookupByLibrary.simpleMessage(
+      "Contraseña actualizada exitosamente",
+    ),
+    "passwordsDoNotMatch": MessageLookupByLibrary.simpleMessage(
+      "Las contraseñas no coinciden",
     ),
     "plants": MessageLookupByLibrary.simpleMessage("Plantas y vegetación"),
     "privacy": MessageLookupByLibrary.simpleMessage("Privacidad"),
@@ -370,6 +389,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Paredes texturizadas",
     ),
     "thisMonth": MessageLookupByLibrary.simpleMessage("+1 este mes"),
+    "updatePassword": MessageLookupByLibrary.simpleMessage(
+      "Actualizar contraseña",
+    ),
     "welcome": MessageLookupByLibrary.simpleMessage(
       "¡Bienvenido! Inspírate y diseña tu espacio ideal en 3D",
     ),
@@ -381,7 +403,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "¡Bienvenido a RyzeAI! 🎉",
     ),
     "welcome_subtitle": MessageLookupByLibrary.simpleMessage(
-      "Inspírate y diseña tu espacio ideal en 3D",
+      "¡Bienvenido! Inspírate y diseña tu espacio ideal en 3D",
     ),
     "welcome_title": MessageLookupByLibrary.simpleMessage("Bienvenido"),
     "yesterday": MessageLookupByLibrary.simpleMessage("ayer"),
