@@ -3,6 +3,8 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../main.dart' show themeProvider;
 import '../../../../core/constants/app_assets.dart';
+import 'auth_custom_widgets.dart';
+
 
 
 class WelcomeHeaderNew extends StatelessWidget {
@@ -13,40 +15,53 @@ class WelcomeHeaderNew extends StatelessWidget {
     final isDark = themeProvider.isDark;
     // Claro → blanco, Oscuro → fondo oscuro
     final headerBg = isDark ? AppColors.darkBackground : Colors.white;
+    final lineColor = isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05);
 
-    return Container(
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.45,
-      color: headerBg,
-      child: Center(
-        child: Container(
-          width: 200,
-          height: 200,
-          decoration: BoxDecoration(
-            // Marco blanco solo en modo oscuro
-            color: isDark
-                ? Colors.white.withOpacity(0.95)
-                : Colors.transparent,
-            shape: BoxShape.circle,
-            boxShadow: isDark
-                ? [
-                    BoxShadow(
-                      color: Colors.white.withOpacity(0.12),
-                      blurRadius: 24,
-                      spreadRadius: 4,
-                    ),
-                  ]
-                : null,
-          ),
-          padding: isDark ? const EdgeInsets.all(24) : EdgeInsets.zero,
-          child: Hero(
-            tag: 'auth_logo',
-            child: Image.asset(
-              AppAssets.logo,
-              width: isDark ? 130 : 180,
-              fit: BoxFit.contain,
+    return ClipPath(
+      clipper: HeaderWaveClipper(),
+      child: Container(
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height * 0.45,
+        color: headerBg,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: CustomPaint(
+                painter: TopographyPainter(lineColor: lineColor),
+              ),
             ),
-          ),
+            Center(
+              child: Container(
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                  // Marco blanco solo en modo oscuro
+                  color: isDark
+                      ? Colors.white.withOpacity(0.95)
+                      : Colors.transparent,
+                  shape: BoxShape.circle,
+                  boxShadow: isDark
+                      ? [
+                          BoxShadow(
+                            color: Colors.white.withOpacity(0.12),
+                            blurRadius: 24,
+                            spreadRadius: 4,
+                          ),
+                        ]
+                      : null,
+                ),
+                padding: isDark ? const EdgeInsets.all(24) : EdgeInsets.zero,
+                child: Hero(
+                  tag: 'auth_logo',
+                  child: Image.asset(
+                    AppAssets.logo,
+                    width: isDark ? 130 : 180,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -66,10 +81,6 @@ class WelcomeContentNew extends StatelessWidget {
       height: size.height * 0.55,
       decoration: const BoxDecoration(
         color: AppColors.primarySoft,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(40),
-          topRight: Radius.circular(40),
-        ),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
       child: Column(

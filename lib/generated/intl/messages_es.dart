@@ -305,6 +305,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "registrationError": MessageLookupByLibrary.simpleMessage(
       "Error en el registro",
     ),
+    "remember_me": MessageLookupByLibrary.simpleMessage("Recordarme"),
     "required": MessageLookupByLibrary.simpleMessage("Requerido"),
     "rooms": MessageLookupByLibrary.simpleMessage("Habitaciones"),
     "rugs": MessageLookupByLibrary.simpleMessage("Alfombras de área"),

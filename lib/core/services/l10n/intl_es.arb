@@ -214,5 +214,6 @@
   "signup_tab": "Registro",
   "full_name_label": "Nombre completo",
   "forgot_password_link": "¿Olvidaste tu contraseña?",
-  "terms_signup_intro": "Al crear una cuenta estás aceptando nuestros "
-} 
+  "terms_signup_intro": "Al crear una cuenta estás aceptando nuestros ",
+"remember_me": "Recordarme"
+}

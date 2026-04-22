@@ -214,5 +214,6 @@
 "passwordsDoNotMatch": "Passwords do not match",
 "passwordTooShort": "Password must be at least 6 characters",
 "passwordUpdated": "Password updated successfully",
-"errorUpdatingPassword": "Error updating password"
+"errorUpdatingPassword": "Error updating password",
+"remember_me": "Remember me"
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../main.dart' show themeProvider;
 import '../widgets/welcome_widgets.dart';
 
@@ -13,7 +14,7 @@ class WelcomePage extends StatelessWidget {
       listenable: themeProvider,
       builder: (context, _) {
         return const Scaffold(
-          backgroundColor: Colors.transparent,
+          backgroundColor: AppColors.primarySoft,
           body: Column(
             children: [
               // Parte superior: fondo blanco/oscuro con logo

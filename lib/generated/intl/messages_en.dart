@@ -287,6 +287,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "registrationError": MessageLookupByLibrary.simpleMessage(
       "Registration error",
     ),
+    "remember_me": MessageLookupByLibrary.simpleMessage("Remember me"),
     "required": MessageLookupByLibrary.simpleMessage("Required"),
     "rooms": MessageLookupByLibrary.simpleMessage("Rooms"),
     "rugs": MessageLookupByLibrary.simpleMessage("Area Rugs"),
