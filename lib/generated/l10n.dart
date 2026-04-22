@@ -1823,6 +1823,91 @@ class S {
   String get remember_me {
     return Intl.message('Remember me', name: 'remember_me', desc: '', args: []);
   }
+
+  /// `New`
+  String get projects_new {
+    return Intl.message('New', name: 'projects_new', desc: '', args: []);
+  }
+
+  /// `You don't have any projects yet.`
+  String get projects_empty {
+    return Intl.message(
+      'You don\'t have any projects yet.',
+      name: 'projects_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Untitled`
+  String get projects_untitled {
+    return Intl.message(
+      'Untitled',
+      name: 'projects_untitled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} styles`
+  String projects_styles_count(Object count) {
+    return Intl.message(
+      '$count styles',
+      name: 'projects_styles_count',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Draft`
+  String get projects_status_draft {
+    return Intl.message(
+      'Draft',
+      name: 'projects_status_draft',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Completed`
+  String get projects_status_completed {
+    return Intl.message(
+      'Completed',
+      name: 'projects_status_completed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In progress`
+  String get projects_status_in_progress {
+    return Intl.message(
+      'In progress',
+      name: 'projects_status_in_progress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Something went wrong`
+  String get projects_error_generic {
+    return Intl.message(
+      'Something went wrong',
+      name: 'projects_error_generic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You don't have any favorite projects yet`
+  String get favorites_empty {
+    return Intl.message(
+      'You don\'t have any favorite projects yet',
+      name: 'favorites_empty',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

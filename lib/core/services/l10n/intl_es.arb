@@ -215,5 +215,16 @@
   "full_name_label": "Nombre completo",
   "forgot_password_link": "¿Olvidaste tu contraseña?",
   "terms_signup_intro": "Al crear una cuenta estás aceptando nuestros ",
-"remember_me": "Recordarme"
+"remember_me": "Recordarme",
+  "projects": "Proyectos",
+  "projects_new": "Nuevo",
+  "projects_empty": "No tienes proyectos creados aún.",
+  "projects_untitled": "Sin título",
+  "projects_styles_count": "{count} estilos",
+  "projects_status_draft": "Borrador",
+  "projects_status_completed": "Completado",
+  "projects_status_in_progress": "En progreso",
+  "projects_error_generic": "Algo salió mal",
+   "favorites": "Favoritos",
+  "favorites_empty": "Aún no tienes proyectos favoritos"
 }

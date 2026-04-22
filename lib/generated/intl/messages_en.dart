@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(count) => "${count} styles";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "accentWall": MessageLookupByLibrary.simpleMessage("Accent Wall"),
@@ -175,6 +177,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "How do I delete my account?",
     ),
     "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
+    "favorites_empty": MessageLookupByLibrary.simpleMessage(
+      "You don\'t have any favorite projects yet",
+    ),
     "firstName": MessageLookupByLibrary.simpleMessage("First Name"),
     "forgotPassword": MessageLookupByLibrary.simpleMessage(
       "Forgot your password?",
@@ -279,6 +284,22 @@ class MessageLookup extends MessageLookupByLibrary {
       "Updates about your decoration projects",
     ),
     "projects": MessageLookupByLibrary.simpleMessage("Projects"),
+    "projects_empty": MessageLookupByLibrary.simpleMessage(
+      "You don\'t have any projects yet.",
+    ),
+    "projects_error_generic": MessageLookupByLibrary.simpleMessage(
+      "Something went wrong",
+    ),
+    "projects_new": MessageLookupByLibrary.simpleMessage("New"),
+    "projects_status_completed": MessageLookupByLibrary.simpleMessage(
+      "Completed",
+    ),
+    "projects_status_draft": MessageLookupByLibrary.simpleMessage("Draft"),
+    "projects_status_in_progress": MessageLookupByLibrary.simpleMessage(
+      "In progress",
+    ),
+    "projects_styles_count": m0,
+    "projects_untitled": MessageLookupByLibrary.simpleMessage("Untitled"),
     "recentProjects": MessageLookupByLibrary.simpleMessage("Recent Projects"),
     "recoverPassword": MessageLookupByLibrary.simpleMessage("Recover Password"),
     "registerError": MessageLookupByLibrary.simpleMessage(
