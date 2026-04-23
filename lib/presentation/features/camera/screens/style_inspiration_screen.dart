@@ -50,29 +50,14 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
       'image': 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=300&q=80',
     },
     {
-      'key': 'moderno',
-      'label': 'Moderno',
-      'image': 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=300&q=80',
+      'key': 'natural',
+      'label': 'Natural',
+      'image': 'https://images.unsplash.com/photo-1518136247453-74e7b5265980?w=300&q=80',
     },
     {
       'key': 'tradicional',
       'label': 'Tradicional',
       'image': 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=300&q=80',
-    },
-    {
-      'key': 'industrial',
-      'label': 'Industrial',
-      'image': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&q=80',
-    },
-    {
-      'key': 'bohemio',
-      'label': 'Bohemio',
-      'image': 'https://images.unsplash.com/photo-1616046229478-9901c5536a45?w=300&q=80',
-    },
-    {
-      'key': 'escandinavo',
-      'label': 'Escandinavo',
-      'image': 'https://images.unsplash.com/photo-1567016432779-094069958ea5?w=300&q=80',
     },
     {
       'key': 'rustico',
