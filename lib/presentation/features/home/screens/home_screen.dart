@@ -9,6 +9,9 @@ import '../../../../../main.dart';
 import '../../styles/screens/style_selection_sheet.dart';
 import '../widgets/widgets_home_screen.dart';
 import '../../../../presentation/widgets/emojis/app_emojis.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import '../../camera/screens/image_action_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -46,6 +49,38 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     themeProvider.removeListener(_onThemeChanged);
     super.dispose();
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: source,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 80,
+      );
+
+      if (image != null) {
+        final imageFile = File(image.path);
+        if (!mounted) return;
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ImageActionScreen(image: imageFile),
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          backgroundColor: AppColors.passwordWeak,
+        ),
+      );
+    }
   }
 
   Future<void> _loadUser() async {
@@ -225,9 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   // Banner IA
                   HomeAIBanner(
                     translations: translations,
-                    onCameraTap: () {
-                      // TODO: conectar con el FAB de HomePage via callback
-                    },
+                    onCameraTap: () => _pickImage(ImageSource.camera),
                   ),
 
                   const SizedBox(height: 16),
