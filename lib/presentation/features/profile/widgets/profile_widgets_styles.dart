@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../generated/l10n.dart';
 import '../../styles/screens/style_selection_sheet.dart';
 
-class ProfileWidgetsStyles extends StatelessWidget {
+class ProfileWidgetsStyles extends StatefulWidget {
   final Map<String, dynamic>? userData;
   final VoidCallback onRefresh;
 
@@ -14,36 +15,70 @@ class ProfileWidgetsStyles extends StatelessWidget {
   });
 
   @override
+  State<ProfileWidgetsStyles> createState() =>
+      _ProfileWidgetsStylesState();
+}
+
+class _ProfileWidgetsStylesState
+    extends State<ProfileWidgetsStyles> {
+  List<Map<String, dynamic>> _styles = [];
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadStyles();
+  }
+
+  @override
+  void didUpdateWidget(covariant ProfileWidgetsStyles oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.userData?['styles'] != widget.userData?['styles']) {
+      _loadStyles();
+    }
+  }
+
+  Future<void> _loadStyles() async {
+    final ids = List<String>.from(widget.userData?['styles'] ?? []);
+
+    if (ids.isEmpty) {
+      setState(() {
+        _styles = [];
+        _loading = false;
+      });
+      return;
+    }
+
+    try {
+      final response = await Supabase.instance.client
+          .from('styles')
+          .select()
+          .inFilter('id', ids);
+
+      setState(() {
+        _styles = List<Map<String, dynamic>>.from(response);
+        _loading = false;
+      });
+    } catch (e) {
+      print('Error cargando styles: $e');
+      setState(() => _loading = false);
+    }
+  }
+
+  String _getLabel(Map<String, dynamic>? nameJson) {
+    if (nameJson == null) return '';
+
+    final locale = Localizations.localeOf(context).languageCode;
+    return nameJson[locale] ?? nameJson['en'] ?? '';
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l = S.of(context);
-    final styles = List<String>.from(userData?['styles'] ?? []);
 
-    final styleData = {
-      'modern': {'icon': '🏠', 'label': l.styleModern},
-      'natural': {'icon': '🌿', 'label': l.styleNatural},
-      'minimal': {'icon': '🕯️', 'label': l.styleMinimal},
-      'colorful': {'icon': '🎨', 'label': l.styleColorful},
-      'rustic': {'icon': '🪵', 'label': l.styleRustic},
-      'scandinavian': {'icon': '❄️', 'label': l.styleScandinavian},
-      'traditional': {'icon': '🏛️', 'label': l.styleTraditional},
-      'japanese': {'icon': '🎌', 'label': l.styleJapanese},
-      'contemporary': {'icon': '⚡', 'label': l.styleContemporary},
-      'bohemian': {'icon': '🌸', 'label': l.styleBohemian},
-      'farmhouse': {'icon': '🚜', 'label': l.styleFarmhouse},
-      'vintage': {'icon': '📻', 'label': l.styleVintage},
-      'industrial': {'icon': '🔧', 'label': l.styleIndustrial},
-      'retro': {'icon': '🎪', 'label': l.styleRetro},
-      'cyberpunk': {'icon': '🤖', 'label': l.styleCyberpunk},
-      'christmas': {'icon': '🎄', 'label': l.styleChristmas},
-      'tropical': {'icon': '🌴', 'label': l.styleTropical},
-      'brutalist': {'icon': '🧱', 'label': l.styleBrutalist},
-      'southwest': {'icon': '🌞', 'label': l.styleSouthwest},
-      'baroque': {'icon': '👑', 'label': l.styleBaroque},
-      'futuristic': {'icon': '🚀', 'label': l.styleFuturistic},
-      'colonial': {'icon': '🏰', 'label': l.styleColonial},
-      'rococo': {'icon': '💎', 'label': l.styleRococo},
-      'valentine': {'icon': '💝', 'label': l.styleValentine},
-    };
+    final selectedIds =
+        List<String>.from(widget.userData?['styles'] ?? []);
 
     return Container(
       width: double.infinity,
@@ -55,6 +90,7 @@ class ProfileWidgetsStyles extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          /// HEADER
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -73,8 +109,8 @@ class ProfileWidgetsStyles extends StatelessWidget {
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
                     builder: (_) => StyleSelectionSheet(
-                      initialSelected: styles,
-                      onSaved: onRefresh,
+                      initialSelected: selectedIds,
+                      onSaved: widget.onRefresh,
                     ),
                   );
                 },
@@ -86,54 +122,65 @@ class ProfileWidgetsStyles extends StatelessWidget {
               ),
             ],
           ),
+
           const SizedBox(height: 12),
-          styles.isEmpty
-              ? Text(
-                  l.noStylesSelected,
-                  style: TextStyle(
-                    color: AppColors.textSecondary(context),
-                    fontSize: 12,
+
+          /// LOADING
+          if (_loading)
+            const Center(child: CircularProgressIndicator())
+
+          /// EMPTY
+          else if (_styles.isEmpty)
+            Text(
+              l.noStylesSelected,
+              style: TextStyle(
+                color: AppColors.textSecondary(context),
+                fontSize: 12,
+              ),
+            )
+
+          /// LISTA REAL DESDE DB
+          else
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: _styles.map((style) {
+                final label = _getLabel(style['name']);
+                final icon = style['icon'] ?? '🎨';
+
+                return Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
                   ),
-                )
-              : Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: styles.map((key) {
-                    final data = styleData[key];
-                    if (data == null) return const SizedBox();
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: AppColors.primary.withOpacity(0.4),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        icon,
+                        style: const TextStyle(fontSize: 14),
                       ),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.12),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: AppColors.primary.withOpacity(0.4),
+                      const SizedBox(width: 6),
+                      Text(
+                        label,
+                        style: const TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            data['icon']!,
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            data['label']!,
-                            style: const TextStyle(
-                              color: AppColors.primary,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
         ],
       ),
     );
