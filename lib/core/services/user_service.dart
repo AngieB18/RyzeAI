@@ -29,15 +29,8 @@ class UserService {
           data['photoUrl'] = data['photo_url'] ?? '';
         }
 
-        // Safe parsing for styles column
-        if (data['styles'] is String) {
-          try {
-            data['styles'] = jsonDecode(data['styles'] as String);
-          } catch (_) {
-            data['styles'] = [];
-          }
-        }
-        
+        data['styles'] = await getCurrentUserStyleIds();
+
         return data;
       }
       return null;
@@ -57,9 +50,10 @@ class UserService {
     try {
       final user = _supabase.auth.currentUser;
       if (user == null) return;
-      await _supabase.from('users').update(
-        {'first_name': firstName, 'last_name': lastName},
-      ).eq('id', user.id);
+      await _supabase
+          .from('users')
+          .update({'first_name': firstName, 'last_name': lastName})
+          .eq('id', user.id);
     } catch (e) {
       print('Error updating user name: $e');
     }
@@ -69,16 +63,20 @@ class UserService {
     try {
       final user = _supabase.auth.currentUser;
       if (user == null) return;
-      await _supabase.from('users').update(
-        {'email': newEmail},
-      ).eq('id', user.id);
+      await _supabase
+          .from('users')
+          .update({'email': newEmail})
+          .eq('id', user.id);
     } catch (e) {
       print('Error updating user email: $e');
     }
   }
 
   // Guarda foto como base64 o URL de avatar en Supabase
-  static Future<String?> uploadProfilePhoto(Uint8List? imageBytes, {String? avatarUrl}) async {
+  static Future<String?> uploadProfilePhoto(
+    Uint8List? imageBytes, {
+    String? avatarUrl,
+  }) async {
     try {
       final user = _supabase.auth.currentUser;
       if (user == null) return null;
@@ -102,9 +100,10 @@ class UserService {
       }
 
       // Guardar en Supabase - Usamos photo_url (snake_case)
-      await _supabase.from('users').update(
-        {'photo_url': finalUrl},
-      ).eq('id', user.id);
+      await _supabase
+          .from('users')
+          .update({'photo_url': finalUrl})
+          .eq('id', user.id);
 
       return finalUrl;
     } catch (e) {
@@ -114,27 +113,61 @@ class UserService {
   }
 
   static Future<void> updateUserStyles(List<String> styles) async {
-    try {
-      final user = _supabase.auth.currentUser;
-      if (user == null) return;
-      await _supabase.from('users').update({
-        'styles': styles,
-        'styles_selected': true,
-      }).eq('id', user.id);
-    } catch (e) {
-      print('Error updating user styles: $e');
+  try {
+    final user = _supabase.auth.currentUser;
+    if (user == null) return;
+
+    await _supabase
+        .from('user_styles')
+        .delete()
+        .eq('user_id', user.id);
+
+    if (styles.isNotEmpty) {
+      await _supabase.from('user_styles').insert(
+        styles.map((styleId) => {
+          'user_id': user.id,
+          'style_id': styleId,
+        }).toList(),
+      );
     }
+
+    await _supabase.from('users').update({
+      'styles_selected': styles.isNotEmpty,
+    }).eq('id', user.id);
+  } catch (e) {
+    print('Error updating user styles: $e');
   }
+}
 
   static Future<void> setStylesSelected(bool selected) async {
     try {
       final user = _supabase.auth.currentUser;
       if (user == null) return;
-      await _supabase.from('users').update({
-        'styles_selected': selected,
-      }).eq('id', user.id);
+      await _supabase
+          .from('users')
+          .update({'styles_selected': selected})
+          .eq('id', user.id);
     } catch (e) {
       print('Error updating styles_selected: $e');
+    }
+  }
+
+  static Future<List<String>> getCurrentUserStyleIds() async {
+    try {
+      final user = _supabase.auth.currentUser;
+      if (user == null) return [];
+
+      final response = await _supabase
+          .from('user_styles')
+          .select('style_id')
+          .eq('user_id', user.id);
+
+      return (response as List)
+          .map((row) => row['style_id'].toString())
+          .toList();
+    } catch (e) {
+      print('Error loading user styles: $e');
+      return [];
     }
   }
 }
