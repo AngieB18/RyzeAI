@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../generated/l10n.dart';
-import '../../camera/screens/image_action_screen.dart';
+import 'package:ryzeai/presentation/features/camera/screens/style_inspiration_screen.dart';
 import '../widgets/widgets_projects.dart';
 
 class ProjectsScreen extends StatefulWidget {
@@ -34,7 +34,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => ImageActionScreen(image: imageFile),
+            builder: (_) => StyleInspirationScreen(image: imageFile),
           ),
         );
       }

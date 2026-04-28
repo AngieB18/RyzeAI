@@ -9,8 +9,7 @@ import 'package:ryzeai/presentation/features/home/screens/home_screen.dart';
 import 'package:ryzeai/presentation/features/profile/screens/profile_screen.dart';
 import 'package:ryzeai/presentation/features/projects/screens/projects_screen.dart';
 import '../widgets/widgets_home_page.dart';
-import 'package:ryzeai/presentation/features/camera/screens/image_action_screen.dart';
-
+import 'package:ryzeai/presentation/features/camera/screens/style_inspiration_screen.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -65,7 +64,7 @@ class _HomePageState extends State<HomePage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => ImageActionScreen(image: imageFile),
+            builder: (_) => StyleInspirationScreen(image: imageFile),
           ),
         );
       }
