@@ -11,8 +11,7 @@ import '../widgets/widgets_home_screen.dart';
 import '../../../../presentation/widgets/emojis/app_emojis.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import '../../camera/screens/image_action_screen.dart';
-
+import 'package:ryzeai/presentation/features/camera/screens/style_inspiration_screen.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -68,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => ImageActionScreen(image: imageFile),
+            builder: (_) => StyleInspirationScreen(image: imageFile),
           ),
         );
       }
