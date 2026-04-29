@@ -108,12 +108,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: Icons.language,
                       label: l.language,
                       trailing: ProfileWidgetsLangDropdown(
-                        onLanguageChanged: (value) {
-                          MyApp.setLocale(context, Locale(value));
-                          setState(() {});
-                        },
-                      ),
-                      onTap: () {},
+                          onLanguageChanged: (value) async {
+                            await UserService.updateUserLanguage(value);
+
+                            if (!mounted) return;
+
+                            MyApp.setLocale(context, Locale(value));
+
+                            setState(() {
+                              _userData?['language'] = value;
+                            });
+                          },
+                        ),
+                                              onTap: () {},
                       isLast: true,
                     ),
                   ]),

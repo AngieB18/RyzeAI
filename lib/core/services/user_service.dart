@@ -28,7 +28,7 @@ class UserService {
         if ((data['photoUrl'] ?? '').isEmpty) {
           data['photoUrl'] = data['photo_url'] ?? '';
         }
-
+        data['language'] = data['language'] ?? 'es';
         data['styles'] = await getCurrentUserStyleIds();
 
         return data;
@@ -170,4 +170,24 @@ class UserService {
       return [];
     }
   }
+
+  static Future<void> updateUserLanguage(String language) async {
+  try {
+    final user = _supabase.auth.currentUser;
+    if (user == null) return;
+
+    final normalizedLanguage = language.trim().toLowerCase();
+
+    if (normalizedLanguage != 'es' && normalizedLanguage != 'en') {
+      throw Exception('Idioma no válido: $language');
+    }
+
+    await _supabase
+        .from('users')
+        .update({'language': normalizedLanguage})
+        .eq('id', user.id);
+  } catch (e) {
+    print('Error updating user language: $e');
+  }
+}
 }
