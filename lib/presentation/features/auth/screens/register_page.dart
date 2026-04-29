@@ -39,6 +39,16 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
+  String _getSystemTheme() {
+  final brightness = MediaQuery.of(context).platformBrightness;
+
+  if (brightness == Brightness.dark) {
+    return 'dark';
+  }
+
+  return 'light';
+}
+
   void _showErrorDialog(String title, String message) {
     if (!mounted) return;
     showDialog(
@@ -77,6 +87,7 @@ class _RegisterPageState extends State<RegisterPage> {
     try {
       final supabase = Supabase.instance.client;
       final email = _emailController.text.trim().toLowerCase();
+      final systemTheme = _getSystemTheme();
 
       // 1. Pick a random default avatar
       final randomAvatar = AppAssets.defaultAvatars[DateTime.now().millisecond % AppAssets.defaultAvatars.length];
@@ -89,6 +100,9 @@ class _RegisterPageState extends State<RegisterPage> {
           'first_name': _firstNameController.text.trim(),
           'last_name': _lastNameController.text.trim(),
           'photo_url': randomAvatar,
+          'theme': systemTheme,
+          'language': Localizations.localeOf(context).languageCode,
+
         },
       );
 
@@ -102,9 +116,9 @@ class _RegisterPageState extends State<RegisterPage> {
         'last_name': _lastNameController.text.trim(),
         'email': email,
         'language': Localizations.localeOf(context).languageCode,
-        'theme': 'dark',
+        'theme': systemTheme,
         'styles_selected': false,
-        'styles': [],
+      
         'photo_url': randomAvatar,
         'created_at': DateTime.now().toIso8601String(),
       });

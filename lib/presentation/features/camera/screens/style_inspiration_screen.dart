@@ -1,3 +1,4 @@
+// style_inspiration_screen.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -10,6 +11,7 @@ import 'package:ryzeai/core/services/type_room/type_room_service.dart';
 import 'package:ryzeai/presentation/features/camera/screens/result_screen.dart';
 import 'package:ryzeai/presentation/features/camera/widgets/widgets_style_inspiration_screen.dart';
 import 'package:ryzeai/presentation/widgets/global/global_loader.dart';
+import 'package:flutter/services.dart';
 
 class StyleInspirationScreen extends StatefulWidget {
   final File image;
@@ -76,8 +78,13 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
 
   String _text(dynamic value) {
     if (value is Map) {
-      return value[_language]?.toString() ??
-          value['es']?.toString() ??
+      final selectedText = value[_language];
+
+      if (selectedText != null && selectedText.toString().trim().isNotEmpty) {
+        return selectedText.toString();
+      }
+
+      return value['es']?.toString() ??
           value['en']?.toString() ??
           '';
     }
@@ -134,12 +141,18 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
     try {
       await _loadUserLanguage();
 
-      final results = await Future.wait([
-        TypeRoomService.getTypeRooms(),
-        StyleService.getStyles(),
-        PaletteService.getPalettes(),
-        FeatureService.getFeatures(),
-      ]);
+      final userId = _supabase.auth.currentUser?.id;
+
+        if (userId == null) {
+          throw Exception('Usuario no autenticado');
+        }
+
+        final results = await Future.wait([
+          TypeRoomService.getTypeRooms(),
+          StyleService.getStylesForUser(userId),
+          PaletteService.getPalettes(),
+          FeatureService.getFeatures(),
+        ]);
 
       if (!mounted) return;
 
@@ -253,9 +266,9 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
                       badgeColor: const Color(0xFF7B1A1A),
                     ),
                     const SizedBox(height: 12),
-                    TextField(
+                    NameProjectInput(
                       controller: _nameController,
-                      style: TextStyle(color: AppColors.textPrimary(context)),
+                      textStyle: TextStyle(color: AppColors.textPrimary(context)),
                       decoration: InputDecoration(
                         hintText: 'Ej: Mi dormitorio principal...',
                         hintStyle: TextStyle(
@@ -288,62 +301,17 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
                       badgeColor: const Color(0xFF7B1A1A),
                     ),
                     const SizedBox(height: 12),
-                    SizedBox(
-                      height: 48,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _rooms.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 10),
-                        itemBuilder: (context, i) {
-                          final room = _rooms[i];
-                          final roomId = room['id'].toString();
-                          final selected = _selectedRoomId == roomId;
-
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() => _selectedRoomId = roomId);
-                            },
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color: selected
-                                    ? AppColors.primary
-                                    : AppColors.surface(context),
-                                borderRadius: BorderRadius.circular(30),
-                                border: Border.all(
-                                  color: selected
-                                      ? AppColors.primary
-                                      : AppColors.inputBorder(context),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    room['icon_room']?.toString() ?? '🏠',
-                                    style: const TextStyle(fontSize: 15),
-                                  ),
-                                  const SizedBox(width: 7),
-                                  Text(
-                                    _text(room['name_type_room']),
-                                    style: TextStyle(
-                                      color: selected
-                                          ? Colors.white
-                                          : AppColors.textPrimary(context),
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                    RoomSelector(
+                      rooms: _rooms,
+                      selectedRoomId: _selectedRoomId,
+                      onRoomSelected: (roomId) {
+                        setState(() => _selectedRoomId = roomId);
+                      },
+                      textTranslator: _text,
+                      primaryColor: AppColors.primary,
+                      surfaceColor: AppColors.surface(context),
+                      inputBorderColor: AppColors.inputBorder(context),
+                      textColor: AppColors.textPrimary(context),
                     ),
 
                     const SizedBox(height: 28),
@@ -354,97 +322,16 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
                       badgeColor: const Color(0xFF7B1A1A),
                     ),
                     const SizedBox(height: 12),
-                    SizedBox(
-                      height: 155,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _styles.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 12),
-                        itemBuilder: (context, i) {
-                          final style = _styles[i];
-                          final styleId = style['id'].toString();
-                          final selected = _selectedStyleId == styleId;
-
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() => _selectedStyleId = styleId);
-                            },
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              width: 125,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                border: Border.all(
-                                  color: selected
-                                      ? AppColors.primary
-                                      : Colors.transparent,
-                                  width: 3,
-                                ),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(11),
-                                child: Stack(
-                                  fit: StackFit.expand,
-                                  children: [
-                                    Container(
-                                      color: AppColors.surface(context),
-                                      child: Center(
-                                        child: Text(
-                                          style['icon']?.toString() ?? '✨',
-                                          style: const TextStyle(fontSize: 40),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                          colors: [
-                                            Colors.transparent,
-                                            Colors.black.withOpacity(0.75),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      bottom: 9,
-                                      left: 0,
-                                      right: 0,
-                                      child: Text(
-                                        _text(style['name']),
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                    ),
-                                    if (selected)
-                                      Positioned(
-                                        top: 8,
-                                        right: 8,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(3),
-                                          decoration: const BoxDecoration(
-                                            color: AppColors.primary,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: const Icon(
-                                            Icons.check,
-                                            size: 12,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                    StyleSelector(
+                      styles: _styles,
+                      selectedStyleId: _selectedStyleId,
+                      onStyleSelected: (styleId) {
+                        setState(() => _selectedStyleId = styleId);
+                      },
+                      textTranslator: _text,
+                      primaryColor: AppColors.primary,
+                      surfaceColor: AppColors.surface(context),
+                      textColor: AppColors.textPrimary(context),
                     ),
 
                     const SizedBox(height: 28),
@@ -455,80 +342,18 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
                       badgeColor: const Color(0xFF7B1A1A),
                     ),
                     const SizedBox(height: 12),
-                    SizedBox(
-                      height: 95,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _palettes.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 12),
-                        itemBuilder: (context, i) {
-                          final palette = _palettes[i];
-                          final paletteId = palette['id'].toString();
-                          final selected = _selectedPaletteId == paletteId;
-                          final colors = _parseColors(
-                            palette['colors_palette'],
-                          );
-
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() => _selectedPaletteId = paletteId);
-                            },
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              width: 158,
-                              padding: const EdgeInsets.all(13),
-                              decoration: BoxDecoration(
-                                color: AppColors.surface(context),
-                                borderRadius: BorderRadius.circular(14),
-                                border: Border.all(
-                                  color: selected
-                                      ? AppColors.primary
-                                      : Colors.transparent,
-                                  width: 1.5,
-                                ),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: colors
-                                        .take(4)
-                                        .map(
-                                          (c) => Container(
-                                            width: 22,
-                                            height: 22,
-                                            margin: const EdgeInsets.symmetric(
-                                              horizontal: 3,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: c,
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: Colors.white24,
-                                                width: 1,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
-                                  const SizedBox(height: 7),
-                                  Text(
-                                    _text(palette['name_palette']),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: AppColors.textPrimary(context),
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                    PaletteSelector(
+                      palettes: _palettes,
+                      selectedPaletteId: _selectedPaletteId,
+                      onPaletteSelected: (paletteId) {
+                        setState(() => _selectedPaletteId = paletteId);
+                      },
+                      textTranslator: _text,
+                      colorParser: _parseColors,
+                      primaryColor: AppColors.primary,
+                      surfaceColor: AppColors.surface(context),
+                      inputBorderColor: AppColors.inputBorder(context),
+                      textColor: AppColors.textPrimary(context),
                     ),
 
                     const SizedBox(height: 28),
@@ -547,87 +372,24 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    SizedBox(
-                      height: 105,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _features.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 10),
-                        itemBuilder: (context, i) {
-                          final feature = _features[i];
-                          final featureId = feature['id'].toString();
-                          final selected =
-                              _selectedFeatures.contains(featureId);
-
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                if (selected) {
-                                  _selectedFeatures.remove(featureId);
-                                } else if (_selectedFeatures.length < 5) {
-                                  _selectedFeatures.add(featureId);
-                                }
-                              });
-                            },
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              width: 100,
-                              decoration: BoxDecoration(
-                                color: AppColors.surface(context),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: selected
-                                      ? AppColors.primary
-                                      : Colors.transparent,
-                                  width: 1.5,
-                                ),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    _featureIcon(
-                                      feature['icon_feature']?.toString(),
-                                    ),
-                                    style: const TextStyle(fontSize: 28),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    _text(feature['name_feature']),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: AppColors.textPrimary(context),
-                                      fontSize: 11,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Container(
-                                    width: 22,
-                                    height: 22,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: selected
-                                            ? AppColors.primary
-                                            : AppColors.inputBorder(context),
-                                        width: 1.5,
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      selected ? Icons.check : Icons.add,
-                                      size: 13,
-                                      color: selected
-                                          ? AppColors.primary
-                                          : AppColors.textSecondary(context),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                    FeatureSelector(
+                      features: _features,
+                      selectedFeatures: _selectedFeatures,
+                      onFeatureToggle: (featureId) {
+                        setState(() {
+                          if (_selectedFeatures.contains(featureId)) {
+                            _selectedFeatures.remove(featureId);
+                          } else if (_selectedFeatures.length < 5) {
+                            _selectedFeatures.add(featureId);
+                          }
+                        });
+                      },
+                      featureIcon: _featureIcon,
+                      textTranslator: _text,
+                      primaryColor: AppColors.primary,
+                      surfaceColor: AppColors.surface(context),
+                      inputBorderColor: AppColors.inputBorder(context),
+                      textColor: AppColors.textPrimary(context),
                     ),
 
                     const SizedBox(height: 28),
@@ -680,18 +442,16 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
                       badgeColor: const Color(0xFF7B1A1A),
                     ),
                     const SizedBox(height: 12),
-                    TextField(
+                    PromptInput(
                       controller: _promptController,
-                      maxLines: 3,
-                      style: TextStyle(color: AppColors.textPrimary(context)),
+                      maxLength: 250,
+                      textStyle: TextStyle(color: AppColors.textPrimary(context)),
+                      hintStyle: TextStyle(
+                        color: AppColors.textSecondary(context).withOpacity(0.5),
+                        fontSize: 13,
+                      ),
                       decoration: InputDecoration(
-                        hintText:
-                            'Ej: Pon un escritorio de madera, plantas y luz cálida...',
-                        hintStyle: TextStyle(
-                          color:
-                              AppColors.textSecondary(context).withOpacity(0.5),
-                          fontSize: 13,
-                        ),
+                        hintText: 'Ej: Pon un escritorio de madera, plantas y luz cálida...',
                         filled: true,
                         fillColor: AppColors.surface(context),
                         border: OutlineInputBorder(
@@ -712,28 +472,11 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
 
                     const SizedBox(height: 28),
 
-                    SizedBox(
-                      width: double.infinity,
-                      height: 54,
-                      child: ElevatedButton(
-                        onPressed: _canGenerate ? _generateIdea : null,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          disabledBackgroundColor:
-                              AppColors.primary.withOpacity(0.35),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                        ),
-                        child: const Text(
-                          '✨ Generar diseño',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
+                    GenerateButton(
+                      isEnabled: _canGenerate,
+                      onPressed: _generateIdea,
+                      primaryColor: AppColors.primary,
+                      disabledBackgroundColor: AppColors.primary.withOpacity(0.35),
                     ),
 
                     const SizedBox(height: 40),
