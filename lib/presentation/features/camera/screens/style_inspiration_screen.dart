@@ -11,15 +11,14 @@ import 'package:ryzeai/core/services/type_room/type_room_service.dart';
 import 'package:ryzeai/presentation/features/camera/screens/result_screen.dart';
 import 'package:ryzeai/presentation/features/camera/widgets/widgets_style_inspiration_screen.dart';
 import 'package:ryzeai/presentation/widgets/global/global_loader.dart';
-import 'package:flutter/services.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:async';
 
 class StyleInspirationScreen extends StatefulWidget {
   final File image;
 
-  const StyleInspirationScreen({
-    super.key,
-    required this.image,
-  });
+  const StyleInspirationScreen({super.key, required this.image});
 
   @override
   State<StyleInspirationScreen> createState() => _StyleInspirationScreenState();
@@ -60,6 +59,7 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
   @override
   void initState() {
     super.initState();
+    _speech = SpeechToText();
 
     _nameController.addListener(() => setState(() {}));
     _promptController.addListener(() => setState(() {}));
@@ -76,6 +76,90 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
     super.dispose();
   }
 
+  void _startListening() async {
+    // 👇 pedir permiso
+    var status = await Permission.microphone.request();
+
+    if (!status.isGranted) {
+      print("Permiso de micrófono denegado");
+      return;
+    }
+
+    bool available = await _speech.initialize(
+      onStatus: (status) {
+        print('STATUS: $status');
+
+        if (status == "done" || status == "notListening") {
+          _stopListening(); // 👈 se apaga SOLO cuando realmente termina
+        }
+      },
+      onError: (error) => print('ERROR: $error'),
+    );
+
+    if (available) {
+      setState(() {
+        _isListening = true;
+        _listeningText = "Escuchando";
+      });
+
+      _animateListening();
+
+      _speech.listen(
+        localeId: "es_ES",
+
+        listenFor: const Duration(seconds: 10), // máximo escucha
+        pauseFor: const Duration(seconds: 4), // 👈 más natural
+
+        onResult: (result) {
+          if (result.finalResult) {
+            setState(() {
+              String newText =
+                  (_promptController.text + ' ${result.recognizedWords}')
+                      .trim();
+
+              // 👇 limitar a 250 caracteres
+              if (newText.length > 250) {
+                newText = newText.substring(0, 250);
+              }
+
+              _promptController.text = newText;
+            });
+          }
+        },
+      );
+    } else {
+      print("Speech no disponible");
+    }
+  }
+
+  void _stopListening() {
+    _speech.stop();
+    setState(() => _isListening = false);
+  }
+
+  void _animateListening() {
+    int dots = 0;
+
+    Future.doWhile(() async {
+      if (!_isListening) return false;
+
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      dots = (dots + 1) % 4;
+
+      setState(() {
+        _listeningText = "Escuchando" + "." * dots;
+      });
+
+      return true;
+    });
+  }
+
+  // voz a texto
+  late SpeechToText _speech;
+  bool _isListening = false;
+  String _listeningText = "";
+
   String _text(dynamic value) {
     if (value is Map) {
       final selectedText = value[_language];
@@ -84,9 +168,7 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
         return selectedText.toString();
       }
 
-      return value['es']?.toString() ??
-          value['en']?.toString() ??
-          '';
+      return value['es']?.toString() ?? value['en']?.toString() ?? '';
     }
 
     return value?.toString() ?? '';
@@ -143,16 +225,16 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
 
       final userId = _supabase.auth.currentUser?.id;
 
-        if (userId == null) {
-          throw Exception('Usuario no autenticado');
-        }
+      if (userId == null) {
+        throw Exception('Usuario no autenticado');
+      }
 
-        final results = await Future.wait([
-          TypeRoomService.getTypeRooms(),
-          StyleService.getStylesForUser(userId),
-          PaletteService.getPalettes(),
-          FeatureService.getFeatures(),
-        ]);
+      final results = await Future.wait([
+        TypeRoomService.getTypeRooms(),
+        StyleService.getStylesForUser(userId),
+        PaletteService.getPalettes(),
+        FeatureService.getFeatures(),
+      ]);
 
       if (!mounted) return;
 
@@ -188,8 +270,9 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
     GlobalLoader.show(context);
 
     try {
-      final originalImageUrl =
-          await ProjectsService.uploadOriginalImage(widget.image);
+      final originalImageUrl = await ProjectsService.uploadOriginalImage(
+        widget.image,
+      );
 
       if (originalImageUrl == null) {
         throw Exception('No se pudo subir la imagen original');
@@ -220,9 +303,7 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => const ResultScreen(
-            resultImageUrl: generatedImageUrl,
-          ),
+          builder: (_) => const ResultScreen(resultImageUrl: generatedImageUrl),
         ),
       );
     } catch (e) {
@@ -268,12 +349,15 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
                     const SizedBox(height: 12),
                     NameProjectInput(
                       controller: _nameController,
-                      textStyle: TextStyle(color: AppColors.textPrimary(context)),
+                      textStyle: TextStyle(
+                        color: AppColors.textPrimary(context),
+                      ),
                       decoration: InputDecoration(
                         hintText: 'Ej: Mi dormitorio principal...',
                         hintStyle: TextStyle(
-                          color: AppColors.textSecondary(context)
-                              .withOpacity(0.4),
+                          color: AppColors.textSecondary(
+                            context,
+                          ).withOpacity(0.4),
                         ),
                         filled: true,
                         fillColor: AppColors.surface(context),
@@ -445,15 +529,47 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
                     PromptInput(
                       controller: _promptController,
                       maxLength: 250,
-                      textStyle: TextStyle(color: AppColors.textPrimary(context)),
+                      textStyle: TextStyle(
+                        color: AppColors.textPrimary(context),
+                      ),
                       hintStyle: TextStyle(
-                        color: AppColors.textSecondary(context).withOpacity(0.5),
+                        color: AppColors.textSecondary(
+                          context,
+                        ).withOpacity(0.5),
                         fontSize: 13,
                       ),
                       decoration: InputDecoration(
-                        hintText: 'Ej: Pon un escritorio de madera, plantas y luz cálida...',
+                        hintText: _isListening
+                            ? _listeningText
+                            : 'Ej: Pon un escritorio de madera, plantas y luz cálida...',
                         filled: true,
                         fillColor: AppColors.surface(context),
+
+                        // 🎤 AQUÍ VA EL MICRO
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            _isListening ? _stopListening() : _startListening();
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 400),
+                            curve: Curves.easeInOut,
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _isListening
+                                  ? Colors.red.withOpacity(0.2)
+                                  : Colors.transparent,
+                            ),
+                            child: Icon(
+                              Icons.mic,
+                              size: _isListening ? 26 : 22,
+                              color: _isListening
+                                  ? Colors.red
+                                  : AppColors.textSecondary(context),
+                            ),
+                          ),
+                        ),
+
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(
@@ -476,7 +592,9 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
                       isEnabled: _canGenerate,
                       onPressed: _generateIdea,
                       primaryColor: AppColors.primary,
-                      disabledBackgroundColor: AppColors.primary.withOpacity(0.35),
+                      disabledBackgroundColor: AppColors.primary.withOpacity(
+                        0.35,
+                      ),
                     ),
 
                     const SizedBox(height: 40),
