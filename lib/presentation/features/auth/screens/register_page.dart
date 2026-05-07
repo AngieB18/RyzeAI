@@ -124,7 +124,7 @@ class _RegisterPageState extends State<RegisterPage> {
       });
 
       if (!mounted) return;
-      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
     } on AuthException catch (e) {
       _showErrorDialog(S.of(context).registrationError, e.message);
     } catch (e) {

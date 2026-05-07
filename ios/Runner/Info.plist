@@ -66,11 +66,15 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<!-- Permisos cámara y galería -->
+	<!-- Permisos cámara, galería y micrófono -->
 	<key>NSCameraUsageDescription</key>
 	<string>Necesitamos acceso a tu cámara para fotografiar tu espacio</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Necesitamos acceso a tu galería para seleccionar imágenes</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Necesitamos acceso al micrófono para convertir tu voz en texto</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Necesitamos reconocimiento de voz para transcribir tus palabras</string>
 
 </dict>
 </plist>

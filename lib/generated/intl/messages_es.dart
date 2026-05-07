@@ -36,6 +36,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Cuenta eliminada correctamente",
     ),
     "addFeatures": MessageLookupByLibrary.simpleMessage("Características"),
+    "addFurnitureSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Elige hasta 5 objetos para sugerir en tu espacio",
+    ),
+    "addFurnitureTitle": MessageLookupByLibrary.simpleMessage(
+      "Añadir muebles y objetos",
+    ),
     "ambientLight": MessageLookupByLibrary.simpleMessage(
       "Iluminación ambiental",
     ),
@@ -52,6 +58,25 @@ class MessageLookup extends MessageLookupByLibrary {
     "builtInShelves": MessageLookupByLibrary.simpleMessage(
       "Estanterías empotradas",
     ),
+    "cameraOptionChangeAngle": MessageLookupByLibrary.simpleMessage(
+      "Cambiar ángulo",
+    ),
+    "cameraOptionChangeAngleDesc": MessageLookupByLibrary.simpleMessage(
+      "La IA elige un ángulo mejor",
+    ),
+    "cameraOptionDetails": MessageLookupByLibrary.simpleMessage(
+      "Mantener detalles",
+    ),
+    "cameraOptionDetailsDesc": MessageLookupByLibrary.simpleMessage(
+      "Conserva elementos existentes",
+    ),
+    "cameraOptionSameAngle": MessageLookupByLibrary.simpleMessage(
+      "Mismo ángulo",
+    ),
+    "cameraOptionSameAngleDesc": MessageLookupByLibrary.simpleMessage(
+      "Mantiene la perspectiva original",
+    ),
+    "cameraPhotoTitle": MessageLookupByLibrary.simpleMessage("Cámara y foto"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancelar"),
     "changePassword": MessageLookupByLibrary.simpleMessage(
       "Cambiar contraseña",
@@ -76,6 +101,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Monocromática",
     ),
     "colorPaletteNeutral": MessageLookupByLibrary.simpleMessage("Neutral"),
+    "colorPaletteRequiredError": MessageLookupByLibrary.simpleMessage(
+      "Debes seleccionar una paleta de colores",
+    ),
+    "colorPaletteTitle": MessageLookupByLibrary.simpleMessage(
+      "Elige la paleta de colores",
+    ),
     "colorPaletteVibrant": MessageLookupByLibrary.simpleMessage("Vibrante"),
     "colorPaletteWarm": MessageLookupByLibrary.simpleMessage("Cálida"),
     "colorful": MessageLookupByLibrary.simpleMessage("Colorido"),
@@ -160,8 +191,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterYourPassword": MessageLookupByLibrary.simpleMessage(
       "Digita tu contraseña",
     ),
+    "errorGeneratingIdea": MessageLookupByLibrary.simpleMessage(
+      "Error generando la idea",
+    ),
+    "errorSavingProject": MessageLookupByLibrary.simpleMessage(
+      "No se pudo guardar el proyecto",
+    ),
     "errorUpdatingPassword": MessageLookupByLibrary.simpleMessage(
       "Error al actualizar la contraseña",
+    ),
+    "errorUploadingOriginalImage": MessageLookupByLibrary.simpleMessage(
+      "No se pudo subir la imagen original",
     ),
     "exploreStyles": MessageLookupByLibrary.simpleMessage("Explorar estilos"),
     "exposedBeams": MessageLookupByLibrary.simpleMessage("Vigas vistas"),
@@ -198,6 +238,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "full_name_label": MessageLookupByLibrary.simpleMessage("Nombre completo"),
     "generateDesign": MessageLookupByLibrary.simpleMessage("Generar diseño"),
     "generateIdeas": MessageLookupByLibrary.simpleMessage("Generar ideas"),
+    "generateProjectError": MessageLookupByLibrary.simpleMessage(
+      "No se pudo generar el proyecto. Intenta de nuevo.",
+    ),
     "generatingDesign": MessageLookupByLibrary.simpleMessage("Generando..."),
     "generatingIdeas": MessageLookupByLibrary.simpleMessage(
       "Generando ideas...",
@@ -217,6 +260,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "lastName": MessageLookupByLibrary.simpleMessage("Apellido"),
     "lightMode": MessageLookupByLibrary.simpleMessage("Modo claro"),
     "lighting": MessageLookupByLibrary.simpleMessage("Iluminación y atmósfera"),
+    "listening": MessageLookupByLibrary.simpleMessage("Escuchando"),
     "livingRoom": MessageLookupByLibrary.simpleMessage("Sala principal"),
     "loading": MessageLookupByLibrary.simpleMessage("Cargando..."),
     "logOut": MessageLookupByLibrary.simpleMessage("Cerrar sesión"),
@@ -228,6 +272,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "¡Bienvenido de nuevo!",
     ),
     "login_tab": MessageLookupByLibrary.simpleMessage("Entrar"),
+    "microphonePermissionDenied": MessageLookupByLibrary.simpleMessage(
+      "Permiso de micrófono denegado",
+    ),
     "minimal": MessageLookupByLibrary.simpleMessage("Mínimal"),
     "mirrors": MessageLookupByLibrary.simpleMessage("Espejos"),
     "modern": MessageLookupByLibrary.simpleMessage("Moderno"),
@@ -293,6 +340,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "profileCreationFailed": MessageLookupByLibrary.simpleMessage(
       "No se pudo crear el perfil del usuario",
     ),
+    "projectNameHint": MessageLookupByLibrary.simpleMessage(
+      "Ej: Mi dormitorio principal...",
+    ),
+    "projectNameRequiredError": MessageLookupByLibrary.simpleMessage(
+      "El nombre del proyecto es obligatorio",
+    ),
+    "projectNameTitle": MessageLookupByLibrary.simpleMessage(
+      "Dale un nombre a tu proyecto",
+    ),
     "projectNotifications": MessageLookupByLibrary.simpleMessage(
       "Notificaciones de proyectos",
     ),
@@ -334,6 +390,15 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "projects_styles_count": m0,
     "projects_untitled": MessageLookupByLibrary.simpleMessage("Sin título"),
+    "promptHint": MessageLookupByLibrary.simpleMessage(
+      "Ej: Pon un escritorio de madera, plantas y luz cálida...",
+    ),
+    "promptRequiredError": MessageLookupByLibrary.simpleMessage(
+      "Describe qué quieres cambiar o agregar",
+    ),
+    "promptTitle": MessageLookupByLibrary.simpleMessage(
+      "¿Qué quieres cambiar o agregar?",
+    ),
     "recentProjects": MessageLookupByLibrary.simpleMessage(
       "Proyectos recientes",
     ),
@@ -346,6 +411,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "remember_me": MessageLookupByLibrary.simpleMessage("Recordarme"),
     "required": MessageLookupByLibrary.simpleMessage("Requerido"),
+    "roomTypeRequiredError": MessageLookupByLibrary.simpleMessage(
+      "Debes seleccionar un tipo de habitación",
+    ),
+    "roomTypeTitle": MessageLookupByLibrary.simpleMessage(
+      "Elige el tipo de habitación",
+    ),
     "rooms": MessageLookupByLibrary.simpleMessage("Habitaciones"),
     "rugs": MessageLookupByLibrary.simpleMessage("Alfombras de área"),
     "saveChanges": MessageLookupByLibrary.simpleMessage("Guardar cambios"),
@@ -385,6 +456,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "spaceShop": MessageLookupByLibrary.simpleMessage("Piso de ventas"),
     "spaceStore": MessageLookupByLibrary.simpleMessage("Tienda / Local"),
     "spaceStorefront": MessageLookupByLibrary.simpleMessage("Vitrina"),
+    "speechRecognitionError": MessageLookupByLibrary.simpleMessage(
+      "Error del reconocimiento de voz",
+    ),
+    "speechRecognitionStatus": MessageLookupByLibrary.simpleMessage(
+      "Estado del reconocimiento de voz",
+    ),
+    "speechUnavailable": MessageLookupByLibrary.simpleMessage(
+      "El reconocimiento de voz no está disponible",
+    ),
     "step1of1": MessageLookupByLibrary.simpleMessage("Paso 1 de 1"),
     "styleBaroque": MessageLookupByLibrary.simpleMessage("Barroco"),
     "styleBohemian": MessageLookupByLibrary.simpleMessage("Bohemio"),
@@ -401,11 +481,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "styleMinimal": MessageLookupByLibrary.simpleMessage("Mínimal"),
     "styleModern": MessageLookupByLibrary.simpleMessage("Moderno"),
     "styleNatural": MessageLookupByLibrary.simpleMessage("Natural"),
+    "styleRequiredError": MessageLookupByLibrary.simpleMessage(
+      "Debes seleccionar un estilo",
+    ),
     "styleRetro": MessageLookupByLibrary.simpleMessage("Retro"),
     "styleRococo": MessageLookupByLibrary.simpleMessage("Rococó"),
     "styleRustic": MessageLookupByLibrary.simpleMessage("Rústico"),
     "styleScandinavian": MessageLookupByLibrary.simpleMessage("Escandinavo"),
     "styleSouthwest": MessageLookupByLibrary.simpleMessage("Suroeste"),
+    "styleTitle": MessageLookupByLibrary.simpleMessage("Elige el estilo"),
     "styleTraditional": MessageLookupByLibrary.simpleMessage("Tradicional"),
     "styleTropical": MessageLookupByLibrary.simpleMessage("Tropical"),
     "styleValentine": MessageLookupByLibrary.simpleMessage("San Valentín"),
@@ -431,6 +515,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "thisMonth": MessageLookupByLibrary.simpleMessage("+1 este mes"),
     "updatePassword": MessageLookupByLibrary.simpleMessage(
       "Actualizar contraseña",
+    ),
+    "userNotAuthenticated": MessageLookupByLibrary.simpleMessage(
+      "El usuario no está autenticado",
     ),
     "welcome": MessageLookupByLibrary.simpleMessage(
       "¡Bienvenido! Inspírate y diseña tu espacio ideal en 3D",
