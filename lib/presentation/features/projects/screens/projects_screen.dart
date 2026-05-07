@@ -6,6 +6,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../generated/l10n.dart';
 import 'package:ryzeai/presentation/features/camera/screens/style_inspiration_screen.dart';
 import '../widgets/widgets_projects.dart';
+import 'project_detail_screen.dart';
 
 class ProjectsScreen extends StatefulWidget {
   const ProjectsScreen({super.key});
@@ -75,26 +76,12 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     }
   }
 
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'completed':
-        return AppColors.passwordStrong;
-      case 'in progress':
-        return AppColors.passwordMedium;
-      default:
-        return AppColors.darkTextSecondary;
-    }
+  String _getPublicStateLabel(bool isPublic, S strings) {
+    return isPublic ? strings.projects_status_completed : strings.projects_status_draft;
   }
 
-  String _getStatusLabel(String status, S strings) {
-    switch (status.toLowerCase()) {
-      case 'completed':
-        return strings.projects_status_completed;
-      case 'in progress':
-        return strings.projects_status_in_progress;
-      default:
-        return strings.projects_status_draft;
-    }
+  Color _getPublicStateColor(bool isPublic) {
+    return isPublic ? AppColors.passwordStrong : AppColors.darkTextSecondary;
   }
 
   @override
@@ -136,9 +123,17 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                     return ProjectItem(
                       project: project,
                       strings: strings,
-                      getStatusColor: _getStatusColor,
-                      getStatusLabel: _getStatusLabel,
+                      getStatusColor: _getPublicStateColor,
+                      getStatusLabel: _getPublicStateLabel,
                       onToggleFavorite: _toggleFavorite,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ProjectDetailScreen(project: project),
+                          ),
+                        );
+                      },
                     );
                   },
                 );
