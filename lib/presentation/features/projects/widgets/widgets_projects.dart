@@ -20,9 +20,10 @@ class ProjectsHeader extends StatelessWidget {
 class ProjectItem extends StatelessWidget {
   final Map<String, dynamic> project;
   final S strings;
-  final Color Function(String) getStatusColor;
-  final String Function(String, S) getStatusLabel;
+  final Color Function(bool) getStatusColor;
+  final String Function(bool, S) getStatusLabel;
   final Function(String, bool) onToggleFavorite;
+  final VoidCallback? onTap;
 
   const ProjectItem({
     super.key,
@@ -31,23 +32,25 @@ class ProjectItem extends StatelessWidget {
     required this.getStatusColor,
     required this.getStatusLabel,
     required this.onToggleFavorite,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final bool isFavorite = project['is_favorite'] ?? false;
     final String projectId = project['id'];
+    final bool isPublic = project['public_state'] ?? false;
+    final String projectName = project['name_projects'] ?? strings.projects_untitled;
 
     return Stack(
       children: [
         ProjectCard(
-          icon: AppEmojis.getRoom(project['room'] ?? ''),
-          name: project['name'] ?? strings.projects_untitled,
-          items: strings.projects_styles_count(
-            (project['styles'] as List?)?.length ?? 0,
-          ),
-          status: getStatusLabel(project['status'] ?? '', strings),
-          statusColor: getStatusColor(project['status'] ?? ''),
+          icon: '🎨',
+          name: projectName,
+          items: strings.projects_styles_count(1),
+          status: getStatusLabel(isPublic, strings),
+          statusColor: getStatusColor(isPublic),
+          onTap: onTap,
         ),
         Positioned(
           top: 10,
