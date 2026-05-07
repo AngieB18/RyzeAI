@@ -1,11 +1,14 @@
 // lib/core/constants/app_colors.dart
 import 'package:flutter/material.dart';
- import '../../main.dart'; 
+import '../../main.dart';
 
 class AppColors {
   // ── Color principal (no cambia con el tema) ──
   static const Color primary = Color(0xFFBF6D3A);
-  static const Color primarySoft = Color(0xFFFF9F66); // Soft Orange for backgrounds
+  static const Color primarySoft = Color(
+    0xFFFF9F66,
+  ); // Soft Orange for backgrounds
+  static const Color error = Color(0xFF7B1A1A);
 
   // ── Colores de contraseña (no cambian) ──
   static const Color passwordWeak = Color(0xFFD94F3D);
@@ -46,5 +49,4 @@ class AppColors {
 
   static Color header(BuildContext context) =>
       themeProvider.isDark ? darkHeader : lightHeader;
-
 }

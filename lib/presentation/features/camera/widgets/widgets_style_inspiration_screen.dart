@@ -40,10 +40,7 @@ class StyleInspirationHeader extends StatelessWidget {
 class CapturedImagePreview extends StatelessWidget {
   final File image;
 
-  const CapturedImagePreview({
-    super.key,
-    required this.image,
-  });
+  const CapturedImagePreview({super.key, required this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +134,9 @@ class CameraChip extends StatelessWidget {
               : AppColors.surface(context),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: selected ? AppColors.primary : AppColors.inputBorder(context),
+            color: selected
+                ? AppColors.primary
+                : AppColors.inputBorder(context),
             width: 1.5,
           ),
         ),
@@ -244,10 +243,7 @@ class RoomSelector extends StatelessWidget {
             },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 10,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
                 color: selected
                     ? primaryColor ?? AppColors.primary
@@ -404,108 +400,6 @@ class StyleSelector extends StatelessWidget {
   }
 }
 
-class PaletteSelector extends StatelessWidget {
-  final List<Map<String, dynamic>> palettes;
-  final String? selectedPaletteId;
-  final Function(String) onPaletteSelected;
-  final String Function(dynamic) textTranslator;
-  final List<Color> Function(dynamic) colorParser;
-  final Color? primaryColor;
-  final Color? surfaceColor;
-  final Color? inputBorderColor;
-  final Color? textColor;
-
-  const PaletteSelector({
-    super.key,
-    required this.palettes,
-    required this.selectedPaletteId,
-    required this.onPaletteSelected,
-    required this.textTranslator,
-    required this.colorParser,
-    this.primaryColor,
-    this.surfaceColor,
-    this.inputBorderColor,
-    this.textColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 95,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: palettes.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
-        itemBuilder: (context, i) {
-          final palette = palettes[i];
-          final paletteId = palette['id'].toString();
-          final selected = selectedPaletteId == paletteId;
-          final colors = colorParser(palette['colors_palette']);
-
-          return GestureDetector(
-            onTap: () {
-              onPaletteSelected(paletteId);
-            },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              width: 158,
-              padding: const EdgeInsets.all(13),
-              decoration: BoxDecoration(
-                color: surfaceColor ?? AppColors.surface(context),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: selected
-                      ? primaryColor ?? AppColors.primary
-                      : Colors.transparent,
-                  width: 1.5,
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: colors
-                        .take(4)
-                        .map(
-                          (c) => Container(
-                            width: 22,
-                            height: 22,
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 3,
-                            ),
-                            decoration: BoxDecoration(
-                              color: c,
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white24,
-                                width: 1,
-                              ),
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  ),
-                  const SizedBox(height: 7),
-                  Text(
-                    textTranslator(palette['name_palette']),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: textColor ?? AppColors.textPrimary(context),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
 class FeatureSelector extends StatelessWidget {
   final List<Map<String, dynamic>> features;
   final Set<String> selectedFeatures;
@@ -586,7 +480,8 @@ class FeatureSelector extends StatelessWidget {
                       border: Border.all(
                         color: selected
                             ? primaryColor ?? AppColors.primary
-                            : inputBorderColor ?? AppColors.inputBorder(context),
+                            : inputBorderColor ??
+                                  AppColors.inputBorder(context),
                         width: 1.5,
                       ),
                     ),
@@ -626,20 +521,20 @@ class PromptInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      return TextField(
-        controller: controller,
-        maxLines: 3,
-        maxLength: maxLength,
-        style: textStyle,
-        decoration: decoration.copyWith(
-          counterStyle: TextStyle(
-            color: AppColors.textSecondary(context),
-            fontSize: 12,
-          ),
+    return TextField(
+      controller: controller,
+      maxLines: 3,
+      maxLength: maxLength,
+      style: textStyle,
+      decoration: decoration.copyWith(
+        counterStyle: TextStyle(
+          color: AppColors.textSecondary(context),
+          fontSize: 12,
         ),
-      );
-    }
+      ),
+    );
   }
+}
 
 class GenerateButton extends StatelessWidget {
   final bool isEnabled;

@@ -1639,6 +1639,311 @@ class S {
     return Intl.message('Required', name: 'required', desc: '', args: []);
   }
 
+  /// `Give your project a name`
+  String get projectNameTitle {
+    return Intl.message(
+      'Give your project a name',
+      name: 'projectNameTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Eg: My primary bedroom...`
+  String get projectNameHint {
+    return Intl.message(
+      'Eg: My primary bedroom...',
+      name: 'projectNameHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose the room type`
+  String get roomTypeTitle {
+    return Intl.message(
+      'Choose the room type',
+      name: 'roomTypeTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose the style`
+  String get styleTitle {
+    return Intl.message(
+      'Choose the style',
+      name: 'styleTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose the color palette`
+  String get colorPaletteTitle {
+    return Intl.message(
+      'Choose the color palette',
+      name: 'colorPaletteTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What do you want to change or add?`
+  String get promptTitle {
+    return Intl.message(
+      'What do you want to change or add?',
+      name: 'promptTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Eg: Add a wooden desk, plants and warm light...`
+  String get promptHint {
+    return Intl.message(
+      'Eg: Add a wooden desk, plants and warm light...',
+      name: 'promptHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add furniture and objects`
+  String get addFurnitureTitle {
+    return Intl.message(
+      'Add furniture and objects',
+      name: 'addFurnitureTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose up to 5 items to suggest in your space`
+  String get addFurnitureSubtitle {
+    return Intl.message(
+      'Choose up to 5 items to suggest in your space',
+      name: 'addFurnitureSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Camera and photo`
+  String get cameraPhotoTitle {
+    return Intl.message(
+      'Camera and photo',
+      name: 'cameraPhotoTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Keep details`
+  String get cameraOptionDetails {
+    return Intl.message(
+      'Keep details',
+      name: 'cameraOptionDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Keep existing elements`
+  String get cameraOptionDetailsDesc {
+    return Intl.message(
+      'Keep existing elements',
+      name: 'cameraOptionDetailsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Same angle`
+  String get cameraOptionSameAngle {
+    return Intl.message(
+      'Same angle',
+      name: 'cameraOptionSameAngle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Keep the original perspective`
+  String get cameraOptionSameAngleDesc {
+    return Intl.message(
+      'Keep the original perspective',
+      name: 'cameraOptionSameAngleDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change angle`
+  String get cameraOptionChangeAngle {
+    return Intl.message(
+      'Change angle',
+      name: 'cameraOptionChangeAngle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AI chooses a better angle`
+  String get cameraOptionChangeAngleDesc {
+    return Intl.message(
+      'AI chooses a better angle',
+      name: 'cameraOptionChangeAngleDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Project name is required`
+  String get projectNameRequiredError {
+    return Intl.message(
+      'Project name is required',
+      name: 'projectNameRequiredError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You must select a room type`
+  String get roomTypeRequiredError {
+    return Intl.message(
+      'You must select a room type',
+      name: 'roomTypeRequiredError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You must select a color palette`
+  String get colorPaletteRequiredError {
+    return Intl.message(
+      'You must select a color palette',
+      name: 'colorPaletteRequiredError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Describe what you want to change or add`
+  String get promptRequiredError {
+    return Intl.message(
+      'Describe what you want to change or add',
+      name: 'promptRequiredError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You must select a style`
+  String get styleRequiredError {
+    return Intl.message(
+      'You must select a style',
+      name: 'styleRequiredError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User is not authenticated`
+  String get userNotAuthenticated {
+    return Intl.message(
+      'User is not authenticated',
+      name: 'userNotAuthenticated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Microphone permission denied`
+  String get microphonePermissionDenied {
+    return Intl.message(
+      'Microphone permission denied',
+      name: 'microphonePermissionDenied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Speech recognition is unavailable`
+  String get speechUnavailable {
+    return Intl.message(
+      'Speech recognition is unavailable',
+      name: 'speechUnavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Speech recognition status`
+  String get speechRecognitionStatus {
+    return Intl.message(
+      'Speech recognition status',
+      name: 'speechRecognitionStatus',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Speech recognition error`
+  String get speechRecognitionError {
+    return Intl.message(
+      'Speech recognition error',
+      name: 'speechRecognitionError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Listening`
+  String get listening {
+    return Intl.message('Listening', name: 'listening', desc: '', args: []);
+  }
+
+  /// `Could not upload the original image`
+  String get errorUploadingOriginalImage {
+    return Intl.message(
+      'Could not upload the original image',
+      name: 'errorUploadingOriginalImage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not save the project`
+  String get errorSavingProject {
+    return Intl.message(
+      'Could not save the project',
+      name: 'errorSavingProject',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error generating idea`
+  String get errorGeneratingIdea {
+    return Intl.message(
+      'Error generating idea',
+      name: 'errorGeneratingIdea',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not generate the project. Please try again.`
+  String get generateProjectError {
+    return Intl.message(
+      'Could not generate the project. Please try again.',
+      name: 'generateProjectError',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Optional`
   String get optional {
     return Intl.message('Optional', name: 'optional', desc: '', args: []);
