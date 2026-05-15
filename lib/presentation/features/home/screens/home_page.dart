@@ -4,12 +4,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ryzeai/core/constants/app_colors.dart';
 import 'package:ryzeai/generated/l10n.dart';
 import 'package:ryzeai/main.dart';
-import 'package:ryzeai/presentation/features/favorites/screens/favorites_screen.dart';
+import 'package:ryzeai/presentation/features/publications/screens/publications_screen.dart'; 
 import 'package:ryzeai/presentation/features/home/screens/home_screen.dart';
 import 'package:ryzeai/presentation/features/profile/screens/profile_screen.dart';
 import 'package:ryzeai/presentation/features/projects/screens/projects_screen.dart';
 import '../widgets/widgets_home_page.dart';
 import 'package:ryzeai/presentation/features/camera/screens/style_inspiration_screen.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -20,11 +21,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
+  // Actualizada la lista de pantallas
   final List<Widget> _screens = const [
-    HomeScreen(),      // index 0
-    FavoritesScreen(), // index 1
-    ProjectsScreen(),  // index 2
-    ProfileScreen(),   // index 3
+    HomeScreen(),         // index 0
+    PublicationsScreen(), // index 1 
+    ProjectsScreen(),     // index 2
+    ProfileScreen(),      // index 3
   ];
 
   void _showImagePickerOptions() {

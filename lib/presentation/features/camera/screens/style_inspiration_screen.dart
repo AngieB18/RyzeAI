@@ -634,46 +634,6 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
 
                     const SizedBox(height: 28),
 
-                    // ── Cámara y foto (opcional) ───────────────────────────────
-                    SectionHeader(
-                      title: strings.cameraPhotoTitle,
-                      badge: strings.optional,
-                      badgeColor: Colors.grey.shade700,
-                    ),
-                    const SizedBox(height: 12),
-                    Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
-                      children: [
-                        CameraChip(
-                          icon: Icons.home_work_outlined,
-                          label: strings.cameraOptionDetails,
-                          desc: strings.cameraOptionDetailsDesc,
-                          selected: _cameraOption == 'details',
-                          onTap: () =>
-                              setState(() => _cameraOption = 'details'),
-                        ),
-                        CameraChip(
-                          icon: Icons.crop_free,
-                          label: strings.cameraOptionSameAngle,
-                          desc: strings.cameraOptionSameAngleDesc,
-                          selected: _cameraOption == 'same_angle',
-                          onTap: () =>
-                              setState(() => _cameraOption = 'same_angle'),
-                        ),
-                        CameraChip(
-                          icon: Icons.rotate_90_degrees_cw_outlined,
-                          label: strings.cameraOptionChangeAngle,
-                          desc: strings.cameraOptionChangeAngleDesc,
-                          selected: _cameraOption == 'change_angle',
-                          onTap: () =>
-                              setState(() => _cameraOption = 'change_angle'),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 28),
-
                     // ── Prompt ─────────────────────────────────────────────────
                     SectionHeader(
                       key: _promptKey,

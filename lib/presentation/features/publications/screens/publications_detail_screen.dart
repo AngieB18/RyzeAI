@@ -1,36 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/services/feature_ser/feature_service.dart';
 import '../../../../core/services/palette/palette_servicio.dart';
 import '../../../../core/services/styles/style_service.dart';
 import '../../../../core/services/type_room/type_room_service.dart';
 import '../../../../generated/l10n.dart';
-import 'package:ryzeai/presentation/widgets/index.dart';
 
-class ProjectDetailScreen extends StatefulWidget {
+class PublicationsDetailScreen extends StatefulWidget {
   final Map<String, dynamic> project;
 
-  const ProjectDetailScreen({
+  const PublicationsDetailScreen({
     super.key,
     required this.project,
   });
 
   @override
-  State<ProjectDetailScreen> createState() => _ProjectDetailScreenState();
+  State<PublicationsDetailScreen> createState() =>
+      _PublicationsDetailScreenState();
 }
 
-class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
-  final _supabase = Supabase.instance.client;
-  bool _isSaving = false;
+class _PublicationsDetailScreenState extends State<PublicationsDetailScreen> {
   bool _isLoadingMetadata = true;
+  bool _showingOriginal = false;
 
   List<Map<String, dynamic>> _rooms = [];
   List<Map<String, dynamic>> _styles = [];
   List<Map<String, dynamic>> _palettes = [];
   List<Map<String, dynamic>> _features = [];
-
-  bool _showingOriginal = false;
 
   @override
   void initState() {
@@ -83,8 +79,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       (item) => item['id']?.toString() == roomId,
       orElse: () => {},
     );
-    if (room.isNotEmpty) return _text(room['name_type_room']);
-    return 'Habitación';
+    return room.isNotEmpty ? _text(room['name_type_room']) : 'Habitación';
   }
 
   String _roomIcon(String? roomId) {
@@ -105,8 +100,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       (item) => item['id']?.toString() == styleId,
       orElse: () => {},
     );
-    if (style.isNotEmpty) return _text(style['name']);
-    return styleId;
+    return style.isNotEmpty ? _text(style['name']) : styleId;
   }
 
   String _styleIcon(String styleId) {
@@ -133,10 +127,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   String _paletteName(String? paletteId) {
     if (paletteId == null) return 'Paleta';
     final palette = _findPalette(paletteId);
-    if (palette != null && palette.isNotEmpty) {
-      return _text(palette['name_palette']);
-    }
-    return 'Paleta';
+    return (palette != null && palette.isNotEmpty)
+        ? _text(palette['name_palette'])
+        : 'Paleta';
   }
 
   List<Color> _paletteColors(String? paletteId) {
@@ -150,8 +143,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       (item) => item['id']?.toString() == featureId,
       orElse: () => {},
     );
-    if (feature.isNotEmpty) return _text(feature['name_feature']);
-    return 'Objeto';
+    return feature.isNotEmpty ? _text(feature['name_feature']) : 'Objeto';
   }
 
   String _featureIcon(String featureId) {
@@ -206,47 +198,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   }
 
   // ─────────────────────────────────────────────────────────────────────────────
-  // ACCIONES
+  // FULLSCREEN
   // ─────────────────────────────────────────────────────────────────────────────
 
-  Future<void> _togglePublicState() async {
-    setState(() => _isSaving = true);
-    try {
-      final projectId = widget.project['id'];
-      final currentState = widget.project['public_state'] == true;
-      await _supabase
-          .from('projects')
-          .update({'public_state': !currentState}).eq('id', projectId);
-
-      if (!mounted) return;
-      widget.project['public_state'] = !currentState;
-      setState(() => _isSaving = false);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            currentState
-                ? 'El proyecto ahora es privado'
-                : 'El proyecto ahora es público',
-          ),
-          backgroundColor: currentState
-              ? AppColors.passwordWeak
-              : AppColors.passwordStrong,
-        ),
-      );
-    } catch (e) {
-      if (!mounted) return;
-      setState(() => _isSaving = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error al actualizar el estado: $e'),
-          backgroundColor: AppColors.passwordWeak,
-        ),
-      );
-    }
-  }
-
-  // ── Abre la imagen en pantalla completa con zoom ──────────────────────────
   void _openImageFullscreen(BuildContext context, String imageUrl) {
     Navigator.push(
       context,
@@ -294,7 +248,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final strings = S.of(context);
-    final isPublic = widget.project['public_state'] == true;
     final projectName =
         widget.project['name_projects'] ?? strings.projects_untitled;
     final roomId = widget.project['id_type_room']?.toString();
@@ -328,12 +281,11 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Header con imagen y toggle ────────────────────────
+                  // ── Header con imagen ─────────────────────────────────
                   _buildHeaderImage(
                     context,
                     activeImageUrl,
                     projectName,
-                    isPublic,
                     hasOriginal: originalImageUrl != null,
                     hasGenerated: generatedImageUrl != null,
                   ),
@@ -345,30 +297,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // ── ESTADO ──────────────────────────────────────
-                        _buildSectionTitle(context, 'Estado'),
-                        const SizedBox(height: 12),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: AppColors.surface(context),
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                          child: Text(
-                            isPublic ? '🌍  Público' : '🔒  Privado',
-                            style: TextStyle(
-                              color: isPublic
-                                  ? AppColors.passwordStrong
-                                  : AppColors.passwordWeak,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 20),
-
                         // ── TIPO DE HABITACIÓN ──────────────────────────
                         _buildSectionTitle(context, 'Tipo de habitación'),
                         const SizedBox(height: 12),
@@ -504,47 +432,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                         ),
 
                         const SizedBox(height: 30),
-
-                        // ── Botón publicar / privatizar ─────────────────
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _isSaving ? null : _togglePublicState,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: isPublic
-                                  ? AppColors.passwordWeak
-                                  : AppColors.passwordStrong,
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 18),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                            child: _isSaving
-                                ? const SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor:
-                                          AlwaysStoppedAnimation<Color>(
-                                              Colors.white),
-                                    ),
-                                  )
-                                : Text(
-                                    isPublic
-                                        ? '🔒  Poner privado'
-                                        : '🌍  Publicar proyecto',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 30),
                       ],
                     ),
                   ),
@@ -561,14 +448,12 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   Widget _buildHeaderImage(
     BuildContext context,
     String? imageUrl,
-    String title,
-    bool isPublic, {
+    String title, {
     required bool hasOriginal,
     required bool hasGenerated,
   }) {
     return Stack(
       children: [
-        // ── Imagen tocable que abre fullscreen ──────────────────────────
         GestureDetector(
           onTap: () {
             if (imageUrl != null) _openImageFullscreen(context, imageUrl);
@@ -592,7 +477,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
           ),
         ),
 
-        // ── Gradiente oscuro abajo ──────────────────────────────────────
+        // ── Gradiente ──────────────────────────────────────────────────
         IgnorePointer(
           child: Container(
             height: 320,
@@ -610,7 +495,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
           ),
         ),
 
-        // ── Icono de lupa como pista visual ────────────────────────────
+        // ── Lupa ───────────────────────────────────────────────────────
         if (imageUrl != null)
           Positioned(
             bottom: 50,
@@ -631,7 +516,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
             ),
           ),
 
-        // ── Título ──────────────────────────────────────────────────────
+        // ── Título ─────────────────────────────────────────────────────
         Positioned(
           bottom: 20,
           left: 20,

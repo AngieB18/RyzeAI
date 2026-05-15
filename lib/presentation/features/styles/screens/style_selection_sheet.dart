@@ -168,7 +168,6 @@ class _StyleSelectionSheetState extends State<StyleSelectionSheet> {
 
                         const SizedBox(height: 20),
 
-                        /// 🔥 AQUÍ USAS TU WIDGET LIMPIO
                         StylesGrid(
                           styles: _styles,
                           selected: _selected,
@@ -194,7 +193,7 @@ class _StyleSelectionSheetState extends State<StyleSelectionSheet> {
                           ? Theme.of(context).colorScheme.outline
                           : Theme.of(context).colorScheme.primary,
 
-                      foregroundColor: Colors.black, // 👈 AQUÍ LA MAGIA
+                      foregroundColor: Colors.black, // 
                     ),
                     onPressed: _selected.isEmpty || _saving ? null : _save,
                     child: _saving
