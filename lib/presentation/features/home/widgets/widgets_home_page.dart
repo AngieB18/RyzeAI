@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../generated/l10n.dart';
+import 'package:ryzeai/presentation/features/home/widgets/widgets_home_icons.dart';
 
 // ─────────────────────────────────────────
 // FAB central (botón cámara)
@@ -41,7 +42,7 @@ class HomeCameraFAB extends StatelessWidget {
 class HomeNavItem extends StatelessWidget {
   final int index;
   final int currentIndex;
-  final IconData icon;
+  final Widget icon;
   final String label;
   final ValueChanged<int> onTap;
 
@@ -67,12 +68,14 @@ class HomeNavItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              color: isActive
-                  ? AppColors.primary
-                  : AppColors.textSecondary(context),
-              size: 22,
+            IconTheme(
+              data: IconThemeData(
+                color: isActive
+                    ? AppColors.primary
+                    : AppColors.textSecondary(context),
+                size: 22,
+              ),
+              child: icon,
             ),
             const SizedBox(height: 3),
             Text(
@@ -125,15 +128,15 @@ class HomeBottomNav extends StatelessWidget {
                   HomeNavItem(
                     index: 0,
                     currentIndex: currentIndex,
-                    icon: Icons.home_rounded,
+                    icon: const Icon(Icons.home_rounded),
                     label: translations.home,
                     onTap: onTap,
                   ),
                   HomeNavItem(
                     index: 1,
                     currentIndex: currentIndex,
-                    icon: Icons.favorite_rounded,
-                    label: translations.favorites,
+                    icon: const HomePublicationIcon(),
+                    label: 'Publicaciones',
                     onTap: onTap,
                   ),
                 ],
@@ -149,14 +152,14 @@ class HomeBottomNav extends StatelessWidget {
                   HomeNavItem(
                     index: 2,
                     currentIndex: currentIndex,
-                    icon: Icons.folder_rounded,
+                    icon: const Icon(Icons.folder_rounded),
                     label: translations.projects,
                     onTap: onTap,
                   ),
                   HomeNavItem(
                     index: 3,
                     currentIndex: currentIndex,
-                    icon: Icons.person_rounded,
+                    icon: const Icon(Icons.person_rounded),
                     label: translations.profile,
                     onTap: onTap,
                   ),
