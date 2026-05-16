@@ -99,13 +99,11 @@ class HomeNavItem extends StatelessWidget {
 // BottomAppBar: 2 | FAB | 2
 // ─────────────────────────────────────────
 class HomeBottomNav extends StatelessWidget {
-  final S translations;
   final int currentIndex;
   final ValueChanged<int> onTap;
 
   const HomeBottomNav({
     super.key,
-    required this.translations,
     required this.currentIndex,
     required this.onTap,
   });
@@ -120,7 +118,7 @@ class HomeBottomNav extends StatelessWidget {
         height: 60,
         child: Row(
           children: [
-            // ── Izquierda: Inicio + Favoritos ──
+            // ── Izquierda: Inicio + Publicaciones ──
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -129,21 +127,23 @@ class HomeBottomNav extends StatelessWidget {
                     index: 0,
                     currentIndex: currentIndex,
                     icon: const Icon(Icons.home_rounded),
-                    label: translations.home,
+                    label: S.of(context).home,
                     onTap: onTap,
                   ),
                   HomeNavItem(
                     index: 1,
                     currentIndex: currentIndex,
                     icon: const HomePublicationIcon(),
-                    label: 'Publicaciones',
+                    label: S.of(context).publications,
                     onTap: onTap,
                   ),
                 ],
               ),
             ),
+
             // ── Espacio FAB ──
             const SizedBox(width: 72),
+
             // ── Derecha: Proyectos + Perfil ──
             Expanded(
               child: Row(
@@ -153,14 +153,14 @@ class HomeBottomNav extends StatelessWidget {
                     index: 2,
                     currentIndex: currentIndex,
                     icon: const Icon(Icons.folder_rounded),
-                    label: translations.projects,
+                    label: S.of(context).projects,
                     onTap: onTap,
                   ),
                   HomeNavItem(
                     index: 3,
                     currentIndex: currentIndex,
                     icon: const Icon(Icons.person_rounded),
-                    label: translations.profile,
+                    label: S.of(context).profile,
                     onTap: onTap,
                   ),
                 ],
@@ -194,7 +194,7 @@ class HomeImagePickerSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'Selecciona una opción',
+            S.of(context).selectOption,
             style: TextStyle(
               color: AppColors.textPrimary(context),
               fontSize: 16,
@@ -202,6 +202,7 @@ class HomeImagePickerSheet extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
+
           SizedBox(
             width: double.infinity,
             height: 50,
@@ -214,9 +215,9 @@ class HomeImagePickerSheet extends StatelessWidget {
               ),
               onPressed: onCameraTap,
               icon: const Icon(Icons.camera_alt_rounded, size: 20),
-              label: const Text(
-                'Tomar foto',
-                style: TextStyle(
+              label: Text(
+                S.of(context).takePhoto,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -224,7 +225,9 @@ class HomeImagePickerSheet extends StatelessWidget {
               ),
             ),
           ),
+
           const SizedBox(height: 12),
+
           SizedBox(
             width: double.infinity,
             height: 50,
@@ -237,9 +240,9 @@ class HomeImagePickerSheet extends StatelessWidget {
               ),
               onPressed: onGalleryTap,
               icon: const Icon(Icons.image_rounded, size: 20),
-              label: const Text(
-                'Cargar imagen',
-                style: TextStyle(
+              label: Text(
+                S.of(context).uploadImage,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,

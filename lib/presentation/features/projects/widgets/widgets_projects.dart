@@ -4,6 +4,7 @@ import '../../../../core/constants/app_colors.dart';
 import 'package:ryzeai/presentation/widgets/index.dart';
 import '../../../../presentation/widgets/emojis/app_emojis.dart';
 export 'projects_empty_state.dart';
+
 class ProjectsHeader extends StatelessWidget {
   final S strings;
 
@@ -32,7 +33,7 @@ class ProjectItem extends StatelessWidget {
   });
 
   String _getRoomIcon(String? roomId) {
-    if (roomId == null) return '🏠';
+    if (roomId == null) return AppEmojis.defaultRoom;
     final room = rooms.firstWhere(
       (item) => item['id']?.toString() == roomId,
       orElse: () => {},
@@ -41,19 +42,7 @@ class ProjectItem extends StatelessWidget {
       final icon = room['icon_room']?.toString();
       if (icon != null && icon.isNotEmpty) return icon;
     }
-    return '🏠';
-  }
-
-  String _getPublicStateLabel(bool isPublic) {
-    return isPublic ? 'Público' : 'Privado';
-  }
-
-  IconData _getPublicStateIcon(bool isPublic) {
-    return isPublic ? Icons.public : Icons.lock;
-  }
-
-  Color _getPublicStateColor(bool isPublic, BuildContext context) {
-    return isPublic ? const Color(0xFF4CAF50) : AppColors.textSecondary(context);
+    return AppEmojis.defaultRoom;
   }
 
   @override
@@ -63,7 +52,6 @@ class ProjectItem extends StatelessWidget {
     final String roomId = project['id_type_room']?.toString() ?? '';
     final bool isPublic = project['public_state'] ?? false;
 
-    // Formatear la fecha
     String formattedDate = '';
     if (createdAt.isNotEmpty) {
       try {
@@ -75,9 +63,13 @@ class ProjectItem extends StatelessWidget {
     }
 
     final roomIcon = _getRoomIcon(roomId);
-    final stateLabel = _getPublicStateLabel(isPublic);
-    final stateIcon = _getPublicStateIcon(isPublic);
-    final stateColor = _getPublicStateColor(isPublic, context);
+
+    // 🔑 emoji y label desde AppEmojis + ARB
+    final stateEmoji = isPublic ? AppEmojis.publicProject : AppEmojis.privateProject;
+    final stateLabel = isPublic ? strings.projects_status_public : strings.projects_status_private;
+    final stateColor = isPublic
+        ? const Color(0xFF4CAF50)
+        : AppColors.textSecondary(context);
 
     return GestureDetector(
       onTap: onTap,
@@ -120,10 +112,10 @@ class ProjectItem extends StatelessWidget {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Icon(
-                        stateIcon,
-                        size: 14,
-                        color: stateColor,
+                      // 🔑 emoji desde AppEmojis en lugar de Icon de Material
+                      Text(
+                        stateEmoji,
+                        style: const TextStyle(fontSize: 14),
                       ),
                       const SizedBox(width: 6),
                       Text(
@@ -135,10 +127,10 @@ class ProjectItem extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 16),
-                      Icon(
-                        Icons.calendar_today,
-                        size: 12,
-                        color: AppColors.textSecondary(context),
+                      // 🔑 emoji de calendario desde AppEmojis
+                      Text(
+                        AppEmojis.createdAt,
+                        style: const TextStyle(fontSize: 12),
                       ),
                       const SizedBox(width: 4),
                       Text(

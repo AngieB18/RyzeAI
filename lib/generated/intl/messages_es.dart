@@ -20,7 +20,9 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'es';
 
-  static String m0(count) => "${count} estilos";
+  static String m0(error) => "Error al actualizar el estado: ${error}";
+
+  static String m1(count) => "${count} estilos";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -194,6 +196,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorGeneratingIdea": MessageLookupByLibrary.simpleMessage(
       "Error generando la idea",
     ),
+    "errorImagePickerLabel": MessageLookupByLibrary.simpleMessage("Error"),
     "errorSavingProject": MessageLookupByLibrary.simpleMessage(
       "No se pudo guardar el proyecto",
     ),
@@ -355,6 +358,68 @@ class MessageLookup extends MessageLookupByLibrary {
     "projectNotificationsDesc": MessageLookupByLibrary.simpleMessage(
       "Actualizaciones sobre tus proyectos de decoración",
     ),
+    "project_detail_btn_make_private": MessageLookupByLibrary.simpleMessage(
+      "Poner privado",
+    ),
+    "project_detail_btn_publish": MessageLookupByLibrary.simpleMessage(
+      "Publicar proyecto",
+    ),
+    "project_detail_created_at": MessageLookupByLibrary.simpleMessage("Creado"),
+    "project_detail_date_unavailable": MessageLookupByLibrary.simpleMessage(
+      "No disponible",
+    ),
+    "project_detail_default_feature": MessageLookupByLibrary.simpleMessage(
+      "Objeto",
+    ),
+    "project_detail_default_palette": MessageLookupByLibrary.simpleMessage(
+      "Paleta",
+    ),
+    "project_detail_default_room": MessageLookupByLibrary.simpleMessage(
+      "Habitación",
+    ),
+    "project_detail_error_update": m0,
+    "project_detail_now_private": MessageLookupByLibrary.simpleMessage(
+      "El proyecto ahora es privado",
+    ),
+    "project_detail_now_public": MessageLookupByLibrary.simpleMessage(
+      "El proyecto ahora es público",
+    ),
+    "project_detail_section_features": MessageLookupByLibrary.simpleMessage(
+      "Muebles y objetos",
+    ),
+    "project_detail_section_palette": MessageLookupByLibrary.simpleMessage(
+      "Paleta de colores",
+    ),
+    "project_detail_section_prompt": MessageLookupByLibrary.simpleMessage(
+      "¿Qué quieres cambiar o agregar?",
+    ),
+    "project_detail_section_room_type": MessageLookupByLibrary.simpleMessage(
+      "Tipo de habitación",
+    ),
+    "project_detail_section_status": MessageLookupByLibrary.simpleMessage(
+      "Estado",
+    ),
+    "project_detail_section_styles": MessageLookupByLibrary.simpleMessage(
+      "Estilos",
+    ),
+    "project_detail_section_times": MessageLookupByLibrary.simpleMessage(
+      "Tiempos",
+    ),
+    "project_detail_status_private": MessageLookupByLibrary.simpleMessage(
+      "Privado",
+    ),
+    "project_detail_status_public": MessageLookupByLibrary.simpleMessage(
+      "Público",
+    ),
+    "project_detail_toggle_generated": MessageLookupByLibrary.simpleMessage(
+      "Generada",
+    ),
+    "project_detail_toggle_original": MessageLookupByLibrary.simpleMessage(
+      "Original",
+    ),
+    "project_detail_updated_at": MessageLookupByLibrary.simpleMessage(
+      "Actualizado",
+    ),
     "projects": MessageLookupByLibrary.simpleMessage("Proyectos"),
     "projects_empty": MessageLookupByLibrary.simpleMessage(
       "No tienes proyectos creados aún.",
@@ -388,7 +453,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "projects_status_in_progress": MessageLookupByLibrary.simpleMessage(
       "En progreso",
     ),
-    "projects_styles_count": m0,
+    "projects_status_private": MessageLookupByLibrary.simpleMessage("Privado"),
+    "projects_status_public": MessageLookupByLibrary.simpleMessage("Público"),
+    "projects_styles_count": m1,
     "projects_untitled": MessageLookupByLibrary.simpleMessage("Sin título"),
     "promptHint": MessageLookupByLibrary.simpleMessage(
       "Ej: Pon un escritorio de madera, plantas y luz cálida...",
@@ -399,6 +466,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "promptTitle": MessageLookupByLibrary.simpleMessage(
       "¿Qué quieres cambiar o agregar?",
     ),
+    "publications": MessageLookupByLibrary.simpleMessage("Publicaciones"),
     "recentProjects": MessageLookupByLibrary.simpleMessage(
       "Proyectos recientes",
     ),
@@ -422,6 +490,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "saveChanges": MessageLookupByLibrary.simpleMessage("Guardar cambios"),
     "savedToDesigns": MessageLookupByLibrary.simpleMessage(
       "Guardado en Mis diseños",
+    ),
+    "selectOption": MessageLookupByLibrary.simpleMessage(
+      "Selecciona una opción",
     ),
     "selectStyles": MessageLookupByLibrary.simpleMessage(
       "¿Qué estilos te gustan?",
@@ -494,6 +565,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "styleTropical": MessageLookupByLibrary.simpleMessage("Tropical"),
     "styleValentine": MessageLookupByLibrary.simpleMessage("San Valentín"),
     "styleVintage": MessageLookupByLibrary.simpleMessage("Vintage"),
+    "takePhoto": MessageLookupByLibrary.simpleMessage("Tomar foto"),
     "termsAndConditions": MessageLookupByLibrary.simpleMessage(
       "Términos y condiciones",
     ),
@@ -516,6 +588,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "updatePassword": MessageLookupByLibrary.simpleMessage(
       "Actualizar contraseña",
     ),
+    "uploadImage": MessageLookupByLibrary.simpleMessage("Cargar imagen"),
     "userNotAuthenticated": MessageLookupByLibrary.simpleMessage(
       "El usuario no está autenticado",
     ),

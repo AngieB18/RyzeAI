@@ -73,6 +73,7 @@ flutter_launcher_icons:
 
 # The following section is specific to Flutter packages.
 flutter:
+  generate: true
   # The following line ensures that the Material Icons font is
   # included with your application.
   uses-material-design: true

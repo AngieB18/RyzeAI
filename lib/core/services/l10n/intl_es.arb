@@ -38,6 +38,7 @@
   "favorites": "Favoritos",
   "profile": "Perfil",
   "home": "Inicio",
+  "publications": "Publicaciones",
   "newBadge": "Nuevo",
   "decorateDesc2": "Toma una foto de tu espacio y visualiza muebles en 3D al instante",
   "modifiedAgo": "Modificado",
@@ -263,5 +264,38 @@
   "projects_empty_step1": "Sube una foto de la habitación",
   "projects_empty_step2": "Elige tu estilo",
   "projects_empty_step3": "Genera y guarda",
-  "projects_empty_button": "+ Crea tu primer diseño"
+  "projects_empty_button": "+ Crea tu primer diseño",
+  "selectOption": "Selecciona una opción",
+  "takePhoto": "Tomar foto",
+  "uploadImage": "Cargar imagen",
+  "errorImagePickerLabel": "Error",
+  "project_detail_default_room": "Habitación",
+  "project_detail_default_palette": "Paleta",
+  "project_detail_default_feature": "Objeto",
+  "project_detail_date_unavailable": "No disponible",
+  "project_detail_now_private": "El proyecto ahora es privado",
+  "project_detail_now_public": "El proyecto ahora es público",
+  "project_detail_error_update": "Error al actualizar el estado: {error}",
+  "@project_detail_error_update": {
+    "placeholders": {
+      "error": { "type": "String" } 
+    }
+  },
+  "project_detail_section_status": "Estado",
+  "project_detail_section_room_type": "Tipo de habitación",
+  "project_detail_section_styles": "Estilos",
+  "project_detail_section_palette": "Paleta de colores",
+  "project_detail_section_features": "Muebles y objetos",
+  "project_detail_section_prompt": "¿Qué quieres cambiar o agregar?",
+  "project_detail_section_times": "Tiempos",
+  "project_detail_status_public": "Público",
+  "project_detail_status_private": "Privado",
+  "project_detail_created_at": "Creado",
+  "project_detail_updated_at": "Actualizado",
+  "project_detail_btn_publish": "Publicar proyecto",
+  "project_detail_btn_make_private": "Poner privado",
+  "project_detail_toggle_original": "Original",
+  "project_detail_toggle_generated": "Generada",
+  "projects_status_public": "Público",
+  "projects_status_private": "Privado"
 }

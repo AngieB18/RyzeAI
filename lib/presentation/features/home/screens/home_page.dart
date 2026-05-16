@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ryzeai/core/constants/app_colors.dart';
 import 'package:ryzeai/generated/l10n.dart';
 import 'package:ryzeai/main.dart';
-import 'package:ryzeai/presentation/features/publications/screens/publications_screen.dart'; 
+import 'package:ryzeai/presentation/features/publications/screens/publications_screen.dart';
 import 'package:ryzeai/presentation/features/home/screens/home_screen.dart';
 import 'package:ryzeai/presentation/features/profile/screens/profile_screen.dart';
 import 'package:ryzeai/presentation/features/projects/screens/projects_screen.dart';
@@ -21,12 +21,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
-  // Actualizada la lista de pantallas
   final List<Widget> _screens = const [
-    HomeScreen(),         // index 0
-    PublicationsScreen(), // index 1 
-    ProjectsScreen(),     // index 2
-    ProfileScreen(),      // index 3
+    HomeScreen(),
+    PublicationsScreen(),
+    ProjectsScreen(),
+    ProfileScreen(),
   ];
 
   void _showImagePickerOptions() {
@@ -83,19 +82,18 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final translations = S.of(context);
-
     return ListenableBuilder(
       listenable: themeProvider,
       builder: (context, _) {
         return Scaffold(
           backgroundColor: AppColors.background(context),
           body: _screens[_currentIndex],
+
           bottomNavigationBar: HomeBottomNav(
-            translations: translations,
             currentIndex: _currentIndex,
             onTap: (index) => setState(() => _currentIndex = index),
           ),
+
           floatingActionButton: HomeCameraFAB(
             onTap: _showImagePickerOptions,
           ),
