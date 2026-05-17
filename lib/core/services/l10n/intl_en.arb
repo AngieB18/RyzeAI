@@ -297,5 +297,40 @@
   "project_detail_toggle_original": "Original",
   "project_detail_toggle_generated": "Generated",
   "projects_status_public": "Public",
-  "projects_status_private": "Private"
+  "projects_status_private": "Private",
+  "publications_title": "Publications",
+  "publications_filter_favorites": "Favorites",
+  "publications_empty_favorites": "You have no favorites yet",
+  "publications_empty_all": "No publications yet",
+  "publications_unknown_author": "User",
+  "home_error_image_pick": "Error selecting image: {error}",
+  "@home_error_image_pick": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "home_section_stats": "Overview",
+  "home_stat_this_month": "+{count} this month",
+  "@home_stat_this_month": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "home_stat_new": "{count} new",
+  "@home_stat_new": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "home_stat_public_label": "Public",
+  "home_stat_published": "Published",
+  "home_time_minutes": "{count} min ago",
+  "@home_time_minutes": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "home_time_hours": "{count} h ago",
+  "@home_time_hours": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "home_time_yesterday": "Yesterday",
+  "home_time_days": "{count} days ago",
+  "@home_time_days": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "home_empty_projects": "You have no projects yet.\nStart by taking a photo of your space."
 }
+

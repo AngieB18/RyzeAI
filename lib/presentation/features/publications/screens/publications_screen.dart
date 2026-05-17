@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/services/styles/style_service.dart';
 import '../../../../generated/l10n.dart';
+import '../../../../presentation/widgets/emojis/app_emojis.dart';
 import '../screens/publications_detail_screen.dart';
 
 class PublicationsScreen extends StatefulWidget {
@@ -41,17 +42,13 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
     try {
       final currentUserId = _supabase.auth.currentUser?.id;
       if (currentUserId == null) return;
-
       final response = await _supabase
           .from('publication_likes')
           .select('project_id')
           .eq('user_id', currentUserId);
-
       if (mounted) {
         setState(() {
-          _likedIds = {
-            for (final row in response) row['project_id'].toString()
-          };
+          _likedIds = {for (final row in response) row['project_id'].toString()};
         });
       }
     } catch (e) {
@@ -62,10 +59,7 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
   Future<void> _toggleLike(String projectId) async {
     final currentUserId = _supabase.auth.currentUser?.id;
     if (currentUserId == null) return;
-
     final isLiked = _likedIds.contains(projectId);
-
-    // Optimistic update
     setState(() {
       if (isLiked) {
         _likedIds.remove(projectId);
@@ -73,7 +67,6 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
         _likedIds.add(projectId);
       }
     });
-
     try {
       if (isLiked) {
         await _supabase
@@ -88,7 +81,6 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
         });
       }
     } catch (e) {
-      // Revertir si falla
       setState(() {
         if (isLiked) {
           _likedIds.add(projectId);
@@ -103,7 +95,6 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
   Future<List<Map<String, dynamic>>> _fetchPublicPublications() async {
     try {
       final currentUserId = _supabase.auth.currentUser?.id;
-
       final query = _supabase
           .from('projects')
           .select('''
@@ -115,14 +106,10 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
             )
           ''')
           .eq('public_state', true);
-
       final filteredQuery = currentUserId != null
           ? query.neq('user_id', currentUserId)
           : query;
-
-      final response =
-          await filteredQuery.order('created_at', ascending: false);
-
+      final response = await filteredQuery.order('created_at', ascending: false);
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {
       debugPrint('Error fetching public publications: $e');
@@ -165,7 +152,7 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
     } else if (stylesRaw is String && stylesRaw.isNotEmpty) {
       ids = [stylesRaw];
     }
-    if (ids.isEmpty) return '🎨';
+    if (ids.isEmpty) return AppEmojis.defaultStyle;
     final style = _styles.firstWhere(
       (s) => s['id']?.toString() == ids.first,
       orElse: () => {},
@@ -174,7 +161,7 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
       final icon = style['icon']?.toString();
       if (icon != null && icon.isNotEmpty) return icon;
     }
-    return '🎨';
+    return AppEmojis.defaultStyle;
   }
 
   String _formatDate(dynamic dateValue) {
@@ -208,7 +195,7 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
               children: [
                 Expanded(
                   child: Text(
-                    'Publicaciones',
+                    strings.publications_title,
                     style: TextStyle(
                       color: AppColors.textPrimary(context),
                       fontSize: 26,
@@ -218,12 +205,10 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
                 ),
                 // Filtro favoritos
                 GestureDetector(
-                  onTap: () =>
-                      setState(() => _showingFavorites = !_showingFavorites),
+                  onTap: () => setState(() => _showingFavorites = !_showingFavorites),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
                       color: _showingFavorites
                           ? AppColors.primary
@@ -233,18 +218,16 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
+                        // 🔑 emoji desde AppEmojis en lugar de Icon Material
+                        Text(
                           _showingFavorites
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          size: 16,
-                          color: _showingFavorites
-                              ? Colors.white
-                              : AppColors.textSecondary(context),
+                              ? AppEmojis.favoriteActive
+                              : AppEmojis.favoriteInactive,
+                          style: const TextStyle(fontSize: 16),
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          'Favoritos',
+                          strings.publications_filter_favorites,
                           style: TextStyle(
                             color: _showingFavorites
                                 ? Colors.white
@@ -270,19 +253,13 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
-
                 if (snapshot.hasError) {
                   return Center(child: Text(strings.projects_error_generic));
                 }
 
                 final all = snapshot.data ?? [];
-
-                // Aplica filtro de favoritos
                 final publications = _showingFavorites
-                    ? all
-                        .where((p) =>
-                            _likedIds.contains(p['id']?.toString()))
-                        .toList()
+                    ? all.where((p) => _likedIds.contains(p['id']?.toString())).toList()
                     : all;
 
                 if (publications.isEmpty) {
@@ -290,15 +267,18 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        // 🔑 emojis desde AppEmojis
                         Text(
-                          _showingFavorites ? '💔' : '🏠',
+                          _showingFavorites
+                              ? AppEmojis.emptyFavorites
+                              : AppEmojis.defaultRoom,
                           style: const TextStyle(fontSize: 48),
                         ),
                         const SizedBox(height: 12),
                         Text(
                           _showingFavorites
-                              ? 'Aún no tienes favoritos'
-                              : 'Aún no hay publicaciones',
+                              ? strings.publications_empty_favorites
+                              : strings.publications_empty_all,
                           style: TextStyle(
                             color: AppColors.textSecondary(context),
                             fontSize: 16,
@@ -316,7 +296,6 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
                     final pub = publications[i];
                     final projectId = pub['id']?.toString() ?? '';
                     final isLiked = _likedIds.contains(projectId);
-
                     return _PublicationCard(
                       publication: pub,
                       styleLabel: _styleLabel(pub['styles']),
@@ -327,8 +306,7 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) =>
-                              PublicationsDetailScreen(project: pub),
+                          builder: (_) => PublicationsDetailScreen(project: pub),
                         ),
                       ),
                     );
@@ -368,6 +346,7 @@ class _PublicationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = S.of(context);
     final imageUrl = (publication['generated_image_url'] ??
             publication['original_image_url'])
         ?.toString();
@@ -377,8 +356,8 @@ class _PublicationCard extends StatelessWidget {
     final lastName = user?['last_name']?.toString() ?? '';
     final authorName = '$firstName $lastName'.trim();
     final photoUrl = user?['photo_url']?.toString();
-    final projectName =
-        publication['name_projects']?.toString() ?? 'Sin título';
+    final projectName = publication['name_projects']?.toString()
+        ?? strings.projects_untitled;
 
     return GestureDetector(
       onTap: onTap,
@@ -395,8 +374,7 @@ class _PublicationCard extends StatelessWidget {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(20)),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
                   child: imageUrl != null
                       ? Image.network(
                           imageUrl,
@@ -407,32 +385,26 @@ class _PublicationCard extends StatelessWidget {
                             if (progress == null) return child;
                             return Container(
                               height: 200,
-                              color: AppColors.darkHeader
-                                  .withValues(alpha: 0.1),
-                              child: const Center(
-                                  child: CircularProgressIndicator()),
+                              color: AppColors.darkHeader.withValues(alpha: 0.1),
+                              child: const Center(child: CircularProgressIndicator()),
                             );
                           },
                           errorBuilder: (_, __, ___) => Container(
                             height: 200,
-                            color: AppColors.darkHeader
-                                .withValues(alpha: 0.1),
+                            color: AppColors.darkHeader.withValues(alpha: 0.1),
                             child: const Icon(Icons.broken_image_outlined,
                                 size: 40, color: Colors.grey),
                           ),
                         )
                       : Container(
                           height: 200,
-                          color:
-                              AppColors.darkHeader.withValues(alpha: 0.1),
-                          child: const Icon(
-                              Icons.image_not_supported_outlined,
-                              size: 40,
-                              color: Colors.grey),
+                          color: AppColors.darkHeader.withValues(alpha: 0.1),
+                          child: const Icon(Icons.image_not_supported_outlined,
+                              size: 40, color: Colors.grey),
                         ),
                 ),
 
-                // ── Botón corazón ──────────────────────────────────────
+                // ── Botón corazón con emoji de AppEmojis ───────────────
                 Positioned(
                   top: 12,
                   right: 12,
@@ -447,10 +419,9 @@ class _PublicationCard extends StatelessWidget {
                             : Colors.black.withValues(alpha: 0.35),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
-                        isLiked ? Icons.favorite : Icons.favorite_border,
-                        color: Colors.white,
-                        size: 20,
+                      child: Text(
+                        isLiked ? AppEmojis.favoriteActive : AppEmojis.favoriteInactive,
+                        style: const TextStyle(fontSize: 20),
                       ),
                     ),
                   ),
@@ -482,22 +453,21 @@ class _PublicationCard extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 16,
-                        backgroundColor:
-                            AppColors.darkHeader.withValues(alpha: 0.15),
-                        backgroundImage:
-                            (photoUrl != null && photoUrl.isNotEmpty)
-                                ? NetworkImage(photoUrl)
-                                : null,
+                        backgroundColor: AppColors.darkHeader.withValues(alpha: 0.15),
+                        backgroundImage: (photoUrl != null && photoUrl.isNotEmpty)
+                            ? NetworkImage(photoUrl)
+                            : null,
                         child: (photoUrl == null || photoUrl.isEmpty)
                             ? Icon(Icons.person,
-                                size: 16,
-                                color: AppColors.textSecondary(context))
+                                size: 16, color: AppColors.textSecondary(context))
                             : null,
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          authorName.isNotEmpty ? authorName : 'Usuario',
+                          authorName.isNotEmpty
+                              ? authorName
+                              : strings.publications_unknown_author,
                           style: TextStyle(
                             color: AppColors.textSecondary(context),
                             fontSize: 13,
@@ -506,13 +476,21 @@ class _PublicationCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
+                      // 🔑 emoji desde AppEmojis + fecha
                       if (formattedDate.isNotEmpty)
-                        Text(
-                          '📅 $formattedDate',
-                          style: TextStyle(
-                            color: AppColors.textSecondary(context),
-                            fontSize: 12,
-                          ),
+                        Row(
+                          children: [
+                            Text(AppEmojis.createdAt,
+                                style: const TextStyle(fontSize: 12)),
+                            const SizedBox(width: 4),
+                            Text(
+                              formattedDate,
+                              style: TextStyle(
+                                color: AppColors.textSecondary(context),
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
                         ),
                     ],
                   ),
@@ -521,8 +499,7 @@ class _PublicationCard extends StatelessWidget {
                   if (styleLabel.isNotEmpty) ...[
                     const SizedBox(height: 10),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
                         color: AppColors.primary.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(10),

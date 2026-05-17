@@ -2558,6 +2558,166 @@ class S {
       args: [],
     );
   }
+
+  /// `Publications`
+  String get publications_title {
+    return Intl.message(
+      'Publications',
+      name: 'publications_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Favorites`
+  String get publications_filter_favorites {
+    return Intl.message(
+      'Favorites',
+      name: 'publications_filter_favorites',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have no favorites yet`
+  String get publications_empty_favorites {
+    return Intl.message(
+      'You have no favorites yet',
+      name: 'publications_empty_favorites',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No publications yet`
+  String get publications_empty_all {
+    return Intl.message(
+      'No publications yet',
+      name: 'publications_empty_all',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User`
+  String get publications_unknown_author {
+    return Intl.message(
+      'User',
+      name: 'publications_unknown_author',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error selecting image: {error}`
+  String home_error_image_pick(String error) {
+    return Intl.message(
+      'Error selecting image: $error',
+      name: 'home_error_image_pick',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Overview`
+  String get home_section_stats {
+    return Intl.message(
+      'Overview',
+      name: 'home_section_stats',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `+{count} this month`
+  String home_stat_this_month(int count) {
+    return Intl.message(
+      '+$count this month',
+      name: 'home_stat_this_month',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} new`
+  String home_stat_new(int count) {
+    return Intl.message(
+      '$count new',
+      name: 'home_stat_new',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Public`
+  String get home_stat_public_label {
+    return Intl.message(
+      'Public',
+      name: 'home_stat_public_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Published`
+  String get home_stat_published {
+    return Intl.message(
+      'Published',
+      name: 'home_stat_published',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} min ago`
+  String home_time_minutes(int count) {
+    return Intl.message(
+      '$count min ago',
+      name: 'home_time_minutes',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} h ago`
+  String home_time_hours(int count) {
+    return Intl.message(
+      '$count h ago',
+      name: 'home_time_hours',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Yesterday`
+  String get home_time_yesterday {
+    return Intl.message(
+      'Yesterday',
+      name: 'home_time_yesterday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} days ago`
+  String home_time_days(int count) {
+    return Intl.message(
+      '$count days ago',
+      name: 'home_time_days',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `You have no projects yet.\nStart by taking a photo of your space.`
+  String get home_empty_projects {
+    return Intl.message(
+      'You have no projects yet.\nStart by taking a photo of your space.',
+      name: 'home_empty_projects',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
