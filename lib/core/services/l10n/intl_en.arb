@@ -38,6 +38,7 @@
   "favorites": "Favorites",
   "profile": "Profile",
   "home": "Home",
+  "publications": "Publications",
   "newBadge": "New",
   "decorateDesc2": "Take a photo of your space and visualize furniture in 3D instantly",
   "modifiedAgo": "Modified",
@@ -263,5 +264,73 @@
   "projects_empty_step1": "Upload a photo of the room",
   "projects_empty_step2": "Choose your style",
   "projects_empty_step3": "Generate and save",
-  "projects_empty_button": "+ Create your first design"
+  "projects_empty_button": "+ Create your first design",
+  "selectOption": "Select an option",
+  "takePhoto": "Take a photo",
+  "uploadImage": "Upload image",
+  "errorImagePickerLabel": "Error",
+  "project_detail_default_room": "Room",
+  "project_detail_default_palette": "Palette",
+  "project_detail_default_feature": "Object",
+  "project_detail_date_unavailable": "Not available",
+  "project_detail_now_private": "The project is now private",
+  "project_detail_now_public": "The project is now public",
+  "project_detail_error_update": "Error updating status: {error}",
+  "@project_detail_error_update": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "project_detail_section_status": "Status",
+  "project_detail_section_room_type": "Room type",
+  "project_detail_section_styles": "Styles",
+  "project_detail_section_palette": "Color palette",
+  "project_detail_section_features": "Furniture & objects",
+  "project_detail_section_prompt": "What do you want to change or add?",
+  "project_detail_section_times": "Timestamps",
+  "project_detail_status_public": "Public",
+  "project_detail_status_private": "Private",
+  "project_detail_created_at": "Created",
+  "project_detail_updated_at": "Updated",
+  "project_detail_btn_publish": "Publish project",
+  "project_detail_btn_make_private": "Make private",
+  "project_detail_toggle_original": "Original",
+  "project_detail_toggle_generated": "Generated",
+  "projects_status_public": "Public",
+  "projects_status_private": "Private",
+  "publications_title": "Publications",
+  "publications_filter_favorites": "Favorites",
+  "publications_empty_favorites": "You have no favorites yet",
+  "publications_empty_all": "No publications yet",
+  "publications_unknown_author": "User",
+  "home_error_image_pick": "Error selecting image: {error}",
+  "@home_error_image_pick": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "home_section_stats": "Overview",
+  "home_stat_this_month": "+{count} this month",
+  "@home_stat_this_month": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "home_stat_new": "{count} new",
+  "@home_stat_new": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "home_stat_public_label": "Public",
+  "home_stat_published": "Published",
+  "home_time_minutes": "{count} min ago",
+  "@home_time_minutes": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "home_time_hours": "{count} h ago",
+  "@home_time_hours": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "home_time_yesterday": "Yesterday",
+  "home_time_days": "{count} days ago",
+  "@home_time_days": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "home_empty_projects": "You have no projects yet.\nStart by taking a photo of your space."
 }
+

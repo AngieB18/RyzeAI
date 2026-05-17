@@ -6,6 +6,7 @@ import '../../../../core/services/palette/palette_servicio.dart';
 import '../../../../core/services/styles/style_service.dart';
 import '../../../../core/services/type_room/type_room_service.dart';
 import '../../../../generated/l10n.dart';
+import 'package:ryzeai/presentation/widgets/emojis/app_emojis.dart';
 import 'package:ryzeai/presentation/widgets/index.dart';
 
 class ProjectDetailScreen extends StatefulWidget {
@@ -46,9 +47,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
         PaletteService.getPalettes(),
         FeatureService.getFeatures(),
       ]);
-
       if (!mounted) return;
-
       setState(() {
         _rooms = results[0];
         _styles = results[1];
@@ -62,10 +61,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     }
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  // HELPERS
-  // ─────────────────────────────────────────────────────────────────────────────
-
   String _text(dynamic value) {
     if (value is Map) {
       final es = value['es']?.toString().trim();
@@ -78,17 +73,17 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   }
 
   String _roomName(String? roomId) {
-    if (roomId == null) return 'Habitación';
+    if (roomId == null) return S.current.project_detail_default_room;
     final room = _rooms.firstWhere(
       (item) => item['id']?.toString() == roomId,
       orElse: () => {},
     );
     if (room.isNotEmpty) return _text(room['name_type_room']);
-    return 'Habitación';
+    return S.current.project_detail_default_room;
   }
 
   String _roomIcon(String? roomId) {
-    if (roomId == null) return '🏠';
+    if (roomId == null) return AppEmojis.defaultRoom;
     final room = _rooms.firstWhere(
       (item) => item['id']?.toString() == roomId,
       orElse: () => {},
@@ -97,7 +92,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       final icon = room['icon_room']?.toString();
       if (icon != null && icon.isNotEmpty) return icon;
     }
-    return '🏠';
+    return AppEmojis.defaultRoom;
   }
 
   String _styleLabel(String styleId) {
@@ -118,7 +113,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       final icon = style['icon']?.toString();
       if (icon != null && icon.isNotEmpty) return icon;
     }
-    return '🎨';
+    return AppEmojis.defaultStyle;
   }
 
   Map<String, dynamic>? _findPalette(String? paletteId) {
@@ -131,12 +126,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   }
 
   String _paletteName(String? paletteId) {
-    if (paletteId == null) return 'Paleta';
+    if (paletteId == null) return S.current.project_detail_default_palette;
     final palette = _findPalette(paletteId);
-    if (palette != null && palette.isNotEmpty) {
-      return _text(palette['name_palette']);
-    }
-    return 'Paleta';
+    if (palette != null && palette.isNotEmpty) return _text(palette['name_palette']);
+    return S.current.project_detail_default_palette;
   }
 
   List<Color> _paletteColors(String? paletteId) {
@@ -151,7 +144,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       orElse: () => {},
     );
     if (feature.isNotEmpty) return _text(feature['name_feature']);
-    return 'Objeto';
+    return S.current.project_detail_default_feature;
   }
 
   String _featureIcon(String featureId) {
@@ -163,7 +156,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       final icon = feature['icon_feature']?.toString();
       if (icon != null && icon.isNotEmpty) return icon;
     }
-    return '🔹';
+    return AppEmojis.defaultFeature;
   }
 
   List<Color> _parseColors(dynamic value) {
@@ -192,7 +185,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   }
 
   String _formatDate(dynamic dateValue) {
-    if (dateValue == null) return 'No disponible';
+    if (dateValue == null) return S.current.project_detail_date_unavailable;
     try {
       final date = dateValue is DateTime
           ? dateValue
@@ -205,10 +198,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     }
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  // ACCIONES
-  // ─────────────────────────────────────────────────────────────────────────────
-
   Future<void> _togglePublicState() async {
     setState(() => _isSaving = true);
     try {
@@ -217,18 +206,15 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       await _supabase
           .from('projects')
           .update({'public_state': !currentState}).eq('id', projectId);
-
       if (!mounted) return;
       widget.project['public_state'] = !currentState;
       setState(() => _isSaving = false);
-
+      final strings = S.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            currentState
-                ? 'El proyecto ahora es privado'
-                : 'El proyecto ahora es público',
-          ),
+          content: Text(currentState
+              ? strings.project_detail_now_private
+              : strings.project_detail_now_public),
           backgroundColor: currentState
               ? AppColors.passwordWeak
               : AppColors.passwordStrong,
@@ -239,14 +225,13 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       setState(() => _isSaving = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error al actualizar el estado: $e'),
+          content: Text(S.of(context).project_detail_error_update(e.toString())),
           backgroundColor: AppColors.passwordWeak,
         ),
       );
     }
   }
 
-  // ── Abre la imagen en pantalla completa con zoom ──────────────────────────
   void _openImageFullscreen(BuildContext context, String imageUrl) {
     Navigator.push(
       context,
@@ -271,8 +256,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                 loadingBuilder: (context, child, progress) {
                   if (progress == null) return child;
                   return const Center(
-                    child: CircularProgressIndicator(color: Colors.white),
-                  );
+                      child: CircularProgressIndicator(color: Colors.white));
                 },
                 errorBuilder: (context, error, stack) => const Icon(
                   Icons.broken_image_outlined,
@@ -287,24 +271,18 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  // BUILD
-  // ─────────────────────────────────────────────────────────────────────────────
-
   @override
   Widget build(BuildContext context) {
     final strings = S.of(context);
     final isPublic = widget.project['public_state'] == true;
-    final projectName =
-        widget.project['name_projects'] ?? strings.projects_untitled;
+    final projectName = widget.project['name_projects'] ?? strings.projects_untitled;
     final roomId = widget.project['id_type_room']?.toString();
     final styles = _toStringList(widget.project['styles']);
     final features = _toStringList(widget.project['id_features']);
     final paletteId = widget.project['id_palette']?.toString();
     final paletteColors = _paletteColors(paletteId);
     final paletteName = _paletteName(paletteId);
-    final generatedImageUrl =
-        widget.project['generated_image_url']?.toString();
+    final generatedImageUrl = widget.project['generated_image_url']?.toString();
     final originalImageUrl = widget.project['original_image_url']?.toString();
     final activeImageUrl = _showingOriginal
         ? originalImageUrl
@@ -328,53 +306,58 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Header con imagen y toggle ────────────────────────
                   _buildHeaderImage(
-                    context,
-                    activeImageUrl,
-                    projectName,
-                    isPublic,
+                    context, activeImageUrl, projectName, isPublic,
                     hasOriginal: originalImageUrl != null,
                     hasGenerated: generatedImageUrl != null,
                   ),
-
                   const SizedBox(height: 20),
-
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+
                         // ── ESTADO ──────────────────────────────────────
-                        _buildSectionTitle(context, 'Estado'),
+                        _buildSectionTitle(context, strings.project_detail_section_status),
                         const SizedBox(height: 12),
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                           decoration: BoxDecoration(
                             color: AppColors.surface(context),
                             borderRadius: BorderRadius.circular(14),
                           ),
-                          child: Text(
-                            isPublic ? '🌍  Público' : '🔒  Privado',
-                            style: TextStyle(
-                              color: isPublic
-                                  ? AppColors.passwordStrong
-                                  : AppColors.passwordWeak,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          // 🔑 Row con emoji de AppEmojis + texto del ARB
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                isPublic ? AppEmojis.publicProject : AppEmojis.privateProject,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                isPublic
+                                    ? strings.project_detail_status_public
+                                    : strings.project_detail_status_private,
+                                style: TextStyle(
+                                  color: isPublic
+                                      ? AppColors.passwordStrong
+                                      : AppColors.passwordWeak,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-
                         const SizedBox(height: 20),
 
                         // ── TIPO DE HABITACIÓN ──────────────────────────
-                        _buildSectionTitle(context, 'Tipo de habitación'),
+                        _buildSectionTitle(context, strings.project_detail_section_room_type),
                         const SizedBox(height: 12),
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                           decoration: BoxDecoration(
                             color: AppColors.surface(context),
                             borderRadius: BorderRadius.circular(14),
@@ -382,8 +365,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(_roomIcon(roomId),
-                                  style: const TextStyle(fontSize: 16)),
+                              Text(_roomIcon(roomId), style: const TextStyle(fontSize: 16)),
                               const SizedBox(width: 8),
                               Text(
                                 _roomName(roomId),
@@ -396,26 +378,23 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                             ],
                           ),
                         ),
-
                         const SizedBox(height: 20),
 
                         // ── Estilos ─────────────────────────────────────
                         if (styles.isNotEmpty) ...[
-                          _buildSectionTitle(context, 'Estilos'),
+                          _buildSectionTitle(context, strings.project_detail_section_styles),
                           const SizedBox(height: 12),
                           Wrap(
                             spacing: 10,
                             runSpacing: 10,
-                            children: styles
-                                .map((s) => _buildStyleTag(context, s))
-                                .toList(),
+                            children: styles.map((s) => _buildStyleTag(context, s)).toList(),
                           ),
                           const SizedBox(height: 20),
                         ],
 
                         // ── Paleta de colores ───────────────────────────
                         if (paletteId != null && paletteColors.isNotEmpty) ...[
-                          _buildSectionTitle(context, 'Paleta de colores'),
+                          _buildSectionTitle(context, strings.project_detail_section_palette),
                           const SizedBox(height: 12),
                           _buildPaletteRow(paletteColors),
                           const SizedBox(height: 10),
@@ -431,25 +410,20 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
                         // ── Muebles y objetos ───────────────────────────
                         if (features.isNotEmpty) ...[
-                          _buildSectionTitle(context, 'Muebles y objetos'),
+                          _buildSectionTitle(context, strings.project_detail_section_features),
                           const SizedBox(height: 12),
                           Wrap(
                             spacing: 10,
                             runSpacing: 10,
-                            children: features
-                                .map((f) => _buildFeatureTag(context, f))
-                                .toList(),
+                            children: features.map((f) => _buildFeatureTag(context, f)).toList(),
                           ),
                           const SizedBox(height: 20),
                         ],
 
                         // ── Prompt ──────────────────────────────────────
                         if (widget.project['prompts'] != null &&
-                            widget.project['prompts']
-                                .toString()
-                                .isNotEmpty) ...[
-                          _buildSectionTitle(
-                              context, '¿Qué quieres cambiar o agregar?'),
+                            widget.project['prompts'].toString().isNotEmpty) ...[
+                          _buildSectionTitle(context, strings.project_detail_section_prompt),
                           const SizedBox(height: 12),
                           Container(
                             width: double.infinity,
@@ -461,8 +435,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('💬',
-                                    style: TextStyle(fontSize: 18)),
+                                // 🔑 AppEmojis.prompt
+                                Text(AppEmojis.prompt, style: const TextStyle(fontSize: 18)),
                                 const SizedBox(width: 10),
                                 Expanded(
                                   child: Text(
@@ -481,14 +455,16 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                         ],
 
                         // ── Tiempos ─────────────────────────────────────
-                        _buildSectionTitle(context, 'Tiempos'),
+                        _buildSectionTitle(context, strings.project_detail_section_times),
                         const SizedBox(height: 12),
                         Row(
                           children: [
                             Expanded(
                               child: _buildInfoCard(
                                 context,
-                                '📅  Creado',
+                                // 🔑 emoji + texto ARB
+                                AppEmojis.createdAt,
+                                strings.project_detail_created_at,
                                 _formatDate(widget.project['created_at']),
                               ),
                             ),
@@ -496,13 +472,14 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                             Expanded(
                               child: _buildInfoCard(
                                 context,
-                                '🔄  Actualizado',
+                                // 🔑 emoji + texto ARB
+                                AppEmojis.updatedAt,
+                                strings.project_detail_updated_at,
                                 _formatDate(widget.project['updated_at']),
                               ),
                             ),
                           ],
                         ),
-
                         const SizedBox(height: 30),
 
                         // ── Botón publicar / privatizar ─────────────────
@@ -514,11 +491,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                               backgroundColor: isPublic
                                   ? AppColors.passwordWeak
                                   : AppColors.passwordStrong,
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 18),
+                              padding: const EdgeInsets.symmetric(vertical: 18),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
+                                  borderRadius: BorderRadius.circular(16)),
                             ),
                             child: _isSaving
                                 ? const SizedBox(
@@ -526,24 +501,34 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                     width: 20,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      valueColor:
-                                          AlwaysStoppedAnimation<Color>(
-                                              Colors.white),
+                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                     ),
                                   )
-                                : Text(
-                                    isPublic
-                                        ? '🔒  Poner privado'
-                                        : '🌍  Publicar proyecto',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                : Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      // 🔑 emoji del botón desde AppEmojis
+                                      Text(
+                                        isPublic
+                                            ? AppEmojis.privateProject
+                                            : AppEmojis.publicProject,
+                                        style: const TextStyle(fontSize: 18),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        isPublic
+                                            ? strings.project_detail_btn_make_private
+                                            : strings.project_detail_btn_publish,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                           ),
                         ),
-
                         const SizedBox(height: 30),
                       ],
                     ),
@@ -554,10 +539,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  // WIDGETS INTERNOS
-  // ─────────────────────────────────────────────────────────────────────────────
-
   Widget _buildHeaderImage(
     BuildContext context,
     String? imageUrl,
@@ -566,9 +547,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     required bool hasOriginal,
     required bool hasGenerated,
   }) {
+    final strings = S.of(context);
     return Stack(
       children: [
-        // ── Imagen tocable que abre fullscreen ──────────────────────────
         GestureDetector(
           onTap: () {
             if (imageUrl != null) _openImageFullscreen(context, imageUrl);
@@ -582,17 +563,12 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
               decoration: BoxDecoration(
                 color: AppColors.darkHeader.withValues(alpha: 0.15),
                 image: imageUrl != null
-                    ? DecorationImage(
-                        image: NetworkImage(imageUrl),
-                        fit: BoxFit.cover,
-                      )
+                    ? DecorationImage(image: NetworkImage(imageUrl), fit: BoxFit.cover)
                     : null,
               ),
             ),
           ),
         ),
-
-        // ── Gradiente oscuro abajo ──────────────────────────────────────
         IgnorePointer(
           child: Container(
             height: 320,
@@ -610,22 +586,21 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
           ),
         ),
 
-        // ── Icono de lupa como pista visual ────────────────────────────
+        // ── Hint de zoom con AppEmojis.zoomHint ────────────────────────
         if (imageUrl != null)
           Positioned(
             bottom: 50,
             right: 20,
             child: IgnorePointer(
               child: Container(
-                padding: const EdgeInsets.all(6),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: Colors.black.withValues(alpha: 0.45),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.zoom_in_rounded,
-                  color: Colors.white70,
-                  size: 20,
+                child: Text(
+                  AppEmojis.zoomHint,
+                  style: const TextStyle(fontSize: 18),
                 ),
               ),
             ),
@@ -659,12 +634,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _toggleChip('Original', _showingOriginal, () {
-                    setState(() => _showingOriginal = true);
-                  }),
-                  _toggleChip('Generada', !_showingOriginal, () {
-                    setState(() => _showingOriginal = false);
-                  }),
+                  _toggleChip(strings.project_detail_toggle_original, _showingOriginal,
+                      () => setState(() => _showingOriginal = true)),
+                  _toggleChip(strings.project_detail_toggle_generated, !_showingOriginal,
+                      () => setState(() => _showingOriginal = false)),
                 ],
               ),
             ),
@@ -772,7 +745,13 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     );
   }
 
-  Widget _buildInfoCard(BuildContext context, String label, String value) {
+  // 🔑 Firma actualizada: recibe emoji por separado
+  Widget _buildInfoCard(
+    BuildContext context,
+    String emoji,
+    String label,
+    String value,
+  ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -783,12 +762,18 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              color: AppColors.textSecondary(context),
-              fontSize: 12,
-            ),
+          Row(
+            children: [
+              Text(emoji, style: const TextStyle(fontSize: 14)),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: TextStyle(
+                  color: AppColors.textSecondary(context),
+                  fontSize: 12,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 10),
           Text(
