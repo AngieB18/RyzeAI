@@ -109,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final projects = await _supabase
           .from('projects')
-          .select('id, user_id, name, room, status, created_at, updated_at, is_favorite, public_state')
+          .select('id, user_id, name_projects, id_type_room, created_at, updated_at, is_favorite, public_state, generated_image_url, original_image_url')
           .eq('user_id', userId)
           .order('created_at', ascending: false);
 
@@ -178,16 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return null;
   }
 
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'completed':
-        return AppColors.passwordStrong;
-      case 'in progress':
-        return AppColors.passwordMedium;
-      default:
-        return AppColors.darkTextSecondary;
-    }
-  }
+
 
   String _formatDate(String isoDate) {
     try {
@@ -287,6 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Expanded(
                         child: HomeStatCard(
+                          emoji: AppEmojis.defaultRoom,
                           title: translations.projects,
                           value: _loadingStats ? '—' : '$_projectCount',
                           subtitle: _projectSubtitle(translations),
@@ -300,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => const MyFavoritesScreen(),
+                                builder: (_) => const FavoritesScreen(),
                               ),
                             );
                             _loadStats();
@@ -312,6 +304,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             subtitle: _favoritesSubtitle(translations),
                             subtitleColor: AppColors.primary,
                           ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: HomeStatCard(
+                          emoji: AppEmojis.publicProject,
+                          title: translations.home_stat_public_label,
+                          value: _loadingStats ? '—' : '$_publicCount',
+                          subtitle: translations.home_stat_published,
+                          subtitleColor: AppColors.passwordMedium,
                         ),
                       ),
                     ],
@@ -326,23 +328,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (_loadingStats)
                     const Center(child: CircularProgressIndicator())
                   else if (_recentProjects.isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Text(
-                        'No tienes proyectos aún.',
-                        style: TextStyle(color: AppColors.darkTextSecondary),
-                      ),
-                    )
+                    HomeEmptyProjects(strings: translations)
                   else
                     ..._recentProjects.map((project) {
-                      final status = project['status'] ?? 'Draft';
                       return HomeProjectItem(
-                        icon: AppEmojis.getRoom(project['room'] ?? ''),
-                        name: project['name'] ?? 'Untitled',
+                        icon: AppEmojis.getRoom(project['id_type_room']?.toString() ?? ''),
+                        name: project['name_projects'] ?? 'Untitled',
                         time: project['created_at'] != null
                             ? _formatDate(project['created_at'])
                             : '',
-                        statusColor: _getStatusColor(status),
+                        imageUrl: project['generated_image_url'] ?? project['original_image_url'],
+                        isPublic: project['public_state'] == true,
+                        isFavorite: project['is_favorite'] == true,
                       );
                     }),
 
