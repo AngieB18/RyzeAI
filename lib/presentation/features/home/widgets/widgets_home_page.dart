@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../generated/l10n.dart';
+import 'package:ryzeai/presentation/features/home/widgets/widgets_home_icons.dart';
 
 // ─────────────────────────────────────────
 // FAB central (botón cámara)
@@ -41,7 +42,7 @@ class HomeCameraFAB extends StatelessWidget {
 class HomeNavItem extends StatelessWidget {
   final int index;
   final int currentIndex;
-  final IconData icon;
+  final Widget icon;
   final String label;
   final ValueChanged<int> onTap;
 
@@ -67,12 +68,14 @@ class HomeNavItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              color: isActive
-                  ? AppColors.primary
-                  : AppColors.textSecondary(context),
-              size: 22,
+            IconTheme(
+              data: IconThemeData(
+                color: isActive
+                    ? AppColors.primary
+                    : AppColors.textSecondary(context),
+                size: 22,
+              ),
+              child: icon,
             ),
             const SizedBox(height: 3),
             Flexible(
@@ -101,13 +104,11 @@ class HomeNavItem extends StatelessWidget {
 // BottomAppBar: 2 | FAB | 2
 // ─────────────────────────────────────────
 class HomeBottomNav extends StatelessWidget {
-  final S translations;
   final int currentIndex;
   final ValueChanged<int> onTap;
 
   const HomeBottomNav({
     super.key,
-    required this.translations,
     required this.currentIndex,
     required this.onTap,
   });
@@ -122,25 +123,10 @@ class HomeBottomNav extends StatelessWidget {
         height: 60,
         child: Row(
           children: [
-            // ── Izquierda: Inicio + Favoritos ──
+            // ── Izquierda: Inicio + Publicaciones ──
             Expanded(
               child: Row(
                 children: [
-<<<<<<< Updated upstream
-                  HomeNavItem(
-                    index: 0,
-                    currentIndex: currentIndex,
-                    icon: Icons.home_rounded,
-                    label: translations.home,
-                    onTap: onTap,
-                  ),
-                  HomeNavItem(
-                    index: 1,
-                    currentIndex: currentIndex,
-                    icon: Icons.favorite_rounded,
-                    label: translations.favorites,
-                    onTap: onTap,
-=======
                   Expanded(
                     child: HomeNavItem(
                       index: 0,
@@ -158,32 +144,18 @@ class HomeBottomNav extends StatelessWidget {
                       label: S.of(context).publications,
                       onTap: onTap,
                     ),
->>>>>>> Stashed changes
                   ),
                 ],
               ),
             ),
+
             // ── Espacio FAB ──
             const SizedBox(width: 72),
+
             // ── Derecha: Proyectos + Perfil ──
             Expanded(
               child: Row(
                 children: [
-<<<<<<< Updated upstream
-                  HomeNavItem(
-                    index: 2,
-                    currentIndex: currentIndex,
-                    icon: Icons.folder_rounded,
-                    label: translations.projects,
-                    onTap: onTap,
-                  ),
-                  HomeNavItem(
-                    index: 3,
-                    currentIndex: currentIndex,
-                    icon: Icons.person_rounded,
-                    label: translations.profile,
-                    onTap: onTap,
-=======
                   Expanded(
                     child: HomeNavItem(
                       index: 2,
@@ -201,7 +173,6 @@ class HomeBottomNav extends StatelessWidget {
                       label: S.of(context).profile,
                       onTap: onTap,
                     ),
->>>>>>> Stashed changes
                   ),
                 ],
               ),
@@ -234,7 +205,7 @@ class HomeImagePickerSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'Selecciona una opción',
+            S.of(context).selectOption,
             style: TextStyle(
               color: AppColors.textPrimary(context),
               fontSize: 16,
@@ -242,6 +213,7 @@ class HomeImagePickerSheet extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
+
           SizedBox(
             width: double.infinity,
             height: 50,
@@ -254,9 +226,9 @@ class HomeImagePickerSheet extends StatelessWidget {
               ),
               onPressed: onCameraTap,
               icon: const Icon(Icons.camera_alt_rounded, size: 20),
-              label: const Text(
-                'Tomar foto',
-                style: TextStyle(
+              label: Text(
+                S.of(context).takePhoto,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -264,7 +236,9 @@ class HomeImagePickerSheet extends StatelessWidget {
               ),
             ),
           ),
+
           const SizedBox(height: 12),
+
           SizedBox(
             width: double.infinity,
             height: 50,
@@ -277,9 +251,9 @@ class HomeImagePickerSheet extends StatelessWidget {
               ),
               onPressed: onGalleryTap,
               icon: const Icon(Icons.image_rounded, size: 20),
-              label: const Text(
-                'Cargar imagen',
-                style: TextStyle(
+              label: Text(
+                S.of(context).uploadImage,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
