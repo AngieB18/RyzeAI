@@ -210,7 +210,7 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
                     await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => const MyFavoritesScreen(),
+                        builder: (_) => const FavoritesScreen(),
                       ),
                     );
                     _loadLikes();
