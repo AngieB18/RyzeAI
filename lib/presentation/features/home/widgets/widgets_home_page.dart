@@ -78,14 +78,19 @@ class HomeNavItem extends StatelessWidget {
               child: icon,
             ),
             const SizedBox(height: 3),
-            Text(
-              label,
-              style: TextStyle(
-                color: isActive
-                    ? AppColors.primary
-                    : AppColors.textSecondary(context),
-                fontSize: 10,
-                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+            Flexible(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: isActive
+                      ? AppColors.primary
+                      : AppColors.textSecondary(context),
+                  fontSize: 10,
+                  fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
               ),
             ),
           ],
@@ -121,21 +126,24 @@ class HomeBottomNav extends StatelessWidget {
             // ── Izquierda: Inicio + Publicaciones ──
             Expanded(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  HomeNavItem(
-                    index: 0,
-                    currentIndex: currentIndex,
-                    icon: const Icon(Icons.home_rounded),
-                    label: S.of(context).home,
-                    onTap: onTap,
+                  Expanded(
+                    child: HomeNavItem(
+                      index: 0,
+                      currentIndex: currentIndex,
+                      icon: const Icon(Icons.home_rounded),
+                      label: S.of(context).home,
+                      onTap: onTap,
+                    ),
                   ),
-                  HomeNavItem(
-                    index: 1,
-                    currentIndex: currentIndex,
-                    icon: const HomePublicationIcon(),
-                    label: S.of(context).publications,
-                    onTap: onTap,
+                  Expanded(
+                    child: HomeNavItem(
+                      index: 1,
+                      currentIndex: currentIndex,
+                      icon: const HomePublicationIcon(),
+                      label: S.of(context).publications,
+                      onTap: onTap,
+                    ),
                   ),
                 ],
               ),
@@ -147,21 +155,24 @@ class HomeBottomNav extends StatelessWidget {
             // ── Derecha: Proyectos + Perfil ──
             Expanded(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  HomeNavItem(
-                    index: 2,
-                    currentIndex: currentIndex,
-                    icon: const Icon(Icons.folder_rounded),
-                    label: S.of(context).projects,
-                    onTap: onTap,
+                  Expanded(
+                    child: HomeNavItem(
+                      index: 2,
+                      currentIndex: currentIndex,
+                      icon: const Icon(Icons.folder_rounded),
+                      label: S.of(context).projects,
+                      onTap: onTap,
+                    ),
                   ),
-                  HomeNavItem(
-                    index: 3,
-                    currentIndex: currentIndex,
-                    icon: const Icon(Icons.person_rounded),
-                    label: S.of(context).profile,
-                    onTap: onTap,
+                  Expanded(
+                    child: HomeNavItem(
+                      index: 3,
+                      currentIndex: currentIndex,
+                      icon: const Icon(Icons.person_rounded),
+                      label: S.of(context).profile,
+                      onTap: onTap,
+                    ),
                   ),
                 ],
               ),

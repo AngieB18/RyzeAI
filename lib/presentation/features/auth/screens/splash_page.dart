@@ -15,6 +15,21 @@ class _SplashPageState extends State<SplashPage> {
   double _dragValue = 0.0;
   final double _sliderWidth = 300.0;
   final double _thumbSize = 60.0;
+@override
+void initState() {
+  super.initState();
+
+  final isRecovery = Uri.base.toString().contains('code=');
+
+  if (isRecovery) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.pushReplacementNamed(
+        context,
+        '/nueva-contraseña',
+      );
+    });
+  }
+}
 
   @override
   Widget build(BuildContext context) {

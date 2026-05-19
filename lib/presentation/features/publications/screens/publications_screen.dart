@@ -5,6 +5,7 @@ import '../../../../core/services/styles/style_service.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../presentation/widgets/emojis/app_emojis.dart';
 import '../screens/publications_detail_screen.dart';
+import '../../favorites/screens/favorites_screen.dart';
 
 class PublicationsScreen extends StatefulWidget {
   const PublicationsScreen({super.key});
@@ -203,35 +204,39 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
                     ),
                   ),
                 ),
-                // Filtro favoritos
+                // Filtro favoritos -> Ahora lleva a una pantalla dedicada
                 GestureDetector(
-                  onTap: () => setState(() => _showingFavorites = !_showingFavorites),
+                  onTap: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const MyFavoritesScreen(),
+                      ),
+                    );
+                    _loadLikes();
+                    setState(() {
+                      _publicationsFuture = _fetchPublicPublications();
+                    });
+                  },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
-                      color: _showingFavorites
-                          ? AppColors.primary
-                          : AppColors.surface(context),
+                      color: AppColors.primary,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // 🔑 emoji desde AppEmojis en lugar de Icon Material
                         Text(
-                          _showingFavorites
-                              ? AppEmojis.favoriteActive
-                              : AppEmojis.favoriteInactive,
+                          AppEmojis.favoriteActive,
                           style: const TextStyle(fontSize: 16),
                         ),
                         const SizedBox(width: 6),
                         Text(
                           strings.publications_filter_favorites,
-                          style: TextStyle(
-                            color: _showingFavorites
-                                ? Colors.white
-                                : AppColors.textSecondary(context),
+                          style: const TextStyle(
+                            color: Colors.white,
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                           ),

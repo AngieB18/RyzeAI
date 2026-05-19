@@ -4,7 +4,7 @@ import 'presentation/features/auth/screens/splash_page.dart';
 import 'presentation/features/auth/screens/welcome_page.dart';
 import 'presentation/features/auth/screens/login_page.dart';
 import 'presentation/features/auth/screens/register_page.dart';
-import 'presentation/features/auth/screens/new_password_page.dart'; // Tu pantalla
+import 'presentation/features/auth/screens/new_password_page.dart'; 
 import 'presentation/features/home/screens/home_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'generated/l10n.dart';
@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
       final AuthChangeEvent event = data.event;
       if (event == AuthChangeEvent.passwordRecovery) {
         // Cuando detecta el evento, navega a tu pantalla de Nueva Contraseña
-        navigatorKey.currentState?.pushReplacementNamed('/new-password');
+   navigatorKey.currentState?.pushReplacementNamed('/nueva-contraseña');
       }
     });
   }
@@ -83,7 +83,9 @@ class _MyAppState extends State<MyApp> {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          initialRoute: "/",
+       initialRoute: Uri.base.toString().contains('code=')
+    ? "/nueva-contraseña"
+    : "/",
           onGenerateRoute: (settings) {
             switch (settings.name) {
               case "/":
@@ -96,7 +98,7 @@ class _MyAppState extends State<MyApp> {
                 return _fadeRoute(const RegisterPage());
               case "/home":
                 return _fadeRoute(const HomePage());
-              case "/new-password": // <-- Ruta para tu nueva pantalla
+              case "/nueva-contraseña":
                 return _fadeRoute(const NewPasswordPage());
               default:
                 return _fadeRoute(const SplashPage());
