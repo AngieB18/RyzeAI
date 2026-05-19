@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/services/type_room/type_room_service.dart';
 import '../../../../generated/l10n.dart';
 import 'package:ryzeai/presentation/features/camera/screens/style_inspiration_screen.dart';
 import '../widgets/widgets_projects.dart';
+import 'project_detail_screen.dart';
 
 class ProjectsScreen extends StatefulWidget {
   const ProjectsScreen({super.key});
@@ -16,6 +18,24 @@ class ProjectsScreen extends StatefulWidget {
 
 class _ProjectsScreenState extends State<ProjectsScreen> {
   final _supabase = Supabase.instance.client;
+  List<Map<String, dynamic>> _rooms = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRooms();
+  }
+
+  Future<void> _loadRooms() async {
+    try {
+      final rooms = await TypeRoomService.getTypeRooms();
+      setState(() {
+        _rooms = rooms;
+      });
+    } catch (e) {
+      debugPrint('Error loading rooms: $e');
+    }
+  }
 
   Future<void> _pickImage(ImageSource source) async {
     try {
@@ -62,40 +82,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     return List<Map<String, dynamic>>.from(response);
   }
 
-  Future<void> _toggleFavorite(String projectId, bool currentStatus) async {
-    try {
-      await _supabase
-          .from('projects')
-          .update({'is_favorite': !currentStatus})
-          .eq('id', projectId);
 
-      setState(() {});
-    } catch (e) {
-      debugPrint('Error updating favorite: $e');
-    }
-  }
-
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'completed':
-        return AppColors.passwordStrong;
-      case 'in progress':
-        return AppColors.passwordMedium;
-      default:
-        return AppColors.darkTextSecondary;
-    }
-  }
-
-  String _getStatusLabel(String status, S strings) {
-    switch (status.toLowerCase()) {
-      case 'completed':
-        return strings.projects_status_completed;
-      case 'in progress':
-        return strings.projects_status_in_progress;
-      default:
-        return strings.projects_status_draft;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,9 +123,15 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                     return ProjectItem(
                       project: project,
                       strings: strings,
-                      getStatusColor: _getStatusColor,
-                      getStatusLabel: _getStatusLabel,
-                      onToggleFavorite: _toggleFavorite,
+                      rooms: _rooms,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ProjectDetailScreen(project: project),
+                          ),
+                        );
+                      },
                     );
                   },
                 );

@@ -359,6 +359,16 @@ class S {
     return Intl.message('Home', name: 'home', desc: '', args: []);
   }
 
+  /// `Publications`
+  String get publications {
+    return Intl.message(
+      'Publications',
+      name: 'publications',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `New`
   String get newBadge {
     return Intl.message('New', name: 'newBadge', desc: '', args: []);
@@ -2269,6 +2279,441 @@ class S {
     return Intl.message(
       '+ Create your first design',
       name: 'projects_empty_button',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select an option`
+  String get selectOption {
+    return Intl.message(
+      'Select an option',
+      name: 'selectOption',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take a photo`
+  String get takePhoto {
+    return Intl.message('Take a photo', name: 'takePhoto', desc: '', args: []);
+  }
+
+  /// `Upload image`
+  String get uploadImage {
+    return Intl.message(
+      'Upload image',
+      name: 'uploadImage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error`
+  String get errorImagePickerLabel {
+    return Intl.message(
+      'Error',
+      name: 'errorImagePickerLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Room`
+  String get project_detail_default_room {
+    return Intl.message(
+      'Room',
+      name: 'project_detail_default_room',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Palette`
+  String get project_detail_default_palette {
+    return Intl.message(
+      'Palette',
+      name: 'project_detail_default_palette',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Object`
+  String get project_detail_default_feature {
+    return Intl.message(
+      'Object',
+      name: 'project_detail_default_feature',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not available`
+  String get project_detail_date_unavailable {
+    return Intl.message(
+      'Not available',
+      name: 'project_detail_date_unavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The project is now private`
+  String get project_detail_now_private {
+    return Intl.message(
+      'The project is now private',
+      name: 'project_detail_now_private',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The project is now public`
+  String get project_detail_now_public {
+    return Intl.message(
+      'The project is now public',
+      name: 'project_detail_now_public',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error updating status: {error}`
+  String project_detail_error_update(String error) {
+    return Intl.message(
+      'Error updating status: $error',
+      name: 'project_detail_error_update',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Status`
+  String get project_detail_section_status {
+    return Intl.message(
+      'Status',
+      name: 'project_detail_section_status',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Room type`
+  String get project_detail_section_room_type {
+    return Intl.message(
+      'Room type',
+      name: 'project_detail_section_room_type',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Styles`
+  String get project_detail_section_styles {
+    return Intl.message(
+      'Styles',
+      name: 'project_detail_section_styles',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Color palette`
+  String get project_detail_section_palette {
+    return Intl.message(
+      'Color palette',
+      name: 'project_detail_section_palette',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Furniture & objects`
+  String get project_detail_section_features {
+    return Intl.message(
+      'Furniture & objects',
+      name: 'project_detail_section_features',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What do you want to change or add?`
+  String get project_detail_section_prompt {
+    return Intl.message(
+      'What do you want to change or add?',
+      name: 'project_detail_section_prompt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Timestamps`
+  String get project_detail_section_times {
+    return Intl.message(
+      'Timestamps',
+      name: 'project_detail_section_times',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Public`
+  String get project_detail_status_public {
+    return Intl.message(
+      'Public',
+      name: 'project_detail_status_public',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Private`
+  String get project_detail_status_private {
+    return Intl.message(
+      'Private',
+      name: 'project_detail_status_private',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Created`
+  String get project_detail_created_at {
+    return Intl.message(
+      'Created',
+      name: 'project_detail_created_at',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Updated`
+  String get project_detail_updated_at {
+    return Intl.message(
+      'Updated',
+      name: 'project_detail_updated_at',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Publish project`
+  String get project_detail_btn_publish {
+    return Intl.message(
+      'Publish project',
+      name: 'project_detail_btn_publish',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Make private`
+  String get project_detail_btn_make_private {
+    return Intl.message(
+      'Make private',
+      name: 'project_detail_btn_make_private',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Original`
+  String get project_detail_toggle_original {
+    return Intl.message(
+      'Original',
+      name: 'project_detail_toggle_original',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Generated`
+  String get project_detail_toggle_generated {
+    return Intl.message(
+      'Generated',
+      name: 'project_detail_toggle_generated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Public`
+  String get projects_status_public {
+    return Intl.message(
+      'Public',
+      name: 'projects_status_public',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Private`
+  String get projects_status_private {
+    return Intl.message(
+      'Private',
+      name: 'projects_status_private',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Publications`
+  String get publications_title {
+    return Intl.message(
+      'Publications',
+      name: 'publications_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Favorites`
+  String get publications_filter_favorites {
+    return Intl.message(
+      'Favorites',
+      name: 'publications_filter_favorites',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have no favorites yet`
+  String get publications_empty_favorites {
+    return Intl.message(
+      'You have no favorites yet',
+      name: 'publications_empty_favorites',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No publications yet`
+  String get publications_empty_all {
+    return Intl.message(
+      'No publications yet',
+      name: 'publications_empty_all',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User`
+  String get publications_unknown_author {
+    return Intl.message(
+      'User',
+      name: 'publications_unknown_author',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error selecting image: {error}`
+  String home_error_image_pick(String error) {
+    return Intl.message(
+      'Error selecting image: $error',
+      name: 'home_error_image_pick',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Overview`
+  String get home_section_stats {
+    return Intl.message(
+      'Overview',
+      name: 'home_section_stats',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `+{count} this month`
+  String home_stat_this_month(int count) {
+    return Intl.message(
+      '+$count this month',
+      name: 'home_stat_this_month',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} new`
+  String home_stat_new(int count) {
+    return Intl.message(
+      '$count new',
+      name: 'home_stat_new',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Public`
+  String get home_stat_public_label {
+    return Intl.message(
+      'Public',
+      name: 'home_stat_public_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Published`
+  String get home_stat_published {
+    return Intl.message(
+      'Published',
+      name: 'home_stat_published',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} min ago`
+  String home_time_minutes(int count) {
+    return Intl.message(
+      '$count min ago',
+      name: 'home_time_minutes',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} h ago`
+  String home_time_hours(int count) {
+    return Intl.message(
+      '$count h ago',
+      name: 'home_time_hours',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Yesterday`
+  String get home_time_yesterday {
+    return Intl.message(
+      'Yesterday',
+      name: 'home_time_yesterday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} days ago`
+  String home_time_days(int count) {
+    return Intl.message(
+      '$count days ago',
+      name: 'home_time_days',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `You have no projects yet.\nStart by taking a photo of your space.`
+  String get home_empty_projects {
+    return Intl.message(
+      'You have no projects yet.\nStart by taking a photo of your space.',
+      name: 'home_empty_projects',
       desc: '',
       args: [],
     );
