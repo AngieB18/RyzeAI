@@ -352,3 +352,106 @@ class TopographyPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
+
+/// ── AUTH SCREEN LAYOUT ────────────────────────────────────
+/// A reusable layout for all authentication screens (Login, 
+/// Register, Recover Password, New Password) to maintain a 
+/// consistent and professional design while keeping screen logic clean.
+class AuthScreenLayout extends StatelessWidget {
+  final Widget? topTrailingWidget;
+  final String title;
+  final String subtitle;
+  final Widget formContent;
+  final bool showBackButton;
+
+  const AuthScreenLayout({
+    super.key,
+    this.topTrailingWidget,
+    required this.title,
+    required this.subtitle,
+    required this.formContent,
+    this.showBackButton = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Import themeProvider safely inside the widget or ensure it's available.
+    // For now we'll use Theme.of(context).brightness to determine dark mode
+    // since this widget is generic, making it completely independent.
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    // Colores adaptativos
+    final cardBg = isDark ? AppColors.darkSurface : Colors.white;
+
+    return Scaffold(
+      backgroundColor: AppColors.primarySoft,
+      body: Column(
+        children: [
+          // ── CABECERA NARANJA ─────────────────────────────────
+          SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (showBackButton)
+                        GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: const Icon(Icons.arrow_back_ios_new_rounded,
+                              color: Colors.black, size: 22),
+                        )
+                      else
+                        const SizedBox(width: 22),
+                      if (topTrailingWidget != null) topTrailingWidget!,
+                    ],
+                  ),
+                  const SizedBox(height: 28),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.black.withOpacity(0.65),
+                      height: 1.4,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // ── TARJETA BLANCA (Formulario) ─────────────────────
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: cardBg,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(36),
+                  topRight: Radius.circular(36),
+                ),
+              ),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(28, 36, 28, 32),
+                child: formContent,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

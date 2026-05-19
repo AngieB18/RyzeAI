@@ -12,6 +12,11 @@ import '../../../../presentation/widgets/emojis/app_emojis.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:ryzeai/presentation/features/camera/screens/style_inspiration_screen.dart';
+<<<<<<< Updated upstream
+=======
+import '../../favorites/screens/favorites_screen.dart';
+
+>>>>>>> Stashed changes
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -110,7 +115,16 @@ class _HomeScreenState extends State<HomeScreen> {
           .eq('user_id', userId)
           .order('created_at', ascending: false);
 
+      final likes = await _supabase
+          .from('publication_likes')
+          .select('project_id, created_at')
+          .eq('user_id', userId);
+
       final allProjects = List<Map<String, dynamic>>.from(projects);
+<<<<<<< Updated upstream
+=======
+      final allLikes = List<Map<String, dynamic>>.from(likes);
+>>>>>>> Stashed changes
 
       final now = DateTime.now();
       final startOfMonth = DateTime(now.year, now.month, 1);
@@ -133,13 +147,26 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
 
+      for (final l in allLikes) {
+        final likedAt = _parseDate(l['created_at']);
+        if (likedAt != null && !likedAt.isBefore(startOfMonth)) {
+          newFavoritesThisMonth++;
+        }
+      }
+
       final favorites = allProjects.where((p) => p['is_favorite'] == true).toList();
 
       if (mounted) {
         setState(() {
           _projectCount = allProjects.length;
+<<<<<<< Updated upstream
           _favoriteCount = favorites.length;
           _recentProjects = allProjects.take(2).toList();
+=======
+          _favoriteCount = favorites.length + allLikes.length;
+          _publicCount = publicOnes.length;
+          _recentProjects = allProjects.take(3).toList();
+>>>>>>> Stashed changes
           _projectsThisMonth = projectsThisMonth;
           _newFavoritesThisMonth = newFavoritesThisMonth;
           _loadingStats = false;
@@ -277,11 +304,31 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(width: 12),
                       Expanded(
+<<<<<<< Updated upstream
                         child: HomeStatCard(
                           title: translations.favorites,
                           value: _loadingStats ? '—' : '$_favoriteCount',
                           subtitle: _favoritesSubtitle(translations),
                           subtitleColor: AppColors.primary,
+=======
+                        child: GestureDetector(
+                          onTap: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const MyFavoritesScreen(),
+                              ),
+                            );
+                            _loadStats();
+                          },
+                          child: HomeStatCard(
+                            emoji: AppEmojis.favoriteActive,
+                            title: strings.favorites,
+                            value: _loadingStats ? '—' : '$_favoriteCount',
+                            subtitle: strings.home_stat_new(_newFavoritesThisMonth),
+                            subtitleColor: AppColors.primary,
+                          ),
+>>>>>>> Stashed changes
                         ),
                       ),
                     ],

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:ryzeai/core/constants/app_colors.dart';
-import 'package:ryzeai/generated/l10n.dart';
+import 'package:ryzeai/presentation/widgets/index.dart';
+import '../../../../generated/l10n.dart';
+import '../widgets/auth_custom_widgets.dart';
 
 class RecoverPasswordPage extends StatefulWidget {
   const RecoverPasswordPage({super.key});
@@ -11,178 +12,88 @@ class RecoverPasswordPage extends StatefulWidget {
 }
 
 class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
-
   final TextEditingController _emailController = TextEditingController();
-  bool _loading = false;
+  bool _isLoading = false;
 
-  Future<void> _recoverPassword() async {
-    final localizations = S.of(context);
+  Future<void> _sendRecoveryLink() async {
     final email = _emailController.text.trim();
+    final l = S.of(context);
 
-    /// VALIDACIONES
     if (email.isEmpty) {
-      _showMessage(localizations.invalidEmail);
+      ErrorDialog.show(context, l.emptyFieldsError);
       return;
     }
-
     if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
-      _showMessage(localizations.invalidEmail);
+      ErrorDialog.show(context, l.invalidEmail);
       return;
     }
 
-    setState(() => _loading = true);
+    setState(() => _isLoading = true);
+
+    String? redirectTo;
+    try {
+      redirectTo = Uri.base.origin;
+    } catch (_) {
+      // Safe fallback for non-web environments
+    }
 
     try {
       await Supabase.instance.client.auth.resetPasswordForEmail(
         email,
-        redirectTo: 'io.supabase.flutter://reset-password', 
+        redirectTo: redirectTo,
       );
-
-      _showMessage(localizations.emailSentFull, success: true);
-
-    } catch (e) {
-      // Manejo de errores específicos
-      String errorMessage = localizations.registerError;
-      if (e.toString().contains('User not found') || e.toString().contains('Invalid email')) {
-        errorMessage = localizations.invalidEmail;
-      } else if (e.toString().contains('Too many requests')) {
-        errorMessage = 'Demasiadas solicitudes. Inténtalo más tarde.';
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Enlace de recuperación enviado al correo.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pop(context);
       }
-      _showMessage(errorMessage);
+    } catch (e) {
+      if (mounted) {
+        final errorStr = e.toString().toLowerCase();
+        if (errorStr.contains('rate_limit') || errorStr.contains('after')) {
+          ErrorDialog.show(context, 'Por seguridad, espera alrededor de 1 minuto antes de solicitar otro enlace.');
+        } else {
+          ErrorDialog.show(context, 'Error: ${e.toString()}');
+        }
+      }
     } finally {
-      setState(() => _loading = false);
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
-  void _showMessage(String message, {bool success = false}) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.surface(context),
-        title: Text(
-          success ? "✔" : "Error",
-          style: TextStyle(
-            color: success ? Colors.green : AppColors.textPrimary(context),
-          ),
-        ),
-        content: Text(
-          message,
-          style: TextStyle(color: AppColors.textPrimary(context)),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text("OK", style: TextStyle(color: AppColors.primary)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  InputDecoration _inputDecoration({
-    required String hint,
-    required IconData icon,
-  }) {
-    return InputDecoration(
-      hintText: hint,
-      prefixIcon: Icon(icon),
-      filled: true,
-      fillColor: AppColors.surface(context),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide.none,
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(
-          color: AppColors.primary,
-          width: 1.5,
-        ),
-      ),
-    );
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    final localizations = S.of(context);
-
-    return Scaffold(
-      backgroundColor: AppColors.background(context),
-
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: IconThemeData(color: AppColors.textPrimary(context)),
-      ),
-
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-
-            Text(
-              localizations.recoverPassword,
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary(context),
-              ),
-            ),
-
-            const SizedBox(height: 10),
-
-            Text(
-              localizations.enterYourEmail,
-              style: TextStyle(
-                color: AppColors.textSecondary(context),
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            /// EMAIL
-            TextField(
-              controller: _emailController,
-              style: TextStyle(color: AppColors.textPrimary(context)),
-              decoration: _inputDecoration(
-                hint: localizations.email,
-                icon: Icons.email_outlined,
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            /// BOTÓN
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-
-                onPressed: _loading ? null : _recoverPassword,
-
-                child: _loading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : Text(
-                        localizations.sendEmail,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-              ),
-            ),
-          ],
-        ),
+    final l = S.of(context);
+    
+    return AuthScreenLayout(
+      title: l.forgot_password_link ?? 'Recuperar Contraseña',
+      subtitle: 'Ingresa tu correo electrónico para recibir un enlace de recuperación.',
+      formContent: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AuthInputField(
+            controller: _emailController,
+            label: l.email,
+            hintText: l.enterEmail,
+            keyboardType: TextInputType.emailAddress,
+          ),
+          const SizedBox(height: 32),
+          AuthPrimaryButton(
+            label: 'Enviar Enlace',
+            isLoading: _isLoading,
+            onPressed: _sendRecoveryLink,
+          ),
+        ],
       ),
     );
   }

@@ -10,6 +10,7 @@ import '../widgets/profile_widgets_menu.dart';
 import '../widgets/profile_widgets_styles.dart';
 import '../widgets/profile_widgets_edit_sheet.dart';
 import '../widgets/profile_widgets_help_sheet.dart';
+import '../widgets/profile_widgets_change_password_sheet.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -66,7 +67,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background(context),
-      body: SingleChildScrollView(
+      body: SafeArea(
+        child: SingleChildScrollView(
         child: Column(
           children: [
             ProfileWidgetsHeader(
@@ -92,6 +94,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: Icons.person_outline,
                       label: l.editProfile,
                       onTap: () => ProfileWidgetsEditSheet.show(context, userData: _userData, onRefresh: _loadUser),
+                      isLast: false,
+                    ),
+                    ProfileWidgetsMenuRow(
+                      icon: Icons.key_outlined,
+                      label: Localizations.localeOf(context).languageCode == 'es' ? 'Cambiar contraseña' : 'Change password',
+                      onTap: () => ProfileWidgetsChangePasswordSheet.show(context),
                       isLast: true,
                     ),
                   ]),
@@ -174,6 +182,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

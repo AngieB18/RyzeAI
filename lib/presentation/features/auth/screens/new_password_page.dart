@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ryzeai/core/constants/app_colors.dart';
-import 'package:ryzeai/generated/l10n.dart';
+import 'package:ryzeai/presentation/widgets/index.dart';
+import '../../../../generated/l10n.dart';
+import '../../../../main.dart' show MyApp, themeProvider;
+import '../../../../core/services/user_service.dart';
+import '../widgets/auth_custom_widgets.dart';
 
 class NewPasswordPage extends StatefulWidget {
   const NewPasswordPage({super.key});
@@ -12,29 +16,113 @@ class NewPasswordPage extends StatefulWidget {
 
 class _NewPasswordPageState extends State<NewPasswordPage> {
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+
   bool _loading = false;
   bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
+  bool _sessionReady = false;
 
-  Future<void> _updatePassword() async {
-    final localizations = S.of(context);
-    final password = _passwordController.text.trim();
-    final confirmPassword = _confirmPasswordController.text.trim();
+  @override
+  void initState() {
+    super.initState();
+    // 1. Forzamos modo claro al entrar al restablecimiento de contraseña por defecto
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      themeProvider.setTheme(false); // false = modo claro
+    });
+    _initializeRecovery();
+  }
 
-    // Validaciones
-    if (password.isEmpty || confirmPassword.isEmpty) {
-      _showMessage(localizations.passwordRequired);
+  Future<void> _loadUserPreferences() async {
+    try {
+      final userData = await UserService.getCurrentUserData();
+      if (userData != null) {
+        // Cargar idioma configurado en perfil
+        final lang = userData['language'] ?? 'es';
+        if (mounted) {
+          MyApp.setLocale(context, Locale(lang));
+        }
+        // Cargar tema configurado en perfil
+        if (userData['theme'] != null) {
+          final isDark = userData['theme'] == 'dark';
+          await themeProvider.setTheme(isDark);
+        }
+      }
+    } catch (e) {
+      print("Error al cargar las preferencias del perfil: $e");
+    }
+  }
+
+  Future<void> _initializeRecovery() async {
+    // Damos tiempo para que el SDK de Supabase procese el código de fondo en la web
+    await Future.delayed(const Duration(milliseconds: 800));
+
+    // 1. Verificamos si supabase_flutter ya lo manejó en segundo plano
+    if (Supabase.instance.client.auth.currentSession != null) {
+      if (mounted) {
+        setState(() => _sessionReady = true);
+        _loadUserPreferences();
+      }
       return;
     }
 
-    if (password != confirmPassword) {
-      _showMessage(localizations.passwordsDoNotMatch);
+    // 2. Si no hay sesión, intentamos canjear el código manualmente para atrapar el error exacto
+    try {
+      final uri = Uri.base;
+      final code = uri.queryParameters['code'];
+      
+      if (code != null) {
+        await Supabase.instance.client.auth.exchangeCodeForSession(code);
+        if (mounted) {
+          setState(() => _sessionReady = true);
+          _loadUserPreferences();
+        }
+      }
+    } catch (e) {
+      print("Error detallado al canjear código: $e");
+      if (mounted) {
+        if (e.toString().toLowerCase().contains('code verifier')) {
+          ErrorDialog.show(context, 'Error de seguridad (PKCE): Estás abriendo el link en un dispositivo/navegador diferente al que solicitó el cambio.');
+        } else {
+          ErrorDialog.show(context, 'Error al obtener sesión: $e');
+        }
+      }
+    }
+
+    // Escuchamos por si la sesión se resuelve un instante después
+    Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+      if (mounted && data.session != null) {
+        setState(() {
+          _sessionReady = true;
+        });
+        _loadUserPreferences();
+      }
+    });
+  }
+
+  Future<void> _updatePassword() async {
+    final password = _passwordController.text.trim();
+    final isEs = Localizations.localeOf(context).languageCode == 'es';
+
+    if (password.isEmpty) {
+      ErrorDialog.show(
+        context, 
+        isEs ? 'Ingresa una contraseña' : 'Please enter a password'
+      );
       return;
     }
 
     if (password.length < 6) {
-      _showMessage(localizations.passwordTooShort);
+      ErrorDialog.show(
+        context, 
+        isEs ? 'La contraseña debe tener mínimo 6 caracteres' : 'Password must be at least 6 characters'
+      );
+      return;
+    }
+
+    if (!_sessionReady) {
+      ErrorDialog.show(
+        context, 
+        isEs ? 'Sesión inválida' : 'Invalid session'
+      );
       return;
     }
 
@@ -45,161 +133,68 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
         UserAttributes(password: password),
       );
 
-      _showMessage(localizations.passwordUpdated, success: true);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            isEs 
+                ? 'Contraseña actualizada correctamente' 
+                : 'Password updated successfully'
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
 
-      // Redirigir al login o home después de actualizar
       Future.delayed(const Duration(seconds: 2), () {
-        Navigator.of(context).pushReplacementNamed('/login');
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, '/login');
+        }
       });
-
     } catch (e) {
-      _showMessage(localizations.errorUpdatingPassword);
+      print(e);
+      if (mounted) {
+        ErrorDialog.show(context, e.toString());
+      }
     } finally {
-      setState(() => _loading = false);
+      if (mounted) setState(() => _loading = false);
     }
   }
 
-  void _showMessage(String message, {bool success = false}) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.surface(context),
-        title: Text(
-          success ? "✔" : "Error",
-          style: TextStyle(
-            color: success ? Colors.green : AppColors.textPrimary(context),
-          ),
-        ),
-        content: Text(
-          message,
-          style: TextStyle(color: AppColors.textPrimary(context)),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text("OK", style: TextStyle(color: AppColors.primary)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  InputDecoration _inputDecoration({
-    required String hint,
-    required IconData icon,
-    required bool obscureText,
-    required VoidCallback onToggleVisibility,
-  }) {
-    return InputDecoration(
-      hintText: hint,
-      prefixIcon: Icon(icon),
-      suffixIcon: IconButton(
-        icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
-        onPressed: onToggleVisibility,
-      ),
-      filled: true,
-      fillColor: AppColors.surface(context),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide.none,
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(
-          color: AppColors.primary,
-          width: 1.5,
-        ),
-      ),
-    );
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final localizations = S.of(context);
+    final l = S.of(context);
+    final isEs = Localizations.localeOf(context).languageCode == 'es';
 
-    return Scaffold(
-      backgroundColor: AppColors.background(context),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: IconThemeData(color: AppColors.textPrimary(context)),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              localizations.newPassword,
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary(context),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              localizations.enterNewPassword,
-              style: TextStyle(
-                color: AppColors.textSecondary(context),
-              ),
-            ),
-            const SizedBox(height: 30),
-            // Nueva contraseña
-            TextField(
-              controller: _passwordController,
-              obscureText: _obscurePassword,
-              style: TextStyle(color: AppColors.textPrimary(context)),
-              decoration: _inputDecoration(
-                hint: localizations.password,
-                icon: Icons.lock_outline,
-                obscureText: _obscurePassword,
-                onToggleVisibility: () {
-                  setState(() => _obscurePassword = !_obscurePassword);
-                },
-              ),
-            ),
-            const SizedBox(height: 20),
-            // Confirmar contraseña
-            TextField(
-              controller: _confirmPasswordController,
-              obscureText: _obscureConfirmPassword,
-              style: TextStyle(color: AppColors.textPrimary(context)),
-              decoration: _inputDecoration(
-                hint: localizations.confirmPassword,
-                icon: Icons.lock_outline,
-                obscureText: _obscureConfirmPassword,
-                onToggleVisibility: () {
-                  setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
-                },
-              ),
-            ),
-            const SizedBox(height: 30),
-            // Botón
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-                onPressed: _loading ? null : _updatePassword,
-                child: _loading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : Text(
-                        localizations.updatePassword,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-              ),
-            ),
-          ],
-        ),
+    return AuthScreenLayout(
+      title: l.newPassword,
+      subtitle: isEs 
+          ? "Ingresa tu nueva contraseña para acceder." 
+          : "Enter your new password to access your account.",
+      formContent: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AuthInputField(
+            controller: _passwordController,
+            label: l.password,
+            hintText: isEs ? "Mínimo 6 caracteres" : "Minimum 6 characters",
+            isPassword: true,
+            obscureText: _obscurePassword,
+            onToggleVisibility: () =>
+                setState(() => _obscurePassword = !_obscurePassword),
+          ),
+          const SizedBox(height: 32),
+          AuthPrimaryButton(
+            label: l.updatePassword,
+            isLoading: _loading,
+            onPressed: _updatePassword,
+          ),
+        ],
       ),
     );
   }
