@@ -17,7 +17,7 @@ void main() async {
   // Inicializar Supabase
   await Supabase.initialize(
     url: 'https://xejcfclltcnigufcsqvb.supabase.co',
-    anonKey: 'sb_publishable_tbu_TdCUp-6Ft6wTgEfxDQ_5Yxdesfw', 
+    anonKey: 'sb_publishable_tbu_TdCUp-6Ft6wTgEfxDQ_5Yxdesfw',
   );
 
   await themeProvider.loadTheme();
@@ -76,7 +76,7 @@ class _MyAppState extends State<MyApp> {
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
           themeMode: themeProvider.themeMode,
-          supportedLocales: S.delegate.supportedLocales,
+          supportedLocales: S.supportedLocales,
           localizationsDelegates: const [
             S.delegate,
             GlobalMaterialLocalizations.delegate,

@@ -56,6 +56,11 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
   /// Solo a partir de ese momento se muestran los mensajes de error.
   bool _submitted = false;
 
+  /// Controla si el prompt se llena automáticamente según las selecciones
+  bool _autoFillingPrompt = false;
+  String _lastAutoPrompt = '';
+  bool _userHasEditedPrompt = false;
+
   String _language = 'es';
 
   List<Map<String, dynamic>> _rooms = [];
@@ -87,7 +92,15 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
     super.initState();
     _speech = SpeechToText();
     _nameController.addListener(() => setState(() {}));
-    _promptController.addListener(() => setState(() {}));
+    _promptController.addListener(() {
+      setState(() {});
+      if (_autoFillingPrompt) return;
+      if (_promptController.text.isEmpty) {
+        _userHasEditedPrompt = false;
+      } else if (_promptController.text != _lastAutoPrompt) {
+        _userHasEditedPrompt = true;
+      }
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) => _loadData());
   }
 
@@ -492,6 +505,64 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
     return buffer.toString();
   }
 
+  void _updateAutoPrompt() {
+    if (_userHasEditedPrompt && _promptController.text.isNotEmpty) return;
+
+    final parts = <String>[];
+    if (_selectedRoomId != null) {
+      final room = _rooms.firstWhere(
+        (r) => r['id'].toString() == _selectedRoomId,
+        orElse: () => {},
+      );
+      parts.add(_text(room['name_type_room']));
+    }
+    if (_selectedStyleId != null) {
+      final style = _styles.firstWhere(
+        (s) => s['id'].toString() == _selectedStyleId,
+        orElse: () => {},
+      );
+      final styleName = _text(style['name']);
+      if (styleName.isNotEmpty) {
+        parts.add('estilo $styleName');
+      }
+    }
+    if (_selectedPaletteId != null) {
+      final palette = _palettes.firstWhere(
+        (p) => p['id'].toString() == _selectedPaletteId,
+        orElse: () => {},
+      );
+      final paletteName = _text(palette['name_palette']);
+      if (paletteName.isNotEmpty) {
+        parts.add('paleta $paletteName');
+      }
+    }
+    if (_selectedFeatures.isNotEmpty) {
+      final names = _selectedFeatures.map((id) {
+        final f = _features.firstWhere(
+          (fe) => fe['id'].toString() == id,
+          orElse: () => {},
+        );
+        return _text(f['name_feature']);
+      }).where((n) => n.isNotEmpty).join(', ');
+      if (names.isNotEmpty) {
+        parts.add('incluye $names');
+      }
+    }
+
+    if (parts.isEmpty) return;
+
+    final newPrompt = 'Rediseña esta ${parts.join(', ')}';
+    if (newPrompt == _lastAutoPrompt) return;
+
+    _autoFillingPrompt = true;
+    _promptController.text = newPrompt;
+    _promptController.selection = TextSelection.fromPosition(
+      TextPosition(offset: newPrompt.length),
+    );
+    _lastAutoPrompt = newPrompt;
+    _autoFillingPrompt = false;
+  }
+
   // ─────────────────────────────────────────────────────────────────────────────
   // BUILD
   // ─────────────────────────────────────────────────────────────────────────────
@@ -593,7 +664,10 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
                       rooms: _rooms,
                       selectedRoomId: _selectedRoomId,
                       onRoomSelected: (roomId) {
-                        setState(() => _selectedRoomId = roomId);
+                        setState(() {
+                          _selectedRoomId = roomId;
+                          _updateAutoPrompt();
+                        });
                       },
                       textTranslator: _text,
                       primaryColor: AppColors.primary,
@@ -620,7 +694,10 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
                       styles: _styles,
                       selectedStyleId: _selectedStyleId,
                       onStyleSelected: (styleId) {
-                        setState(() => _selectedStyleId = styleId);
+                        setState(() {
+                          _selectedStyleId = styleId;
+                          _updateAutoPrompt();
+                        });
                       },
                       textTranslator: _text,
                       primaryColor: AppColors.primary,
@@ -653,7 +730,10 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
                           .toList(),
                       selectedPalette: _selectedPaletteId,
                       onPaletteSelected: (paletteId) {
-                        setState(() => _selectedPaletteId = paletteId);
+                        setState(() {
+                          _selectedPaletteId = paletteId;
+                          _updateAutoPrompt();
+                        });
                       },
                       getPaletteLabel: (key) {
                         final palette = _palettes.firstWhere(
@@ -695,6 +775,7 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
                           } else if (_selectedFeatures.length < 5) {
                             _selectedFeatures.add(featureId);
                           }
+                          _updateAutoPrompt();
                         });
                       },
                       featureIcon: _featureIcon,

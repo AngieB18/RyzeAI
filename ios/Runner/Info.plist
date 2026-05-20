@@ -74,7 +74,9 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Necesitamos acceso al micrófono para convertir tu voz en texto</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Necesitamos reconocimiento de voz para transcribir tus palabras</string>
-
+	<string>Necesitamos reconocimiento de voz para transcribir tus palabras</string>	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 </dict>
 </plist>

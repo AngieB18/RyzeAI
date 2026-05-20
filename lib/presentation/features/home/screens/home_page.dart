@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ryzeai/core/constants/app_colors.dart';
-import 'package:ryzeai/generated/l10n.dart';
 import 'package:ryzeai/main.dart';
 import 'package:ryzeai/presentation/features/publications/screens/publications_screen.dart';
 import 'package:ryzeai/presentation/features/home/screens/home_screen.dart';
@@ -21,12 +20,19 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = const [
-    HomeScreen(),
-    PublicationsScreen(),
-    ProjectsScreen(),
-    ProfileScreen(),
-  ];
+  final List<Widget?> _screens = [null, null, null, null];
+
+  Widget _currentScreen() {
+    if (_screens[_currentIndex] == null) {
+      _screens[_currentIndex] = [
+        const HomeScreen(),
+        const PublicationsScreen(),
+        const ProjectsScreen(),
+        const ProfileScreen(),
+      ][_currentIndex];
+    }
+    return _screens[_currentIndex]!;
+  }
 
   void _showImagePickerOptions() {
     showModalBottomSheet(
@@ -87,7 +93,7 @@ class _HomePageState extends State<HomePage> {
       builder: (context, _) {
         return Scaffold(
           backgroundColor: AppColors.background(context),
-          body: _screens[_currentIndex],
+          body: _currentScreen(),
 
           bottomNavigationBar: HomeBottomNav(
             currentIndex: _currentIndex,

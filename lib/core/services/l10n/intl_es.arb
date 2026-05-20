@@ -332,6 +332,7 @@
   "publications_empty_favorites": "Aún no tienes favoritos",
   "publications_empty_all": "Aún no hay publicaciones",
   "publications_unknown_author": "Usuario",
+  "publications_liked": "Me gusta",
   "home_error_image_pick": "Error al seleccionar imagen: {error}",
   "@home_error_image_pick": {
     "placeholders": { "error": { "type": "String" } }
