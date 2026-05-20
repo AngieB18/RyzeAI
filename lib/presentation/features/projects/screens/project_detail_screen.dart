@@ -27,7 +27,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   bool _isDeleting = false;
   bool _isLoadingMetadata = true;
 
-  // ✅ FIX 1: Copia local mutable del proyecto para que setState funcione correctamente
   late Map<String, dynamic> _project;
 
   List<Map<String, dynamic>> _rooms = [];
@@ -36,13 +35,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   List<Map<String, dynamic>> _features = [];
 
   bool _showingOriginal = false;
-  // ✅ Cache buster: cambia cada vez que se regenera la imagen
-  int _imageCacheBuster = 0;
 
   @override
   void initState() {
     super.initState();
-    // ✅ FIX 1: Inicializar copia local en initState
     _project = Map<String, dynamic>.from(widget.project);
     _loadMetadata();
   }
@@ -71,12 +67,22 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
   // ── Helpers de texto / lookup ──────────────────────────────────────────────
 
+  /// Lee el campo localizado del JSON.
+  /// Prioriza el idioma actual del dispositivo (es/en).
+  /// Si no encuentra el idioma actual, cae al otro; si tampoco, retorna vacío.
   String _text(dynamic value) {
     if (value is Map) {
-      final es = value['es']?.toString().trim();
-      if (es != null && es.isNotEmpty) return es;
-      final en = value['en']?.toString().trim();
-      if (en != null && en.isNotEmpty) return en;
+      // Detectar idioma actual del contexto (es o en)
+      final locale = Localizations.localeOf(context).languageCode;
+      final primary = value[locale]?.toString().trim();
+      if (primary != null && primary.isNotEmpty) return primary;
+
+      // Fallback al otro idioma soportado
+      final fallback = locale == 'es'
+          ? value['en']?.toString().trim()
+          : value['es']?.toString().trim();
+      if (fallback != null && fallback.isNotEmpty) return fallback;
+
       return '';
     }
     return value?.toString().trim() ?? '';
@@ -219,7 +225,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
           .from('projects')
           .update({'public_state': !currentState}).eq('id', projectId);
       if (!mounted) return;
-      // ✅ FIX 2: Usar _project en lugar de widget.project
       setState(() {
         _project['public_state'] = !currentState;
         _isSaving = false;
@@ -245,408 +250,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
         ),
       );
     }
-  }
-
-  /// Muestra el bottom sheet de edición completo: nombre, prompt, habitación, estilos, paleta y features.
-  void _openEditSheet() {
-    final strings = S.of(context);
-
-    // ✅ FIX 2: Leer valores desde _project (copia local)
-    final nameController = TextEditingController(
-      text: _project['name_projects']?.toString() ?? '',
-    );
-    final promptController = TextEditingController(
-      text: _project['prompts']?.toString() ?? '',
-    );
-
-    String? selectedRoomId = _project['id_type_room']?.toString();
-    String? selectedPaletteId = _project['id_palette']?.toString();
-    List<String> selectedStyles = List<String>.from(
-      _toStringList(_project['styles']),
-    );
-    List<String> selectedFeatures = List<String>.from(
-      _toStringList(_project['id_features']),
-    );
-
-    final formKey = GlobalKey<FormState>();
-    bool isSavingEdit = false;
-    bool isRegenerating = false;
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppColors.surface(context),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (sheetContext) {
-        return StatefulBuilder(
-          builder: (ctx, setSheetState) {
-
-            // ── Guardar + regenerar imagen ─────────────────────────────
-            Future<void> saveAndRegenerate() async {
-              if (!formKey.currentState!.validate()) return;
-              setSheetState(() => isSavingEdit = true);
-              try {
-                final projectId = _project['id'];
-                final newName = nameController.text.trim();
-                final newPrompt = promptController.text.trim();
-                final now = DateTime.now().toIso8601String();
-
-                // 1. Actualizar todos los campos en Supabase
-                await _supabase.from('projects').update({
-                  'name_projects': newName,
-                  'prompts': newPrompt,
-                  'id_type_room': selectedRoomId,
-                  'id_palette': selectedPaletteId,
-                  'styles': selectedStyles,
-                  'id_features': selectedFeatures,
-                  'updated_at': now,
-                }).eq('id', projectId);
-
-                // 2. Marcar como regenerando e invocar edge function
-                setSheetState(() {
-                  isSavingEdit = false;
-                  isRegenerating = true;
-                });
-
-                // Obtener datos de paleta y estilos para construir el body correcto
-                final paletteData = _findPalette(selectedPaletteId);
-                final paletteColors = paletteData != null
-                    ? _parseColors(paletteData['colors_palette'])
-                        .map((c) =>
-                            '#${c.value.toRadixString(16).substring(2).toUpperCase()}')
-                        .toList()
-                    : <String>[];
-                final paletteName = paletteData != null
-                    ? _text(paletteData['name_palette'])
-                    : null;
-
-                // Primer estilo seleccionado como string (la función espera un solo estilo)
-                final styleLabel = selectedStyles.isNotEmpty
-                    ? _styleLabel(selectedStyles.first)
-                    : null;
-
-                // roomType como label legible
-                final roomTypeLabel = selectedRoomId != null
-                    ? _roomName(selectedRoomId)
-                    : null;
-
-                // originalImageUrl es obligatorio para la Edge Function
-                final originalImageUrl =
-                    _project['original_image_url']?.toString();
-
-                debugPrint('🔄 Invocando generate-room-design para proyecto: $projectId');
-                debugPrint('   originalImageUrl: $originalImageUrl');
-                debugPrint('   prompt: $newPrompt');
-
-                if (originalImageUrl == null || originalImageUrl.isEmpty) {
-                  throw Exception(
-                      'El proyecto no tiene imagen original. No se puede regenerar.');
-                }
-
-                final regenResponse = await _supabase.functions.invoke(
-                  'generate-room-design', // ✅ nombre correcto
-                  body: {
-                    'originalImageUrl': originalImageUrl,   // obligatorio
-                    'prompt': newPrompt,                     // obligatorio
-                    if (roomTypeLabel != null) 'roomType': roomTypeLabel,
-                    if (styleLabel != null) 'style': styleLabel,
-                    if (paletteName != null) 'palette': paletteName,
-                    if (paletteColors.isNotEmpty) 'paletteColors': paletteColors,
-                    if (selectedFeatures.isNotEmpty) 'features': selectedFeatures
-                        .map((id) => _featureLabel(id))
-                        .toList(),
-                  },
-                );
-
-                debugPrint('📦 Regen response data: ${regenResponse.data}');
-                debugPrint('📊 Regen response status: ${regenResponse.status}');
-
-                // La Edge Function devuelve 'generatedImageUrl' (camelCase)
-                final newImageUrl =
-                    regenResponse.data?['generatedImageUrl']?.toString();
-
-                if (newImageUrl == null) {
-                  debugPrint('⚠️ No se recibió generatedImageUrl en la respuesta');
-                } else {
-                  debugPrint('✅ Nueva imagen URL: $newImageUrl');
-                }
-
-                // 3. ✅ Limpiar caché y actualizar _project para refrescar la UI
-                if (!mounted) return;
-
-                // Evictar imagen antigua Y nueva del caché de Flutter
-                final oldImageUrl = _project['generated_image_url']?.toString();
-                if (oldImageUrl != null) {
-                  await NetworkImage(oldImageUrl).evict();
-                }
-                if (newImageUrl != null) {
-                  await NetworkImage(newImageUrl).evict();
-                }
-
-                setState(() {
-                  _project['name_projects'] = newName;
-                  _project['prompts'] = newPrompt;
-                  _project['id_type_room'] = selectedRoomId;
-                  _project['id_palette'] = selectedPaletteId;
-                  _project['styles'] = selectedStyles;
-                  _project['id_features'] = selectedFeatures;
-                  _project['updated_at'] = now;
-                  if (newImageUrl != null) {
-                    _project['generated_image_url'] = newImageUrl;
-                    _showingOriginal = false;
-                    _imageCacheBuster++; // ✅ fuerza recarga de imagen
-                  }
-                });
-
-                if (!mounted) return;
-                Navigator.pop(sheetContext);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(strings.project_detail_updated_success),
-                    backgroundColor: AppColors.passwordStrong,
-                  ),
-                );
-              } catch (e) {
-                debugPrint('❌ Error en saveAndRegenerate: $e');
-                if (!mounted) return;
-                setSheetState(() {
-                  isSavingEdit = false;
-                  isRegenerating = false;
-                });
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(strings.project_detail_error_update_edit(e.toString())),
-                    backgroundColor: AppColors.passwordWeak,
-                  ),
-                );
-              }
-            }
-
-            final isBusy = isSavingEdit || isRegenerating;
-
-            return DraggableScrollableSheet(
-              expand: false,
-              initialChildSize: 0.92,
-              minChildSize: 0.5,
-              maxChildSize: 0.95,
-              builder: (_, scrollController) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(ctx).viewInsets.bottom,
-                  ),
-                  child: Form(
-                    key: formKey,
-                    child: ListView(
-                      controller: scrollController,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      children: [
-                        // ── Handle ───────────────────────────────────────
-                        const SizedBox(height: 12),
-                        Center(
-                          child: Container(
-                            width: 40,
-                            height: 4,
-                            decoration: BoxDecoration(
-                              color: AppColors.textSecondary(ctx)
-                                  .withValues(alpha: 0.3),
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-
-                        Text(
-                          strings.project_detail_edit_title,
-                          style: TextStyle(
-                            color: AppColors.textPrimary(ctx),
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-
-                        // ── Nombre ───────────────────────────────────────
-                        _sheetLabel(ctx, strings.project_detail_edit_name_label),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          controller: nameController,
-                          style: TextStyle(color: AppColors.textPrimary(ctx)),
-                          decoration: _sheetInputDecoration(
-                            ctx,
-                            strings.project_detail_edit_name_hint,
-                          ),
-                          validator: (v) {
-                            if (v == null || v.trim().isEmpty) {
-                              return strings.project_detail_name_required;
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 20),
-
-                        // ── Prompt ───────────────────────────────────────
-                        _sheetLabel(ctx, strings.project_detail_edit_prompt_label),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          controller: promptController,
-                          style: TextStyle(color: AppColors.textPrimary(ctx)),
-                          maxLines: 4,
-                          decoration: _sheetInputDecoration(
-                            ctx,
-                            strings.project_detail_edit_prompt_hint,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-
-                        // ── Tipo de habitación ───────────────────────────
-                        _sheetLabel(ctx, strings.project_detail_section_room_type),
-                        const SizedBox(height: 10),
-                        ProjectDetailRoomSelector(
-                          rooms: _rooms,
-                          selectedId: selectedRoomId,
-                          onSelect: (id) => setSheetState(() => selectedRoomId = id),
-                          titleBuilder: _text,
-                        ),
-                        const SizedBox(height: 24),
-
-                        // ── Estilos ──────────────────────────────────────
-                        _sheetLabel(ctx, strings.project_detail_section_styles),
-                        const SizedBox(height: 10),
-                        ProjectDetailStylesSelector(
-                          styles: _styles,
-                          selected: selectedStyles,
-                          onUpdate: (updated) => setSheetState(() => selectedStyles = updated),
-                          titleBuilder: _text,
-                        ),
-                        const SizedBox(height: 24),
-
-                        // ── Paleta de colores ────────────────────────────
-                        _sheetLabel(ctx, strings.project_detail_section_palette),
-                        const SizedBox(height: 10),
-                        ProjectDetailPaletteSelector(
-                          palettes: _palettes,
-                          selectedId: selectedPaletteId,
-                          onSelect: (id) => setSheetState(() => selectedPaletteId = id),
-                          nameBuilder: _text,
-                          parseColors: _parseColors,
-                        ),
-                        const SizedBox(height: 24),
-
-                        // ── Objetos / Features ───────────────────────────
-                        _sheetLabel(ctx, strings.project_detail_section_features),
-                        const SizedBox(height: 10),
-                        ProjectDetailFeaturesSelector(
-                          features: _features,
-                          selected: selectedFeatures,
-                          onUpdate: (updated) => setSheetState(() => selectedFeatures = updated),
-                          titleBuilder: _text,
-                        ),
-                        const SizedBox(height: 32),
-
-                        // ── Botón guardar + regenerar ────────────────────
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: isBusy ? null : saveAndRegenerate,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primary,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                            child: isBusy
-                                ? Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const SizedBox(
-                                        height: 18,
-                                        width: 18,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          valueColor: AlwaysStoppedAnimation<Color>(
-                                              Colors.white),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Text(
-                                        isRegenerating
-                                            ? strings.project_detail_btn_regenerating
-                                            : strings.project_detail_btn_saving,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Text('✨',
-                                          style: TextStyle(fontSize: 18)),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        strings.project_detail_btn_save_and_regenerate,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        );
-      },
-    );
-  }
-
-  // ── Selectores del sheet ───────────────────────────────────────────────────
-
-  // ── Helpers del sheet ──────────────────────────────────────────────────────
-
-  Widget _sheetLabel(BuildContext ctx, String text) {
-    return Text(
-      text,
-      style: TextStyle(
-        color: AppColors.textSecondary(ctx),
-        fontSize: 13,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.3,
-      ),
-    );
-  }
-
-  InputDecoration _sheetInputDecoration(BuildContext ctx, String hint) {
-    return InputDecoration(
-      hintText: hint,
-      hintStyle: TextStyle(
-        color: AppColors.textSecondary(ctx).withValues(alpha: 0.5),
-      ),
-      filled: true,
-      fillColor: AppColors.background(ctx),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide.none,
-      ),
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 14,
-      ),
-    );
   }
 
   Future<void> _confirmAndDelete() async {
@@ -697,7 +300,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
     setState(() => _isDeleting = true);
     try {
-      // ✅ FIX 2: Usar _project
       final projectId = _project['id'];
       await _supabase.from('projects').delete().eq('id', projectId);
       if (!mounted) return;
@@ -765,7 +367,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   Widget build(BuildContext context) {
     final strings = S.of(context);
     final isPublic = _project['public_state'] == true;
-    // ✅ FIX 2: Todo el build lee desde _project
     final projectName = _project['name_projects'] ?? strings.projects_untitled;
     final roomId = _project['id_type_room']?.toString();
     final styles = _toStringList(_project['styles']);
@@ -791,12 +392,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.edit_outlined,
-                color: AppColors.textPrimary(context)),
-            tooltip: strings.project_detail_btn_edit,
-            onPressed: _isLoadingMetadata ? null : _openEditSheet,
-          ),
           IconButton(
             icon: _isDeleting
                 ? SizedBox(
@@ -929,8 +524,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                         ],
 
                         // ── PALETA ──────────────────────────────────────
-                        if (paletteId != null &&
-                            paletteColors.isNotEmpty) ...[
+                        if (paletteId != null && paletteColors.isNotEmpty) ...[
                           ProjectDetailSectionTitle(
                             title: strings.project_detail_section_palette,
                           ),
@@ -1011,10 +605,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                           children: [
                             Expanded(
                               child: ProjectDetailInfoCard(
-                              emoji: AppEmojis.createdAt,
-                              label: strings.project_detail_created_at,
-                              value: _formatDate(_project['created_at']),
-                            ),
+                                emoji: AppEmojis.createdAt,
+                                label: strings.project_detail_created_at,
+                                value: _formatDate(_project['created_at']),
+                              ),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
@@ -1048,9 +642,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                     width: 20,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      valueColor:
-                                          AlwaysStoppedAnimation<Color>(
-                                              Colors.white),
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
                                     ),
                                   )
                                 : Row(
@@ -1060,16 +653,13 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                         isPublic
                                             ? AppEmojis.privateProject
                                             : AppEmojis.publicProject,
-                                        style:
-                                            const TextStyle(fontSize: 18),
+                                        style: const TextStyle(fontSize: 18),
                                       ),
                                       const SizedBox(width: 8),
                                       Text(
                                         isPublic
-                                            ? strings
-                                                .project_detail_btn_make_private
-                                            : strings
-                                                .project_detail_btn_publish,
+                                            ? strings.project_detail_btn_make_private
+                                            : strings.project_detail_btn_publish,
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 16,
@@ -1089,5 +679,4 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
             ),
     );
   }
-
 }
