@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import 'package:gal/gal.dart';
 import 'package:ryzeai/core/constants/app_colors.dart';
 
 class ResultScreen extends StatefulWidget {
@@ -19,23 +21,25 @@ class _ResultScreenState extends State<ResultScreen> {
   Future<void> _downloadImage() async {
     setState(() => _isDownloading = true);
 
+    Uint8List? bytes;
     try {
       final response = await http.get(Uri.parse(widget.resultImageUrl));
       if (response.statusCode != 200) {
-        throw Exception('Error downloading image');
+        throw Exception('Error al descargar');
       }
+      bytes = response.bodyBytes;
 
-      final dir = await getApplicationDocumentsDirectory();
-      final fileName =
-          'RyzeAI_${DateTime.now().millisecondsSinceEpoch}.png';
-      final file = File('${dir.path}/$fileName');
-      await file.writeAsBytes(response.bodyBytes);
+      await Gal.putImageBytes(
+        bytes,
+        name: 'RyzeAI_${DateTime.now().millisecondsSinceEpoch}.png',
+        album: 'RyzeAI',
+      );
 
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Imagen guardada exitosamente'),
+          content: const Text('Imagen guardada en la galería'),
           backgroundColor: AppColors.passwordStrong,
           behavior: SnackBarBehavior.floating,
         ),
@@ -43,15 +47,47 @@ class _ResultScreenState extends State<ResultScreen> {
     } catch (e) {
       if (!mounted) return;
 
+      if (bytes != null) {
+        await _saveToDocuments(bytes);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: AppColors.passwordWeak,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isDownloading = false);
+    }
+  }
+
+  Future<void> _saveToDocuments(Uint8List bytes) async {
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+      final fileName =
+          'RyzeAI_${DateTime.now().millisecondsSinceEpoch}.png';
+      final file = File('${dir.path}/$fileName');
+      await file.writeAsBytes(bytes);
+
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error al guardar: $e'),
+          content: Text('Guardado en documentos: $fileName'),
+          backgroundColor: AppColors.passwordStrong,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } catch (e2) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al guardar: $e2'),
           backgroundColor: AppColors.passwordWeak,
           behavior: SnackBarBehavior.floating,
         ),
       );
-    } finally {
-      if (mounted) setState(() => _isDownloading = false);
     }
   }
 
@@ -89,7 +125,6 @@ class _ResultScreenState extends State<ResultScreen> {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
