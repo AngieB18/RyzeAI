@@ -16,11 +16,10 @@ class SEs extends S {
 
   @override
   String get welcome_subtitle =>
-      '¡Bienvenido! Inspírate y diseña tu espacio ideal en 3D';
+      '¡Bienvenido! Inspírate y diseña tu espacio ideal';
 
   @override
-  String get welcome =>
-      '¡Bienvenido! Inspírate y diseña tu espacio ideal en 3D';
+  String get welcome => '¡Bienvenido! Inspírate y diseña tu espacio ideal';
 
   @override
   String get login => 'Iniciar sesión';
@@ -101,7 +100,7 @@ class SEs extends S {
   String get decorate => 'Decora con IA';
 
   @override
-  String get decorateDesc => 'Toma una foto y visualiza muebles en 3D';
+  String get decorateDesc => 'Toma una foto y visualiza tus ideas';
 
   @override
   String get openCamera => 'Abrir cámara IA';
@@ -132,7 +131,7 @@ class SEs extends S {
 
   @override
   String get decorateDesc2 =>
-      'Toma una foto de tu espacio y visualiza muebles en 3D al instante';
+      'Toma una foto de tu espacio y visualiza tus ideas al instante';
 
   @override
   String get modifiedAgo => 'Modificado';
@@ -305,7 +304,7 @@ class SEs extends S {
 
   @override
   String get faqA2 =>
-      'Apunta tu cámara a cualquier espacio y nuestra IA detectará objetos y sugerirá muebles en 3D.';
+      'Apunta tu cámara a cualquier espacio y nuestra IA detectará objetos y sugerirá nuevas ideas.';
 
   @override
   String get faqQ3 => '¿Puedo cambiar mi correo?';

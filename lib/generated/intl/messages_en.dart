@@ -538,6 +538,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "publications_filter_favorites": MessageLookupByLibrary.simpleMessage(
       "Favorites",
     ),
+    "publications_liked": MessageLookupByLibrary.simpleMessage("Liked"),
     "publications_title": MessageLookupByLibrary.simpleMessage("Publications"),
     "publications_unknown_author": MessageLookupByLibrary.simpleMessage("User"),
     "recentProjects": MessageLookupByLibrary.simpleMessage("Recent Projects"),
