@@ -1,10 +1,59 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:ryzeai/core/constants/app_colors.dart';
 
-class ResultScreen extends StatelessWidget {
+class ResultScreen extends StatefulWidget {
   final String resultImageUrl;
 
   const ResultScreen({super.key, required this.resultImageUrl});
+
+  @override
+  State<ResultScreen> createState() => _ResultScreenState();
+}
+
+class _ResultScreenState extends State<ResultScreen> {
+  bool _isDownloading = false;
+
+  Future<void> _downloadImage() async {
+    setState(() => _isDownloading = true);
+
+    try {
+      final response = await http.get(Uri.parse(widget.resultImageUrl));
+      if (response.statusCode != 200) {
+        throw Exception('Error downloading image');
+      }
+
+      final dir = await getApplicationDocumentsDirectory();
+      final fileName =
+          'RyzeAI_${DateTime.now().millisecondsSinceEpoch}.png';
+      final file = File('${dir.path}/$fileName');
+      await file.writeAsBytes(response.bodyBytes);
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Imagen guardada exitosamente'),
+          backgroundColor: AppColors.passwordStrong,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al guardar: $e'),
+          backgroundColor: AppColors.passwordWeak,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isDownloading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +77,10 @@ class ResultScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // Imagen generada con zoom
           Expanded(
             child: InteractiveViewer(
               child: Image.network(
-                resultImageUrl,
+                widget.resultImageUrl,
                 fit: BoxFit.contain,
                 loadingBuilder: (context, child, progress) {
                   if (progress == null) return child;
@@ -42,7 +90,6 @@ class ResultScreen extends StatelessWidget {
             ),
           ),
 
-          // Botones
           Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -57,14 +104,24 @@ class ResultScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    icon: const Icon(Icons.download_rounded, color: Colors.white),
-                    label: const Text(
-                      'Guardar imagen',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    icon: _isDownloading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Icon(Icons.download_rounded, color: Colors.white),
+                    label: Text(
+                      _isDownloading ? 'Guardando...' : 'Guardar imagen',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    onPressed: () {
-                      // TODO: guardar en galería
-                    },
+                    onPressed: _isDownloading ? null : _downloadImage,
                   ),
                 ),
                 const SizedBox(height: 12),

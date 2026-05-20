@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProjectsService {
@@ -22,6 +23,30 @@ class ProjectsService {
       return publicUrl;
     } catch (e) {
       print('Error uploading original image: $e');
+      return null;
+    }
+  }
+
+  static Future<String?> uploadGeneratedImage(String imageUrl) async {
+    try {
+      final user = _supabase.auth.currentUser;
+      if (user == null) return null;
+
+      final response = await http.get(Uri.parse(imageUrl));
+      if (response.statusCode != 200) return null;
+
+      final fileName =
+          'generated/${user.id}/${DateTime.now().millisecondsSinceEpoch}.png';
+
+      await _supabase.storage.from(_bucketName).uploadBinary(
+        fileName,
+        response.bodyBytes,
+        fileOptions: const FileOptions(contentType: 'image/png'),
+      );
+
+      return _supabase.storage.from(_bucketName).getPublicUrl(fileName);
+    } catch (e) {
+      print('Error uploading generated image: $e');
       return null;
     }
   }

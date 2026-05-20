@@ -390,6 +390,11 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
         throw Exception(strings.generateProjectError);
       }
 
+      final permanentImageUrl =
+          await ProjectsService.uploadGeneratedImage(generatedImageUrl);
+
+      final finalImageUrl = permanentImageUrl ?? generatedImageUrl;
+
       final project = await ProjectsService.createProject(
         nameProjects: _nameController.text.trim(),
         idTypeRoom: _selectedRoomId!,
@@ -398,7 +403,7 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
         idFeatures: _selectedFeatures.toList(),
         prompts: _promptController.text.trim(),
         originalImageUrl: originalImageUrl,
-        generatedImageUrl: generatedImageUrl,
+        generatedImageUrl: finalImageUrl,
       );
 
       if (project == null) throw Exception(strings.errorSavingProject);
@@ -410,7 +415,7 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => ResultScreen(resultImageUrl: generatedImageUrl),
+          builder: (_) => ResultScreen(resultImageUrl: finalImageUrl),
         ),
       );
     } catch (e) {
