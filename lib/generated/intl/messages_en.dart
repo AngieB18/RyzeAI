@@ -135,10 +135,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "darkMode": MessageLookupByLibrary.simpleMessage("Dark Mode"),
     "decorate": MessageLookupByLibrary.simpleMessage("Decorate with AI"),
     "decorateDesc": MessageLookupByLibrary.simpleMessage(
-      "Take a photo and visualize furniture in 3D",
+      "Take a photo and visualize furniture",
     ),
     "decorateDesc2": MessageLookupByLibrary.simpleMessage(
-      "Take a photo of your space and visualize furniture in 3D instantly",
+      "Take a photo of your space and visualize furniture instantly",
     ),
     "decoration": MessageLookupByLibrary.simpleMessage("Decoration & Details"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
@@ -217,7 +217,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Go to the Projects tab and tap the New button to start a new decoration project.",
     ),
     "faqA2": MessageLookupByLibrary.simpleMessage(
-      "Point your camera at any space and our AI will detect objects and suggest furniture in 3D.",
+      "Point your camera at any space and our AI will detect objects and suggest furniture.",
     ),
     "faqA3": MessageLookupByLibrary.simpleMessage(
       "Yes, go to Profile → Edit Profile and expand the email section to change it.",
@@ -655,7 +655,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "User is not authenticated",
     ),
     "welcome": MessageLookupByLibrary.simpleMessage(
-      "Welcome! Get inspired and design your ideal space in 3D",
+      "Welcome! Get inspired and design your ideal space",
     ),
     "welcomeBack": MessageLookupByLibrary.simpleMessage("Welcome back!"),
     "welcomeSubtitle": MessageLookupByLibrary.simpleMessage(
@@ -665,7 +665,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Welcome to RyzeAI! 🎉",
     ),
     "welcome_subtitle": MessageLookupByLibrary.simpleMessage(
-      "Welcome! Get inspired and design your ideal space in 3D",
+      "Welcome! Get inspired and design your ideal space",
     ),
     "welcome_title": MessageLookupByLibrary.simpleMessage("Welcome"),
     "yesterday": MessageLookupByLibrary.simpleMessage("yesterday"),

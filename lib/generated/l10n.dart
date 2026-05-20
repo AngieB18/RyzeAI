@@ -112,13 +112,13 @@ abstract class S {
   /// No description provided for @welcome_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Welcome! Get inspired and design your ideal space in 3D'**
+  /// **'Welcome! Get inspired and design your ideal space'**
   String get welcome_subtitle;
 
   /// No description provided for @welcome.
   ///
   /// In en, this message translates to:
-  /// **'Welcome! Get inspired and design your ideal space in 3D'**
+  /// **'Welcome! Get inspired and design your ideal space'**
   String get welcome;
 
   /// No description provided for @login.
@@ -280,7 +280,7 @@ abstract class S {
   /// No description provided for @decorateDesc.
   ///
   /// In en, this message translates to:
-  /// **'Take a photo and visualize furniture in 3D'**
+  /// **'Take a photo and visualize furniture'**
   String get decorateDesc;
 
   /// No description provided for @openCamera.
@@ -340,7 +340,7 @@ abstract class S {
   /// No description provided for @decorateDesc2.
   ///
   /// In en, this message translates to:
-  /// **'Take a photo of your space and visualize furniture in 3D instantly'**
+  /// **'Take a photo of your space and visualize furniture instantly'**
   String get decorateDesc2;
 
   /// No description provided for @modifiedAgo.
@@ -670,7 +670,7 @@ abstract class S {
   /// No description provided for @faqA2.
   ///
   /// In en, this message translates to:
-  /// **'Point your camera at any space and our AI will detect objects and suggest furniture in 3D.'**
+  /// **'Point your camera at any space and our AI will detect objects and suggest furniture.'**
   String get faqA2;
 
   /// No description provided for @faqQ3.
