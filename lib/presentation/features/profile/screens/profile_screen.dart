@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/services/user_service.dart';
+import '../../../../core/services/notifications/notification_service.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../main.dart';
 import 'privacy_screen.dart';
+import 'package:ryzeai/presentation/features/notifications/screens/notifications_screen.dart';
 import '../widgets/profile_widgets_header.dart';
 import '../widgets/profile_widgets_menu.dart';
 import '../widgets/profile_widgets_styles.dart';
@@ -21,12 +23,13 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   Map<String, dynamic>? _userData;
-  bool _loading = true;
+  int _unreadNotifications = 0;
 
   @override
   void initState() {
     super.initState();
     _loadUser();
+    _loadUnreadNotifications();
   }
 
   Future<void> _loadUser() async {
@@ -46,11 +49,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (mounted && data != null) {
       setState(() {
         _userData = data;
-        _loading = false;
       });
-    } else if (mounted) {
-      setState(() => _loading = false);
     }
+  }
+
+  Future<void> _loadUnreadNotifications() async {
+    final count = await NotificationService.getUnreadNotificationCount();
+    if (!mounted) return;
+    setState(() => _unreadNotifications = count);
   }
 
   @override
@@ -97,21 +103,57 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       isLast: false,
                     ),
                     ProfileWidgetsMenuRow(
-                      icon: Icons.key_outlined,
-                      label: Localizations.localeOf(context).languageCode == 'es' ? 'Cambiar contraseña' : 'Change password',
-                      onTap: () => ProfileWidgetsChangePasswordSheet.show(context),
+                      icon: Icons.notifications_outlined,
+                      label: l.notifications,
+                      onTap: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+                        );
+                        await _loadUnreadNotifications();
+                      },
+                      trailing: _unreadNotifications > 0
+                          ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primary,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    _unreadNotifications > 99
+                                        ? '99+'
+                                        : _unreadNotifications.toString(),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Icon(Icons.chevron_right_rounded,
+                                    color: AppColors.textSecondary(context),
+                                    size: 20),
+                              ],
+                            )
+                          : null,
+                      isLast: false,
+                    ),
+                    ProfileWidgetsMenuRow(
+                      icon: Icons.lock_outline,
+                      label: Localizations.localeOf(context).languageCode == 'es' ? 'Privacidad' : 'Privacy',
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => const PrivacyScreen())),
                       isLast: true,
                     ),
                   ]),
                   const SizedBox(height: 16),
 
                   ProfileWidgetsMenuCard(children: [
-                    ProfileWidgetsMenuRow(
-                      icon: Icons.lock_outline,
-                      label: Localizations.localeOf(context).languageCode == 'es' ? 'Privacidad' : 'Privacy',
-                      onTap: () => Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => const PrivacyScreen())),
-                    ),
                     ProfileWidgetsMenuRow(
                       icon: Icons.language,
                       label: l.language,

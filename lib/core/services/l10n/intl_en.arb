@@ -332,6 +332,7 @@
   "publications_empty_favorites": "You have no favorites yet",
   "publications_empty_all": "No publications yet",
   "publications_unknown_author": "User",
+  "publications_liked": "Liked",
   "home_error_image_pick": "Error selecting image: {error}",
   "@home_error_image_pick": {
     "placeholders": { "error": { "type": "String" } }

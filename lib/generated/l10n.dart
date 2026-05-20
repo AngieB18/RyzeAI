@@ -1,2938 +1,2094 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'intl/messages_all.dart';
+import 'dart:async';
 
-// **************************************************************************
-// Generator: Flutter Intl IDE plugin
-// Made by Localizely
-// **************************************************************************
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart' as intl;
 
-// ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
-// ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
-// ignore_for_file: avoid_redundant_argument_values, avoid_escaping_inner_quotes
+import 'l10n_en.dart';
+import 'l10n_es.dart';
 
-class S {
-  S();
+// ignore_for_file: type=lint
 
-  static S? _current;
+/// Callers can lookup localized strings with an instance of S
+/// returned by `S.of(context)`.
+///
+/// Applications need to include `S.delegate()` in their app's
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
+///
+/// ```dart
+/// import 'generated/l10n.dart';
+///
+/// return MaterialApp(
+///   localizationsDelegates: S.localizationsDelegates,
+///   supportedLocales: S.supportedLocales,
+///   home: MyApplicationHome(),
+/// );
+/// ```
+///
+/// ## Update pubspec.yaml
+///
+/// Please make sure to update your pubspec.yaml to include the following
+/// packages:
+///
+/// ```yaml
+/// dependencies:
+///   # Internationalization support.
+///   flutter_localizations:
+///     sdk: flutter
+///   intl: any # Use the pinned version from flutter_localizations
+///
+///   # Rest of dependencies
+/// ```
+///
+/// ## iOS Applications
+///
+/// iOS applications define key application metadata, including supported
+/// locales, in an Info.plist file that is built into the application bundle.
+/// To configure the locales supported by your app, you’ll need to edit this
+/// file.
+///
+/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
+/// Then, in the Project Navigator, open the Info.plist file under the Runner
+/// project’s Runner folder.
+///
+/// Next, select the Information Property List item, select Add Item from the
+/// Editor menu, then select Localizations from the pop-up menu.
+///
+/// Select and expand the newly-created Localizations item then, for each
+/// locale your application supports, add a new item and select the locale
+/// you wish to add from the pop-up menu in the Value field. This list should
+/// be consistent with the languages listed in the S.supportedLocales
+/// property.
+abstract class S {
+  S(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
-  static S get current {
-    assert(
-      _current != null,
-      'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.',
-    );
-    return _current!;
-  }
-
-  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
-
-  static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name);
-    return initializeMessages(localeName).then((_) {
-      Intl.defaultLocale = localeName;
-      final instance = S();
-      S._current = instance;
-
-      return instance;
-    });
-  }
+  final String localeName;
 
   static S of(BuildContext context) {
-    final instance = S.maybeOf(context);
-    assert(
-      instance != null,
-      'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?',
-    );
-    return instance!;
-  }
-
-  static S? maybeOf(BuildContext context) {
-    return Localizations.of<S>(context, S);
-  }
-
-  /// `Slide to start`
-  String get slide_me {
-    return Intl.message('Slide to start', name: 'slide_me', desc: '', args: []);
-  }
-
-  /// `Welcome`
-  String get welcome_title {
-    return Intl.message('Welcome', name: 'welcome_title', desc: '', args: []);
-  }
-
-  /// `Welcome! Get inspired and design your ideal space in 3D`
-  String get welcome_subtitle {
-    return Intl.message(
-      'Welcome! Get inspired and design your ideal space in 3D',
-      name: 'welcome_subtitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Welcome! Get inspired and design your ideal space in 3D`
-  String get welcome {
-    return Intl.message(
-      'Welcome! Get inspired and design your ideal space in 3D',
-      name: 'welcome',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Log In`
-  String get login {
-    return Intl.message('Log In', name: 'login', desc: '', args: []);
-  }
-
-  /// `Language`
-  String get language {
-    return Intl.message('Language', name: 'language', desc: '', args: []);
-  }
-
-  /// `You must accept the terms to continue`
-  String get acceptTermsError {
-    return Intl.message(
-      'You must accept the terms to continue',
-      name: 'acceptTermsError',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Account created successfully`
-  String get accountCreated {
-    return Intl.message(
-      'Account created successfully',
-      name: 'accountCreated',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Error while registering`
-  String get registerError {
-    return Intl.message(
-      'Error while registering',
-      name: 'registerError',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Step 1 of 1`
-  String get step1of1 {
-    return Intl.message('Step 1 of 1', name: 'step1of1', desc: '', args: []);
-  }
-
-  /// `Create Account`
-  String get createAccount {
-    return Intl.message(
-      'Create Account',
-      name: 'createAccount',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Join RyzeAI and start decorating`
-  String get joinRyzeAI {
-    return Intl.message(
-      'Join RyzeAI and start decorating',
-      name: 'joinRyzeAI',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `First Name`
-  String get firstName {
-    return Intl.message('First Name', name: 'firstName', desc: '', args: []);
-  }
-
-  /// `Enter your first name`
-  String get enterFirstName {
-    return Intl.message(
-      'Enter your first name',
-      name: 'enterFirstName',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Last Name`
-  String get lastName {
-    return Intl.message('Last Name', name: 'lastName', desc: '', args: []);
-  }
-
-  /// `Enter your last name`
-  String get enterLastName {
-    return Intl.message(
-      'Enter your last name',
-      name: 'enterLastName',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Email`
-  String get email {
-    return Intl.message('Email', name: 'email', desc: '', args: []);
-  }
-
-  /// `Enter your email`
-  String get enterEmail {
-    return Intl.message(
-      'Enter your email',
-      name: 'enterEmail',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Password`
-  String get password {
-    return Intl.message('Password', name: 'password', desc: '', args: []);
-  }
-
-  /// `Create a secure password`
-  String get enterPassword {
-    return Intl.message(
-      'Create a secure password',
-      name: 'enterPassword',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Confirm Password`
-  String get confirmPassword {
-    return Intl.message(
-      'Confirm Password',
-      name: 'confirmPassword',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Confirm your password`
-  String get confirmPasswordHint {
-    return Intl.message(
-      'Confirm your password',
-      name: 'confirmPasswordHint',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `By signing up you accept the `
-  String get termsIntro {
-    return Intl.message(
-      'By signing up you accept the ',
-      name: 'termsIntro',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Terms of Service`
-  String get termsOfService {
-    return Intl.message(
-      'Terms of Service',
-      name: 'termsOfService',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// ` and the `
-  String get andThe {
-    return Intl.message(' and the ', name: 'andThe', desc: '', args: []);
-  }
-
-  /// `Privacy Policy`
-  String get privacyPolicy {
-    return Intl.message(
-      'Privacy Policy',
-      name: 'privacyPolicy',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Create Account`
-  String get createAccountButton {
-    return Intl.message(
-      'Create Account',
-      name: 'createAccountButton',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Welcome back!`
-  String get welcomeBack {
-    return Intl.message(
-      'Welcome back!',
-      name: 'welcomeBack',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Hello`
-  String get helloUser {
-    return Intl.message('Hello', name: 'helloUser', desc: '', args: []);
-  }
-
-  /// `Decorate with AI`
-  String get decorate {
-    return Intl.message(
-      'Decorate with AI',
-      name: 'decorate',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Take a photo and visualize furniture in 3D`
-  String get decorateDesc {
-    return Intl.message(
-      'Take a photo and visualize furniture in 3D',
-      name: 'decorateDesc',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Open AI Camera`
-  String get openCamera {
-    return Intl.message(
-      'Open AI Camera',
-      name: 'openCamera',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Recent Projects`
-  String get recentProjects {
-    return Intl.message(
-      'Recent Projects',
-      name: 'recentProjects',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Explore Styles`
-  String get exploreStyles {
-    return Intl.message(
-      'Explore Styles',
-      name: 'exploreStyles',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Projects`
-  String get projects {
-    return Intl.message('Projects', name: 'projects', desc: '', args: []);
-  }
-
-  /// `Favorites`
-  String get favorites {
-    return Intl.message('Favorites', name: 'favorites', desc: '', args: []);
-  }
-
-  /// `Profile`
-  String get profile {
-    return Intl.message('Profile', name: 'profile', desc: '', args: []);
-  }
-
-  /// `Home`
-  String get home {
-    return Intl.message('Home', name: 'home', desc: '', args: []);
-  }
-
-  /// `Publications`
-  String get publications {
-    return Intl.message(
-      'Publications',
-      name: 'publications',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `New`
-  String get newBadge {
-    return Intl.message('New', name: 'newBadge', desc: '', args: []);
-  }
-
-  /// `Take a photo of your space and visualize furniture in 3D instantly`
-  String get decorateDesc2 {
-    return Intl.message(
-      'Take a photo of your space and visualize furniture in 3D instantly',
-      name: 'decorateDesc2',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Modified`
-  String get modifiedAgo {
-    return Intl.message('Modified', name: 'modifiedAgo', desc: '', args: []);
-  }
-
-  /// `2h ago`
-  String get hoursAgo {
-    return Intl.message('2h ago', name: 'hoursAgo', desc: '', args: []);
-  }
-
-  /// `yesterday`
-  String get yesterday {
-    return Intl.message('yesterday', name: 'yesterday', desc: '', args: []);
-  }
-
-  /// `Living Room`
-  String get livingRoom {
-    return Intl.message('Living Room', name: 'livingRoom', desc: '', args: []);
-  }
-
-  /// `Bedroom`
-  String get bedroom {
-    return Intl.message('Bedroom', name: 'bedroom', desc: '', args: []);
-  }
-
-  /// `Modern`
-  String get modern {
-    return Intl.message('Modern', name: 'modern', desc: '', args: []);
-  }
-
-  /// `Natural`
-  String get natural {
-    return Intl.message('Natural', name: 'natural', desc: '', args: []);
-  }
-
-  /// `Minimal`
-  String get minimal {
-    return Intl.message('Minimal', name: 'minimal', desc: '', args: []);
-  }
-
-  /// `Colorful`
-  String get colorful {
-    return Intl.message('Colorful', name: 'colorful', desc: '', args: []);
-  }
-
-  /// `+1 this month`
-  String get thisMonth {
-    return Intl.message('+1 this month', name: 'thisMonth', desc: '', args: []);
-  }
-
-  /// `5 new`
-  String get newItems {
-    return Intl.message('5 new', name: 'newItems', desc: '', args: []);
-  }
-
-  /// `Incorrect email or password`
-  String get loginError {
-    return Intl.message(
-      'Incorrect email or password',
-      name: 'loginError',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Please enter both email and password`
-  String get emptyFieldsError {
-    return Intl.message(
-      'Please enter both email and password',
-      name: 'emptyFieldsError',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Loading...`
-  String get loading {
-    return Intl.message('Loading...', name: 'loading', desc: '', args: []);
-  }
-
-  /// `Welcome back!`
-  String get loginSuccess {
-    return Intl.message(
-      'Welcome back!',
-      name: 'loginSuccess',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Edit Profile`
-  String get editProfile {
-    return Intl.message(
-      'Edit Profile',
-      name: 'editProfile',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Notifications`
-  String get notifications {
-    return Intl.message(
-      'Notifications',
-      name: 'notifications',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Privacy`
-  String get privacy {
-    return Intl.message('Privacy', name: 'privacy', desc: '', args: []);
-  }
-
-  /// `Help & Support`
-  String get helpSupport {
-    return Intl.message(
-      'Help & Support',
-      name: 'helpSupport',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Log Out`
-  String get logOut {
-    return Intl.message('Log Out', name: 'logOut', desc: '', args: []);
-  }
-
-  /// `Home User`
-  String get homeUser {
-    return Intl.message('Home User', name: 'homeUser', desc: '', args: []);
-  }
-
-  /// `Rooms`
-  String get rooms {
-    return Intl.message('Rooms', name: 'rooms', desc: '', args: []);
-  }
-
-  /// `Dark Mode`
-  String get darkMode {
-    return Intl.message('Dark Mode', name: 'darkMode', desc: '', args: []);
-  }
-
-  /// `Light Mode`
-  String get lightMode {
-    return Intl.message('Light Mode', name: 'lightMode', desc: '', args: []);
-  }
-
-  /// `Save Changes`
-  String get saveChanges {
-    return Intl.message(
-      'Save Changes',
-      name: 'saveChanges',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Privacy`
-  String get privacyTitle {
-    return Intl.message('Privacy', name: 'privacyTitle', desc: '', args: []);
-  }
-
-  /// `Change Password`
-  String get changePassword {
-    return Intl.message(
-      'Change Password',
-      name: 'changePassword',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `We will send you an email to reset your password`
-  String get changePasswordDesc {
-    return Intl.message(
-      'We will send you an email to reset your password',
-      name: 'changePasswordDesc',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Send Reset Email`
-  String get sendResetEmail {
-    return Intl.message(
-      'Send Reset Email',
-      name: 'sendResetEmail',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Delete Account`
-  String get deleteAccount {
-    return Intl.message(
-      'Delete Account',
-      name: 'deleteAccount',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `This action is permanent and cannot be undone`
-  String get deleteAccountDesc {
-    return Intl.message(
-      'This action is permanent and cannot be undone',
-      name: 'deleteAccountDesc',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Are you sure you want to delete your account?`
-  String get deleteAccountConfirm {
-    return Intl.message(
-      'Are you sure you want to delete your account?',
-      name: 'deleteAccountConfirm',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Delete`
-  String get delete {
-    return Intl.message('Delete', name: 'delete', desc: '', args: []);
-  }
-
-  /// `Cancel`
-  String get cancel {
-    return Intl.message('Cancel', name: 'cancel', desc: '', args: []);
-  }
-
-  /// `Email sent! Check your inbox`
-  String get emailSent {
-    return Intl.message(
-      'Email sent! Check your inbox',
-      name: 'emailSent',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Account deleted successfully`
-  String get accountDeleted {
-    return Intl.message(
-      'Account deleted successfully',
-      name: 'accountDeleted',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `New Email`
-  String get newEmail {
-    return Intl.message('New Email', name: 'newEmail', desc: '', args: []);
-  }
-
-  /// `Enter your new email`
-  String get enterNewEmail {
-    return Intl.message(
-      'Enter your new email',
-      name: 'enterNewEmail',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Current Password`
-  String get currentPassword {
-    return Intl.message(
-      'Current Password',
-      name: 'currentPassword',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Enter your current password`
-  String get enterCurrentPassword {
-    return Intl.message(
-      'Enter your current password',
-      name: 'enterCurrentPassword',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `A verification email will be sent to the new address`
-  String get emailChangeInfo {
-    return Intl.message(
-      'A verification email will be sent to the new address',
-      name: 'emailChangeInfo',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Verification email sent, please check your inbox`
-  String get emailChanged {
-    return Intl.message(
-      'Verification email sent, please check your inbox',
-      name: 'emailChanged',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Notifications`
-  String get notificationsTitle {
-    return Intl.message(
-      'Notifications',
-      name: 'notificationsTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Project Notifications`
-  String get projectNotifications {
-    return Intl.message(
-      'Project Notifications',
-      name: 'projectNotifications',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Updates about your decoration projects`
-  String get projectNotificationsDesc {
-    return Intl.message(
-      'Updates about your decoration projects',
-      name: 'projectNotificationsDesc',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `App Updates`
-  String get appUpdates {
-    return Intl.message('App Updates', name: 'appUpdates', desc: '', args: []);
-  }
-
-  /// `New features and improvements`
-  String get appUpdatesDesc {
-    return Intl.message(
-      'New features and improvements',
-      name: 'appUpdatesDesc',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Preferences saved`
-  String get notificationsSaved {
-    return Intl.message(
-      'Preferences saved',
-      name: 'notificationsSaved',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Help & Support`
-  String get helpSupportTitle {
-    return Intl.message(
-      'Help & Support',
-      name: 'helpSupportTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Frequently Asked Questions`
-  String get faq {
-    return Intl.message(
-      'Frequently Asked Questions',
-      name: 'faq',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Terms & Conditions`
-  String get termsAndConditions {
-    return Intl.message(
-      'Terms & Conditions',
-      name: 'termsAndConditions',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `How do I create a project?`
-  String get faqQ1 {
-    return Intl.message(
-      'How do I create a project?',
-      name: 'faqQ1',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Go to the Projects tab and tap the New button to start a new decoration project.`
-  String get faqA1 {
-    return Intl.message(
-      'Go to the Projects tab and tap the New button to start a new decoration project.',
-      name: 'faqA1',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `How does the AI camera work?`
-  String get faqQ2 {
-    return Intl.message(
-      'How does the AI camera work?',
-      name: 'faqQ2',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Point your camera at any space and our AI will detect objects and suggest furniture in 3D.`
-  String get faqA2 {
-    return Intl.message(
-      'Point your camera at any space and our AI will detect objects and suggest furniture in 3D.',
-      name: 'faqA2',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Can I change my email?`
-  String get faqQ3 {
-    return Intl.message(
-      'Can I change my email?',
-      name: 'faqQ3',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Yes, go to Profile → Edit Profile and expand the email section to change it.`
-  String get faqA3 {
-    return Intl.message(
-      'Yes, go to Profile → Edit Profile and expand the email section to change it.',
-      name: 'faqA3',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `How do I delete my account?`
-  String get faqQ4 {
-    return Intl.message(
-      'How do I delete my account?',
-      name: 'faqQ4',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Go to Profile → Privacy → Delete Account. This action is permanent.`
-  String get faqA4 {
-    return Intl.message(
-      'Go to Profile → Privacy → Delete Account. This action is permanent.',
-      name: 'faqA4',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `By using RyzeAI you agree to use the app responsibly. We are not responsible for decoration decisions made based on AI suggestions. All content is for inspiration purposes only.`
-  String get termsContent {
-    return Intl.message(
-      'By using RyzeAI you agree to use the app responsibly. We are not responsible for decoration decisions made based on AI suggestions. All content is for inspiration purposes only.',
-      name: 'termsContent',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `We collect your name, email and usage data to improve your experience. We never sell your data to third parties. You can delete your account and all associated data at any time.`
-  String get privacyContent {
-    return Intl.message(
-      'We collect your name, email and usage data to improve your experience. We never sell your data to third parties. You can delete your account and all associated data at any time.',
-      name: 'privacyContent',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Welcome to RyzeAI! 🎉`
-  String get welcomeTitle {
-    return Intl.message(
-      'Welcome to RyzeAI! 🎉',
-      name: 'welcomeTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Tell us your style so we can personalize your experience`
-  String get welcomeSubtitle {
-    return Intl.message(
-      'Tell us your style so we can personalize your experience',
-      name: 'welcomeSubtitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `What styles do you like?`
-  String get selectStyles {
-    return Intl.message(
-      'What styles do you like?',
-      name: 'selectStyles',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Select all that apply`
-  String get selectStylesHint {
-    return Intl.message(
-      'Select all that apply',
-      name: 'selectStylesHint',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Modern`
-  String get styleModern {
-    return Intl.message('Modern', name: 'styleModern', desc: '', args: []);
-  }
-
-  /// `Natural`
-  String get styleNatural {
-    return Intl.message('Natural', name: 'styleNatural', desc: '', args: []);
-  }
-
-  /// `Minimal`
-  String get styleMinimal {
-    return Intl.message('Minimal', name: 'styleMinimal', desc: '', args: []);
-  }
-
-  /// `Colorful`
-  String get styleColorful {
-    return Intl.message('Colorful', name: 'styleColorful', desc: '', args: []);
-  }
-
-  /// `Rustic`
-  String get styleRustic {
-    return Intl.message('Rustic', name: 'styleRustic', desc: '', args: []);
-  }
-
-  /// `Scandinavian`
-  String get styleScandinavian {
-    return Intl.message(
-      'Scandinavian',
-      name: 'styleScandinavian',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Continue`
-  String get continueButton {
-    return Intl.message('Continue', name: 'continueButton', desc: '', args: []);
-  }
-
-  /// `My Styles`
-  String get myStyles {
-    return Intl.message('My Styles', name: 'myStyles', desc: '', args: []);
-  }
-
-  /// `You haven't selected any styles yet`
-  String get noStylesSelected {
-    return Intl.message(
-      'You haven\'t selected any styles yet',
-      name: 'noStylesSelected',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Accept & Close`
-  String get acceptAndClose {
-    return Intl.message(
-      'Accept & Close',
-      name: 'acceptAndClose',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Choose a Space`
-  String get chooseSpace {
-    return Intl.message(
-      'Choose a Space',
-      name: 'chooseSpace',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Where do you want to apply this style?`
-  String get chooseSpaceDesc {
-    return Intl.message(
-      'Where do you want to apply this style?',
-      name: 'chooseSpaceDesc',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Home`
-  String get spaceHome {
-    return Intl.message('Home', name: 'spaceHome', desc: '', args: []);
-  }
-
-  /// `Office`
-  String get spaceOffice {
-    return Intl.message('Office', name: 'spaceOffice', desc: '', args: []);
-  }
-
-  /// `Restaurant / Café`
-  String get spaceRestaurant {
-    return Intl.message(
-      'Restaurant / Café',
-      name: 'spaceRestaurant',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Store / Shop`
-  String get spaceStore {
-    return Intl.message('Store / Shop', name: 'spaceStore', desc: '', args: []);
-  }
-
-  /// `Other Space`
-  String get spaceCustom {
-    return Intl.message('Other Space', name: 'spaceCustom', desc: '', args: []);
-  }
-
-  /// `Describe your space...`
-  String get spaceCustomHint {
-    return Intl.message(
-      'Describe your space...',
-      name: 'spaceCustomHint',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Bedroom`
-  String get spaceRoom {
-    return Intl.message('Bedroom', name: 'spaceRoom', desc: '', args: []);
-  }
-
-  /// `Living Room`
-  String get spaceLiving {
-    return Intl.message('Living Room', name: 'spaceLiving', desc: '', args: []);
-  }
-
-  /// `Bathroom`
-  String get spaceBathroom {
-    return Intl.message('Bathroom', name: 'spaceBathroom', desc: '', args: []);
-  }
-
-  /// `Kitchen`
-  String get spaceKitchen {
-    return Intl.message('Kitchen', name: 'spaceKitchen', desc: '', args: []);
-  }
-
-  /// `Reception`
-  String get spaceReception {
-    return Intl.message(
-      'Reception',
-      name: 'spaceReception',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Meeting Room`
-  String get spaceMeeting {
-    return Intl.message(
-      'Meeting Room',
-      name: 'spaceMeeting',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Cafeteria`
-  String get spaceCafeteria {
-    return Intl.message(
-      'Cafeteria',
-      name: 'spaceCafeteria',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Shop Floor`
-  String get spaceShop {
-    return Intl.message('Shop Floor', name: 'spaceShop', desc: '', args: []);
-  }
-
-  /// `Storefront`
-  String get spaceStorefront {
-    return Intl.message(
-      'Storefront',
-      name: 'spaceStorefront',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Bar Area`
-  String get spaceBar {
-    return Intl.message('Bar Area', name: 'spaceBar', desc: '', args: []);
-  }
-
-  /// `Dining Room`
-  String get spaceDiningRoom {
-    return Intl.message(
-      'Dining Room',
-      name: 'spaceDiningRoom',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Generate Ideas`
-  String get generateIdeas {
-    return Intl.message(
-      'Generate Ideas',
-      name: 'generateIdeas',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Generating ideas...`
-  String get generatingIdeas {
-    return Intl.message(
-      'Generating ideas...',
-      name: 'generatingIdeas',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Inspiration for`
-  String get inspirationFor {
-    return Intl.message(
-      'Inspiration for',
-      name: 'inspirationFor',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Select a style and space to generate ideas`
-  String get noIdeasYet {
-    return Intl.message(
-      'Select a style and space to generate ideas',
-      name: 'noIdeasYet',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Forgot your password?`
-  String get forgotPassword {
-    return Intl.message(
-      'Forgot your password?',
-      name: 'forgotPassword',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Recover Password`
-  String get recoverPassword {
-    return Intl.message(
-      'Recover Password',
-      name: 'recoverPassword',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Enter your email to receive instructions`
-  String get enterYourEmail {
-    return Intl.message(
-      'Enter your email to receive instructions',
-      name: 'enterYourEmail',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Send Email`
-  String get sendEmail {
-    return Intl.message('Send Email', name: 'sendEmail', desc: '', args: []);
-  }
-
-  /// `No user found with this email`
-  String get emailNotFound {
-    return Intl.message(
-      'No user found with this email',
-      name: 'emailNotFound',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Invalid email`
-  String get invalidEmail {
-    return Intl.message(
-      'Invalid email',
-      name: 'invalidEmail',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Email sent successfully! Check your inbox or spam for the password reset instructions.`
-  String get emailSentFull {
-    return Intl.message(
-      'Email sent successfully! Check your inbox or spam for the password reset instructions.',
-      name: 'emailSentFull',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Your password has been successfully changed 🎉. You can now log in with your new password.`
-  String get passwordChangedSuccess {
-    return Intl.message(
-      'Your password has been successfully changed 🎉. You can now log in with your new password.',
-      name: 'passwordChangedSuccess',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Enter your password`
-  String get enterYourPassword {
-    return Intl.message(
-      'Enter your password',
-      name: 'enterYourPassword',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Traditional`
-  String get styleTraditional {
-    return Intl.message(
-      'Traditional',
-      name: 'styleTraditional',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Japanese`
-  String get styleJapanese {
-    return Intl.message('Japanese', name: 'styleJapanese', desc: '', args: []);
-  }
-
-  /// `Contemporary`
-  String get styleContemporary {
-    return Intl.message(
-      'Contemporary',
-      name: 'styleContemporary',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Bohemian`
-  String get styleBohemian {
-    return Intl.message('Bohemian', name: 'styleBohemian', desc: '', args: []);
-  }
-
-  /// `Farmhouse`
-  String get styleFarmhouse {
-    return Intl.message(
-      'Farmhouse',
-      name: 'styleFarmhouse',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Vintage`
-  String get styleVintage {
-    return Intl.message('Vintage', name: 'styleVintage', desc: '', args: []);
-  }
-
-  /// `Industrial`
-  String get styleIndustrial {
-    return Intl.message(
-      'Industrial',
-      name: 'styleIndustrial',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Retro`
-  String get styleRetro {
-    return Intl.message('Retro', name: 'styleRetro', desc: '', args: []);
-  }
-
-  /// `Cyberpunk`
-  String get styleCyberpunk {
-    return Intl.message(
-      'Cyberpunk',
-      name: 'styleCyberpunk',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Christmas`
-  String get styleChristmas {
-    return Intl.message(
-      'Christmas',
-      name: 'styleChristmas',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Tropical`
-  String get styleTropical {
-    return Intl.message('Tropical', name: 'styleTropical', desc: '', args: []);
-  }
-
-  /// `Brutalist`
-  String get styleBrutalist {
-    return Intl.message(
-      'Brutalist',
-      name: 'styleBrutalist',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Southwest`
-  String get styleSouthwest {
-    return Intl.message(
-      'Southwest',
-      name: 'styleSouthwest',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Baroque`
-  String get styleBaroque {
-    return Intl.message('Baroque', name: 'styleBaroque', desc: '', args: []);
-  }
-
-  /// `Futuristic`
-  String get styleFuturistic {
-    return Intl.message(
-      'Futuristic',
-      name: 'styleFuturistic',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Colonial`
-  String get styleColonial {
-    return Intl.message('Colonial', name: 'styleColonial', desc: '', args: []);
-  }
-
-  /// `Rococo`
-  String get styleRococo {
-    return Intl.message('Rococo', name: 'styleRococo', desc: '', args: []);
-  }
-
-  /// `Valentine's Day`
-  String get styleValentine {
-    return Intl.message(
-      'Valentine\'s Day',
-      name: 'styleValentine',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `My Designs`
-  String get myDesigns {
-    return Intl.message('My Designs', name: 'myDesigns', desc: '', args: []);
-  }
-
-  /// `You haven't generated any designs yet`
-  String get noDesignsYet {
-    return Intl.message(
-      'You haven\'t generated any designs yet',
-      name: 'noDesignsYet',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Saved to My Designs`
-  String get savedToDesigns {
-    return Intl.message(
-      'Saved to My Designs',
-      name: 'savedToDesigns',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Generate Design`
-  String get generateDesign {
-    return Intl.message(
-      'Generate Design',
-      name: 'generateDesign',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Generating...`
-  String get generatingDesign {
-    return Intl.message(
-      'Generating...',
-      name: 'generatingDesign',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Choose Room Type`
-  String get chooseRoomType {
-    return Intl.message(
-      'Choose Room Type',
-      name: 'chooseRoomType',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Choose Style`
-  String get chooseStyle {
-    return Intl.message(
-      'Choose Style',
-      name: 'chooseStyle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Choose Color Palette`
-  String get chooseColorPalette {
-    return Intl.message(
-      'Choose Color Palette',
-      name: 'chooseColorPalette',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add Features`
-  String get addFeatures {
-    return Intl.message(
-      'Add Features',
-      name: 'addFeatures',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Lighting & Atmosphere`
-  String get lighting {
-    return Intl.message(
-      'Lighting & Atmosphere',
-      name: 'lighting',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Architectural Elements`
-  String get architecture {
-    return Intl.message(
-      'Architectural Elements',
-      name: 'architecture',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Decoration & Details`
-  String get decoration {
-    return Intl.message(
-      'Decoration & Details',
-      name: 'decoration',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Ambient Lighting`
-  String get ambientLight {
-    return Intl.message(
-      'Ambient Lighting',
-      name: 'ambientLight',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Natural Light`
-  String get naturalLight {
-    return Intl.message(
-      'Natural Light',
-      name: 'naturalLight',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Cozy Atmosphere`
-  String get cozyAtmosphere {
-    return Intl.message(
-      'Cozy Atmosphere',
-      name: 'cozyAtmosphere',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Accent Wall`
-  String get accentWall {
-    return Intl.message('Accent Wall', name: 'accentWall', desc: '', args: []);
-  }
-
-  /// `Built-in Shelves`
-  String get builtInShelves {
-    return Intl.message(
-      'Built-in Shelves',
-      name: 'builtInShelves',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Exposed Beams`
-  String get exposedBeams {
-    return Intl.message(
-      'Exposed Beams',
-      name: 'exposedBeams',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Arches`
-  String get arches {
-    return Intl.message('Arches', name: 'arches', desc: '', args: []);
-  }
-
-  /// `Plants & Vegetation`
-  String get plants {
-    return Intl.message(
-      'Plants & Vegetation',
-      name: 'plants',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Mirrors`
-  String get mirrors {
-    return Intl.message('Mirrors', name: 'mirrors', desc: '', args: []);
-  }
-
-  /// `Textured Walls`
-  String get texturedWalls {
-    return Intl.message(
-      'Textured Walls',
-      name: 'texturedWalls',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Area Rugs`
-  String get rugs {
-    return Intl.message('Area Rugs', name: 'rugs', desc: '', args: []);
-  }
-
-  /// `Neutral`
-  String get colorPaletteNeutral {
-    return Intl.message(
-      'Neutral',
-      name: 'colorPaletteNeutral',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Warm`
-  String get colorPaletteWarm {
-    return Intl.message('Warm', name: 'colorPaletteWarm', desc: '', args: []);
-  }
-
-  /// `Cool`
-  String get colorPaletteCool {
-    return Intl.message('Cool', name: 'colorPaletteCool', desc: '', args: []);
-  }
-
-  /// `Earthy`
-  String get colorPaletteEarthy {
-    return Intl.message(
-      'Earthy',
-      name: 'colorPaletteEarthy',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Monochrome`
-  String get colorPaletteMonochrome {
-    return Intl.message(
-      'Monochrome',
-      name: 'colorPaletteMonochrome',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Vibrant`
-  String get colorPaletteVibrant {
-    return Intl.message(
-      'Vibrant',
-      name: 'colorPaletteVibrant',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Required`
-  String get required {
-    return Intl.message('Required', name: 'required', desc: '', args: []);
-  }
-
-  /// `Give your project a name`
-  String get projectNameTitle {
-    return Intl.message(
-      'Give your project a name',
-      name: 'projectNameTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Eg: My primary bedroom...`
-  String get projectNameHint {
-    return Intl.message(
-      'Eg: My primary bedroom...',
-      name: 'projectNameHint',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Choose the room type`
-  String get roomTypeTitle {
-    return Intl.message(
-      'Choose the room type',
-      name: 'roomTypeTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Choose the style`
-  String get styleTitle {
-    return Intl.message(
-      'Choose the style',
-      name: 'styleTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Choose the color palette`
-  String get colorPaletteTitle {
-    return Intl.message(
-      'Choose the color palette',
-      name: 'colorPaletteTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `What do you want to change or add?`
-  String get promptTitle {
-    return Intl.message(
-      'What do you want to change or add?',
-      name: 'promptTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Eg: Add a wooden desk, plants and warm light...`
-  String get promptHint {
-    return Intl.message(
-      'Eg: Add a wooden desk, plants and warm light...',
-      name: 'promptHint',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add furniture and objects`
-  String get addFurnitureTitle {
-    return Intl.message(
-      'Add furniture and objects',
-      name: 'addFurnitureTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Choose up to 5 items to suggest in your space`
-  String get addFurnitureSubtitle {
-    return Intl.message(
-      'Choose up to 5 items to suggest in your space',
-      name: 'addFurnitureSubtitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Camera and photo`
-  String get cameraPhotoTitle {
-    return Intl.message(
-      'Camera and photo',
-      name: 'cameraPhotoTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Keep details`
-  String get cameraOptionDetails {
-    return Intl.message(
-      'Keep details',
-      name: 'cameraOptionDetails',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Keep existing elements`
-  String get cameraOptionDetailsDesc {
-    return Intl.message(
-      'Keep existing elements',
-      name: 'cameraOptionDetailsDesc',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Same angle`
-  String get cameraOptionSameAngle {
-    return Intl.message(
-      'Same angle',
-      name: 'cameraOptionSameAngle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Keep the original perspective`
-  String get cameraOptionSameAngleDesc {
-    return Intl.message(
-      'Keep the original perspective',
-      name: 'cameraOptionSameAngleDesc',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Change angle`
-  String get cameraOptionChangeAngle {
-    return Intl.message(
-      'Change angle',
-      name: 'cameraOptionChangeAngle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `AI chooses a better angle`
-  String get cameraOptionChangeAngleDesc {
-    return Intl.message(
-      'AI chooses a better angle',
-      name: 'cameraOptionChangeAngleDesc',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Project name is required`
-  String get projectNameRequiredError {
-    return Intl.message(
-      'Project name is required',
-      name: 'projectNameRequiredError',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `You must select a room type`
-  String get roomTypeRequiredError {
-    return Intl.message(
-      'You must select a room type',
-      name: 'roomTypeRequiredError',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `You must select a color palette`
-  String get colorPaletteRequiredError {
-    return Intl.message(
-      'You must select a color palette',
-      name: 'colorPaletteRequiredError',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Describe what you want to change or add`
-  String get promptRequiredError {
-    return Intl.message(
-      'Describe what you want to change or add',
-      name: 'promptRequiredError',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `You must select a style`
-  String get styleRequiredError {
-    return Intl.message(
-      'You must select a style',
-      name: 'styleRequiredError',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `User is not authenticated`
-  String get userNotAuthenticated {
-    return Intl.message(
-      'User is not authenticated',
-      name: 'userNotAuthenticated',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Microphone permission denied`
-  String get microphonePermissionDenied {
-    return Intl.message(
-      'Microphone permission denied',
-      name: 'microphonePermissionDenied',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Speech recognition is unavailable`
-  String get speechUnavailable {
-    return Intl.message(
-      'Speech recognition is unavailable',
-      name: 'speechUnavailable',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Speech recognition status`
-  String get speechRecognitionStatus {
-    return Intl.message(
-      'Speech recognition status',
-      name: 'speechRecognitionStatus',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Speech recognition error`
-  String get speechRecognitionError {
-    return Intl.message(
-      'Speech recognition error',
-      name: 'speechRecognitionError',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Listening`
-  String get listening {
-    return Intl.message('Listening', name: 'listening', desc: '', args: []);
-  }
-
-  /// `Could not upload the original image`
-  String get errorUploadingOriginalImage {
-    return Intl.message(
-      'Could not upload the original image',
-      name: 'errorUploadingOriginalImage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Could not save the project`
-  String get errorSavingProject {
-    return Intl.message(
-      'Could not save the project',
-      name: 'errorSavingProject',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Error generating idea`
-  String get errorGeneratingIdea {
-    return Intl.message(
-      'Error generating idea',
-      name: 'errorGeneratingIdea',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Could not generate the project. Please try again.`
-  String get generateProjectError {
-    return Intl.message(
-      'Could not generate the project. Please try again.',
-      name: 'generateProjectError',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Optional`
-  String get optional {
-    return Intl.message('Optional', name: 'optional', desc: '', args: []);
-  }
-
-  /// `OK`
-  String get ok {
-    return Intl.message('OK', name: 'ok', desc: '', args: []);
-  }
-
-  /// `This email is already registered`
-  String get emailAlreadyExists {
-    return Intl.message(
-      'This email is already registered',
-      name: 'emailAlreadyExists',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Password is too weak`
-  String get passwordTooWeak {
-    return Intl.message(
-      'Password is too weak',
-      name: 'passwordTooWeak',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Registration error`
-  String get registrationError {
-    return Intl.message(
-      'Registration error',
-      name: 'registrationError',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Failed to create user profile`
-  String get profileCreationFailed {
-    return Intl.message(
-      'Failed to create user profile',
-      name: 'profileCreationFailed',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Creating account...`
-  String get creatingAccount {
-    return Intl.message(
-      'Creating account...',
-      name: 'creatingAccount',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Login`
-  String get login_tab {
-    return Intl.message('Login', name: 'login_tab', desc: '', args: []);
-  }
-
-  /// `Signup`
-  String get signup_tab {
-    return Intl.message('Signup', name: 'signup_tab', desc: '', args: []);
-  }
-
-  /// `Full Name`
-  String get full_name_label {
-    return Intl.message(
-      'Full Name',
-      name: 'full_name_label',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Forgot Password?`
-  String get forgot_password_link {
-    return Intl.message(
-      'Forgot Password?',
-      name: 'forgot_password_link',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `By creating an account you are accepting our `
-  String get terms_signup_intro {
-    return Intl.message(
-      'By creating an account you are accepting our ',
-      name: 'terms_signup_intro',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `New Password`
-  String get newPassword {
-    return Intl.message(
-      'New Password',
-      name: 'newPassword',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Enter your new password`
-  String get enterNewPassword {
-    return Intl.message(
-      'Enter your new password',
-      name: 'enterNewPassword',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Update Password`
-  String get updatePassword {
-    return Intl.message(
-      'Update Password',
-      name: 'updatePassword',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Please enter both passwords`
-  String get passwordRequired {
-    return Intl.message(
-      'Please enter both passwords',
-      name: 'passwordRequired',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Passwords do not match`
-  String get passwordsDoNotMatch {
-    return Intl.message(
-      'Passwords do not match',
-      name: 'passwordsDoNotMatch',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Password must be at least 6 characters`
-  String get passwordTooShort {
-    return Intl.message(
-      'Password must be at least 6 characters',
-      name: 'passwordTooShort',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Password updated successfully`
-  String get passwordUpdated {
-    return Intl.message(
-      'Password updated successfully',
-      name: 'passwordUpdated',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Error updating password`
-  String get errorUpdatingPassword {
-    return Intl.message(
-      'Error updating password',
-      name: 'errorUpdatingPassword',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Remember me`
-  String get remember_me {
-    return Intl.message('Remember me', name: 'remember_me', desc: '', args: []);
-  }
-
-  /// `New`
-  String get projects_new {
-    return Intl.message('New', name: 'projects_new', desc: '', args: []);
-  }
-
-  /// `You don't have any projects yet.`
-  String get projects_empty {
-    return Intl.message(
-      'You don\'t have any projects yet.',
-      name: 'projects_empty',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Untitled`
-  String get projects_untitled {
-    return Intl.message(
-      'Untitled',
-      name: 'projects_untitled',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `{count} styles`
-  String projects_styles_count(Object count) {
-    return Intl.message(
-      '$count styles',
-      name: 'projects_styles_count',
-      desc: '',
-      args: [count],
-    );
-  }
-
-  /// `Draft`
-  String get projects_status_draft {
-    return Intl.message(
-      'Draft',
-      name: 'projects_status_draft',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Completed`
-  String get projects_status_completed {
-    return Intl.message(
-      'Completed',
-      name: 'projects_status_completed',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `In progress`
-  String get projects_status_in_progress {
-    return Intl.message(
-      'In progress',
-      name: 'projects_status_in_progress',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Something went wrong`
-  String get projects_error_generic {
-    return Intl.message(
-      'Something went wrong',
-      name: 'projects_error_generic',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `You don't have any favorite projects yet`
-  String get favorites_empty {
-    return Intl.message(
-      'You don\'t have any favorite projects yet',
-      name: 'favorites_empty',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No saved designs`
-  String get projects_empty_title {
-    return Intl.message(
-      'No saved designs',
-      name: 'projects_empty_title',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Your generated room designs will appear here. Start creating to see your transformations!`
-  String get projects_empty_subtitle {
-    return Intl.message(
-      'Your generated room designs will appear here. Start creating to see your transformations!',
-      name: 'projects_empty_subtitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Upload a photo of the room`
-  String get projects_empty_step1 {
-    return Intl.message(
-      'Upload a photo of the room',
-      name: 'projects_empty_step1',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Choose your style`
-  String get projects_empty_step2 {
-    return Intl.message(
-      'Choose your style',
-      name: 'projects_empty_step2',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Generate and save`
-  String get projects_empty_step3 {
-    return Intl.message(
-      'Generate and save',
-      name: 'projects_empty_step3',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `+ Create your first design`
-  String get projects_empty_button {
-    return Intl.message(
-      '+ Create your first design',
-      name: 'projects_empty_button',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Select an option`
-  String get selectOption {
-    return Intl.message(
-      'Select an option',
-      name: 'selectOption',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Take a photo`
-  String get takePhoto {
-    return Intl.message('Take a photo', name: 'takePhoto', desc: '', args: []);
-  }
-
-  /// `Upload image`
-  String get uploadImage {
-    return Intl.message(
-      'Upload image',
-      name: 'uploadImage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Error`
-  String get errorImagePickerLabel {
-    return Intl.message(
-      'Error',
-      name: 'errorImagePickerLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Room`
-  String get project_detail_default_room {
-    return Intl.message(
-      'Room',
-      name: 'project_detail_default_room',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Palette`
-  String get project_detail_default_palette {
-    return Intl.message(
-      'Palette',
-      name: 'project_detail_default_palette',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Object`
-  String get project_detail_default_feature {
-    return Intl.message(
-      'Object',
-      name: 'project_detail_default_feature',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Not available`
-  String get project_detail_date_unavailable {
-    return Intl.message(
-      'Not available',
-      name: 'project_detail_date_unavailable',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `The project is now private`
-  String get project_detail_now_private {
-    return Intl.message(
-      'The project is now private',
-      name: 'project_detail_now_private',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `The project is now public`
-  String get project_detail_now_public {
-    return Intl.message(
-      'The project is now public',
-      name: 'project_detail_now_public',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Error updating status: {error}`
-  String project_detail_error_update(String error) {
-    return Intl.message(
-      'Error updating status: $error',
-      name: 'project_detail_error_update',
-      desc: '',
-      args: [error],
-    );
-  }
-
-  /// `Status`
-  String get project_detail_section_status {
-    return Intl.message(
-      'Status',
-      name: 'project_detail_section_status',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Room type`
-  String get project_detail_section_room_type {
-    return Intl.message(
-      'Room type',
-      name: 'project_detail_section_room_type',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Styles`
-  String get project_detail_section_styles {
-    return Intl.message(
-      'Styles',
-      name: 'project_detail_section_styles',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Color palette`
-  String get project_detail_section_palette {
-    return Intl.message(
-      'Color palette',
-      name: 'project_detail_section_palette',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Furniture & objects`
-  String get project_detail_section_features {
-    return Intl.message(
-      'Furniture & objects',
-      name: 'project_detail_section_features',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `What do you want to change or add?`
-  String get project_detail_section_prompt {
-    return Intl.message(
-      'What do you want to change or add?',
-      name: 'project_detail_section_prompt',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Timestamps`
-  String get project_detail_section_times {
-    return Intl.message(
-      'Timestamps',
-      name: 'project_detail_section_times',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Public`
-  String get project_detail_status_public {
-    return Intl.message(
-      'Public',
-      name: 'project_detail_status_public',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Private`
-  String get project_detail_status_private {
-    return Intl.message(
-      'Private',
-      name: 'project_detail_status_private',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Created`
-  String get project_detail_created_at {
-    return Intl.message(
-      'Created',
-      name: 'project_detail_created_at',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Updated`
-  String get project_detail_updated_at {
-    return Intl.message(
-      'Updated',
-      name: 'project_detail_updated_at',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Publish project`
-  String get project_detail_btn_publish {
-    return Intl.message(
-      'Publish project',
-      name: 'project_detail_btn_publish',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Make private`
-  String get project_detail_btn_make_private {
-    return Intl.message(
-      'Make private',
-      name: 'project_detail_btn_make_private',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Original`
-  String get project_detail_toggle_original {
-    return Intl.message(
-      'Original',
-      name: 'project_detail_toggle_original',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Generated`
-  String get project_detail_toggle_generated {
-    return Intl.message(
-      'Generated',
-      name: 'project_detail_toggle_generated',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Project updated successfully`
-  String get project_detail_updated_success {
-    return Intl.message(
-      'Project updated successfully',
-      name: 'project_detail_updated_success',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Error updating project: {error}`
-  String project_detail_error_update_edit(String error) {
-    return Intl.message(
-      'Error updating project: $error',
-      name: 'project_detail_error_update_edit',
-      desc: '',
-      args: [error],
-    );
-  }
-
-  /// `Edit Project`
-  String get project_detail_edit_title {
-    return Intl.message(
-      'Edit Project',
-      name: 'project_detail_edit_title',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Project name`
-  String get project_detail_edit_name_label {
-    return Intl.message(
-      'Project name',
-      name: 'project_detail_edit_name_label',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Enter project name`
-  String get project_detail_edit_name_hint {
-    return Intl.message(
-      'Enter project name',
-      name: 'project_detail_edit_name_hint',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Project name is required`
-  String get project_detail_name_required {
-    return Intl.message(
-      'Project name is required',
-      name: 'project_detail_name_required',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Prompt`
-  String get project_detail_edit_prompt_label {
-    return Intl.message(
-      'Prompt',
-      name: 'project_detail_edit_prompt_label',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Describe what to change or add...`
-  String get project_detail_edit_prompt_hint {
-    return Intl.message(
-      'Describe what to change or add...',
-      name: 'project_detail_edit_prompt_hint',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Regenerating...`
-  String get project_detail_btn_regenerating {
-    return Intl.message(
-      'Regenerating...',
-      name: 'project_detail_btn_regenerating',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Saving...`
-  String get project_detail_btn_saving {
-    return Intl.message(
-      'Saving...',
-      name: 'project_detail_btn_saving',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Save and regenerate`
-  String get project_detail_btn_save_and_regenerate {
-    return Intl.message(
-      'Save and regenerate',
-      name: 'project_detail_btn_save_and_regenerate',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Delete project`
-  String get project_detail_delete_confirm_title {
-    return Intl.message(
-      'Delete project',
-      name: 'project_detail_delete_confirm_title',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Are you sure you want to delete this project? This cannot be undone.`
-  String get project_detail_delete_confirm_message {
-    return Intl.message(
-      'Are you sure you want to delete this project? This cannot be undone.',
-      name: 'project_detail_delete_confirm_message',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Cancel`
-  String get project_detail_delete_confirm_cancel {
-    return Intl.message(
-      'Cancel',
-      name: 'project_detail_delete_confirm_cancel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Delete`
-  String get project_detail_delete_confirm_delete {
-    return Intl.message(
-      'Delete',
-      name: 'project_detail_delete_confirm_delete',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Project deleted successfully`
-  String get project_detail_deleted_success {
-    return Intl.message(
-      'Project deleted successfully',
-      name: 'project_detail_deleted_success',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Error deleting project: {error}`
-  String project_detail_error_delete(String error) {
-    return Intl.message(
-      'Error deleting project: $error',
-      name: 'project_detail_error_delete',
-      desc: '',
-      args: [error],
-    );
-  }
-
-  /// `Edit project`
-  String get project_detail_btn_edit {
-    return Intl.message(
-      'Edit project',
-      name: 'project_detail_btn_edit',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Delete project`
-  String get project_detail_btn_delete {
-    return Intl.message(
-      'Delete project',
-      name: 'project_detail_btn_delete',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Public`
-  String get projects_status_public {
-    return Intl.message(
-      'Public',
-      name: 'projects_status_public',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Private`
-  String get projects_status_private {
-    return Intl.message(
-      'Private',
-      name: 'projects_status_private',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Publications`
-  String get publications_title {
-    return Intl.message(
-      'Publications',
-      name: 'publications_title',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Favorites`
-  String get publications_filter_favorites {
-    return Intl.message(
-      'Favorites',
-      name: 'publications_filter_favorites',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `You have no favorites yet`
-  String get publications_empty_favorites {
-    return Intl.message(
-      'You have no favorites yet',
-      name: 'publications_empty_favorites',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No publications yet`
-  String get publications_empty_all {
-    return Intl.message(
-      'No publications yet',
-      name: 'publications_empty_all',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `User`
-  String get publications_unknown_author {
-    return Intl.message(
-      'User',
-      name: 'publications_unknown_author',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Error selecting image: {error}`
-  String home_error_image_pick(String error) {
-    return Intl.message(
-      'Error selecting image: $error',
-      name: 'home_error_image_pick',
-      desc: '',
-      args: [error],
-    );
-  }
-
-  /// `Overview`
-  String get home_section_stats {
-    return Intl.message(
-      'Overview',
-      name: 'home_section_stats',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `+{count} this month`
-  String home_stat_this_month(int count) {
-    return Intl.message(
-      '+$count this month',
-      name: 'home_stat_this_month',
-      desc: '',
-      args: [count],
-    );
-  }
-
-  /// `{count} new`
-  String home_stat_new(int count) {
-    return Intl.message(
-      '$count new',
-      name: 'home_stat_new',
-      desc: '',
-      args: [count],
-    );
-  }
-
-  /// `Public`
-  String get home_stat_public_label {
-    return Intl.message(
-      'Public',
-      name: 'home_stat_public_label',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Published`
-  String get home_stat_published {
-    return Intl.message(
-      'Published',
-      name: 'home_stat_published',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `{count} min ago`
-  String home_time_minutes(int count) {
-    return Intl.message(
-      '$count min ago',
-      name: 'home_time_minutes',
-      desc: '',
-      args: [count],
-    );
-  }
-
-  /// `{count} h ago`
-  String home_time_hours(int count) {
-    return Intl.message(
-      '$count h ago',
-      name: 'home_time_hours',
-      desc: '',
-      args: [count],
-    );
-  }
-
-  /// `Yesterday`
-  String get home_time_yesterday {
-    return Intl.message(
-      'Yesterday',
-      name: 'home_time_yesterday',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `{count} days ago`
-  String home_time_days(int count) {
-    return Intl.message(
-      '$count days ago',
-      name: 'home_time_days',
-      desc: '',
-      args: [count],
-    );
-  }
-
-  /// `You have no projects yet.\nStart by taking a photo of your space.`
-  String get home_empty_projects {
-    return Intl.message(
-      'You have no projects yet.\nStart by taking a photo of your space.',
-      name: 'home_empty_projects',
-      desc: '',
-      args: [],
-    );
-  }
+    return Localizations.of<S>(context, S)!;
+  }
+
+  static const LocalizationsDelegate<S> delegate = _SDelegate();
+
+  /// A list of this localizations delegate along with the default localizations
+  /// delegates.
+  ///
+  /// Returns a list of localizations delegates containing this delegate along with
+  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
+  /// and GlobalWidgetsLocalizations.delegate.
+  ///
+  /// Additional delegates can be added by appending to this list in
+  /// MaterialApp. This list does not have to be used at all if a custom list
+  /// of delegates is preferred or required.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
+
+  /// A list of this localizations delegate's supported locales.
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('es'),
+  ];
+
+  /// No description provided for @slide_me.
+  ///
+  /// In en, this message translates to:
+  /// **'Slide to start'**
+  String get slide_me;
+
+  /// No description provided for @welcome_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome'**
+  String get welcome_title;
+
+  /// No description provided for @welcome_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome! Get inspired and design your ideal space in 3D'**
+  String get welcome_subtitle;
+
+  /// No description provided for @welcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome! Get inspired and design your ideal space in 3D'**
+  String get welcome;
+
+  /// No description provided for @login.
+  ///
+  /// In en, this message translates to:
+  /// **'Log In'**
+  String get login;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @acceptTermsError.
+  ///
+  /// In en, this message translates to:
+  /// **'You must accept the terms to continue'**
+  String get acceptTermsError;
+
+  /// No description provided for @accountCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Account created successfully'**
+  String get accountCreated;
+
+  /// No description provided for @registerError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error while registering'**
+  String get registerError;
+
+  /// No description provided for @step1of1.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 1 of 1'**
+  String get step1of1;
+
+  /// No description provided for @createAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get createAccount;
+
+  /// No description provided for @joinRyzeAI.
+  ///
+  /// In en, this message translates to:
+  /// **'Join RyzeAI and start decorating'**
+  String get joinRyzeAI;
+
+  /// No description provided for @firstName.
+  ///
+  /// In en, this message translates to:
+  /// **'First Name'**
+  String get firstName;
+
+  /// No description provided for @enterFirstName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your first name'**
+  String get enterFirstName;
+
+  /// No description provided for @lastName.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Name'**
+  String get lastName;
+
+  /// No description provided for @enterLastName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your last name'**
+  String get enterLastName;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @enterEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email'**
+  String get enterEmail;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @enterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a secure password'**
+  String get enterPassword;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPassword;
+
+  /// No description provided for @confirmPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your password'**
+  String get confirmPasswordHint;
+
+  /// No description provided for @termsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'By signing up you accept the '**
+  String get termsIntro;
+
+  /// No description provided for @termsOfService.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get termsOfService;
+
+  /// No description provided for @andThe.
+  ///
+  /// In en, this message translates to:
+  /// **' and the '**
+  String get andThe;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @createAccountButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get createAccountButton;
+
+  /// No description provided for @welcomeBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back!'**
+  String get welcomeBack;
+
+  /// No description provided for @helloUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello'**
+  String get helloUser;
+
+  /// No description provided for @decorate.
+  ///
+  /// In en, this message translates to:
+  /// **'Decorate with AI'**
+  String get decorate;
+
+  /// No description provided for @decorateDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo and visualize furniture in 3D'**
+  String get decorateDesc;
+
+  /// No description provided for @openCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Open AI Camera'**
+  String get openCamera;
+
+  /// No description provided for @recentProjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Projects'**
+  String get recentProjects;
+
+  /// No description provided for @exploreStyles.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore Styles'**
+  String get exploreStyles;
+
+  /// No description provided for @projects.
+  ///
+  /// In en, this message translates to:
+  /// **'Projects'**
+  String get projects;
+
+  /// No description provided for @favorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorites;
+
+  /// No description provided for @profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile;
+
+  /// No description provided for @home.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
+  /// No description provided for @publications.
+  ///
+  /// In en, this message translates to:
+  /// **'Publications'**
+  String get publications;
+
+  /// No description provided for @newBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get newBadge;
+
+  /// No description provided for @decorateDesc2.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo of your space and visualize furniture in 3D instantly'**
+  String get decorateDesc2;
+
+  /// No description provided for @modifiedAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'Modified'**
+  String get modifiedAgo;
+
+  /// No description provided for @hoursAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'2h ago'**
+  String get hoursAgo;
+
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'yesterday'**
+  String get yesterday;
+
+  /// No description provided for @livingRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Living Room'**
+  String get livingRoom;
+
+  /// No description provided for @bedroom.
+  ///
+  /// In en, this message translates to:
+  /// **'Bedroom'**
+  String get bedroom;
+
+  /// No description provided for @modern.
+  ///
+  /// In en, this message translates to:
+  /// **'Modern'**
+  String get modern;
+
+  /// No description provided for @natural.
+  ///
+  /// In en, this message translates to:
+  /// **'Natural'**
+  String get natural;
+
+  /// No description provided for @minimal.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimal'**
+  String get minimal;
+
+  /// No description provided for @colorful.
+  ///
+  /// In en, this message translates to:
+  /// **'Colorful'**
+  String get colorful;
+
+  /// No description provided for @thisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'+1 this month'**
+  String get thisMonth;
+
+  /// No description provided for @newItems.
+  ///
+  /// In en, this message translates to:
+  /// **'5 new'**
+  String get newItems;
+
+  /// No description provided for @loginError.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect email or password'**
+  String get loginError;
+
+  /// No description provided for @emptyFieldsError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter both email and password'**
+  String get emptyFieldsError;
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loading;
+
+  /// No description provided for @loginSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back!'**
+  String get loginSuccess;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get editProfile;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get privacy;
+
+  /// No description provided for @helpSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Support'**
+  String get helpSupport;
+
+  /// No description provided for @logOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Out'**
+  String get logOut;
+
+  /// No description provided for @homeUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Home User'**
+  String get homeUser;
+
+  /// No description provided for @rooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Rooms'**
+  String get rooms;
+
+  /// No description provided for @darkMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get darkMode;
+
+  /// No description provided for @lightMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Light Mode'**
+  String get lightMode;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChanges;
+
+  /// No description provided for @privacyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get privacyTitle;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePassword;
+
+  /// No description provided for @changePasswordDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'We will send you an email to reset your password'**
+  String get changePasswordDesc;
+
+  /// No description provided for @sendResetEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Reset Email'**
+  String get sendResetEmail;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
+  /// No description provided for @deleteAccountDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'This action is permanent and cannot be undone'**
+  String get deleteAccountDesc;
+
+  /// No description provided for @deleteAccountConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete your account?'**
+  String get deleteAccountConfirm;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @emailSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Email sent! Check your inbox'**
+  String get emailSent;
+
+  /// No description provided for @accountDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deleted successfully'**
+  String get accountDeleted;
+
+  /// No description provided for @newEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'New Email'**
+  String get newEmail;
+
+  /// No description provided for @enterNewEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your new email'**
+  String get enterNewEmail;
+
+  /// No description provided for @currentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Password'**
+  String get currentPassword;
+
+  /// No description provided for @enterCurrentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your current password'**
+  String get enterCurrentPassword;
+
+  /// No description provided for @emailChangeInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'A verification email will be sent to the new address'**
+  String get emailChangeInfo;
+
+  /// No description provided for @emailChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification email sent, please check your inbox'**
+  String get emailChanged;
+
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsTitle;
+
+  /// No description provided for @projectNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Project Notifications'**
+  String get projectNotifications;
+
+  /// No description provided for @projectNotificationsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Updates about your decoration projects'**
+  String get projectNotificationsDesc;
+
+  /// No description provided for @appUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'App Updates'**
+  String get appUpdates;
+
+  /// No description provided for @appUpdatesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'New features and improvements'**
+  String get appUpdatesDesc;
+
+  /// No description provided for @notificationsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences saved'**
+  String get notificationsSaved;
+
+  /// No description provided for @helpSupportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Support'**
+  String get helpSupportTitle;
+
+  /// No description provided for @faq.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequently Asked Questions'**
+  String get faq;
+
+  /// No description provided for @termsAndConditions.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms & Conditions'**
+  String get termsAndConditions;
+
+  /// No description provided for @faqQ1.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I create a project?'**
+  String get faqQ1;
+
+  /// No description provided for @faqA1.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to the Projects tab and tap the New button to start a new decoration project.'**
+  String get faqA1;
+
+  /// No description provided for @faqQ2.
+  ///
+  /// In en, this message translates to:
+  /// **'How does the AI camera work?'**
+  String get faqQ2;
+
+  /// No description provided for @faqA2.
+  ///
+  /// In en, this message translates to:
+  /// **'Point your camera at any space and our AI will detect objects and suggest furniture in 3D.'**
+  String get faqA2;
+
+  /// No description provided for @faqQ3.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I change my email?'**
+  String get faqQ3;
+
+  /// No description provided for @faqA3.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, go to Profile → Edit Profile and expand the email section to change it.'**
+  String get faqA3;
+
+  /// No description provided for @faqQ4.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I delete my account?'**
+  String get faqQ4;
+
+  /// No description provided for @faqA4.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Profile → Privacy → Delete Account. This action is permanent.'**
+  String get faqA4;
+
+  /// No description provided for @termsContent.
+  ///
+  /// In en, this message translates to:
+  /// **'By using RyzeAI you agree to use the app responsibly. We are not responsible for decoration decisions made based on AI suggestions. All content is for inspiration purposes only.'**
+  String get termsContent;
+
+  /// No description provided for @privacyContent.
+  ///
+  /// In en, this message translates to:
+  /// **'We collect your name, email and usage data to improve your experience. We never sell your data to third parties. You can delete your account and all associated data at any time.'**
+  String get privacyContent;
+
+  /// No description provided for @welcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to RyzeAI! 🎉'**
+  String get welcomeTitle;
+
+  /// No description provided for @welcomeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us your style so we can personalize your experience'**
+  String get welcomeSubtitle;
+
+  /// No description provided for @selectStyles.
+  ///
+  /// In en, this message translates to:
+  /// **'What styles do you like?'**
+  String get selectStyles;
+
+  /// No description provided for @selectStylesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all that apply'**
+  String get selectStylesHint;
+
+  /// No description provided for @styleModern.
+  ///
+  /// In en, this message translates to:
+  /// **'Modern'**
+  String get styleModern;
+
+  /// No description provided for @styleNatural.
+  ///
+  /// In en, this message translates to:
+  /// **'Natural'**
+  String get styleNatural;
+
+  /// No description provided for @styleMinimal.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimal'**
+  String get styleMinimal;
+
+  /// No description provided for @styleColorful.
+  ///
+  /// In en, this message translates to:
+  /// **'Colorful'**
+  String get styleColorful;
+
+  /// No description provided for @styleRustic.
+  ///
+  /// In en, this message translates to:
+  /// **'Rustic'**
+  String get styleRustic;
+
+  /// No description provided for @styleScandinavian.
+  ///
+  /// In en, this message translates to:
+  /// **'Scandinavian'**
+  String get styleScandinavian;
+
+  /// No description provided for @continueButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueButton;
+
+  /// No description provided for @myStyles.
+  ///
+  /// In en, this message translates to:
+  /// **'My Styles'**
+  String get myStyles;
+
+  /// No description provided for @noStylesSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t selected any styles yet'**
+  String get noStylesSelected;
+
+  /// No description provided for @acceptAndClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept & Close'**
+  String get acceptAndClose;
+
+  /// No description provided for @chooseSpace.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a Space'**
+  String get chooseSpace;
+
+  /// No description provided for @chooseSpaceDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Where do you want to apply this style?'**
+  String get chooseSpaceDesc;
+
+  /// No description provided for @spaceHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get spaceHome;
+
+  /// No description provided for @spaceOffice.
+  ///
+  /// In en, this message translates to:
+  /// **'Office'**
+  String get spaceOffice;
+
+  /// No description provided for @spaceRestaurant.
+  ///
+  /// In en, this message translates to:
+  /// **'Restaurant / Café'**
+  String get spaceRestaurant;
+
+  /// No description provided for @spaceStore.
+  ///
+  /// In en, this message translates to:
+  /// **'Store / Shop'**
+  String get spaceStore;
+
+  /// No description provided for @spaceCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Other Space'**
+  String get spaceCustom;
+
+  /// No description provided for @spaceCustomHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe your space...'**
+  String get spaceCustomHint;
+
+  /// No description provided for @spaceRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Bedroom'**
+  String get spaceRoom;
+
+  /// No description provided for @spaceLiving.
+  ///
+  /// In en, this message translates to:
+  /// **'Living Room'**
+  String get spaceLiving;
+
+  /// No description provided for @spaceBathroom.
+  ///
+  /// In en, this message translates to:
+  /// **'Bathroom'**
+  String get spaceBathroom;
+
+  /// No description provided for @spaceKitchen.
+  ///
+  /// In en, this message translates to:
+  /// **'Kitchen'**
+  String get spaceKitchen;
+
+  /// No description provided for @spaceReception.
+  ///
+  /// In en, this message translates to:
+  /// **'Reception'**
+  String get spaceReception;
+
+  /// No description provided for @spaceMeeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Meeting Room'**
+  String get spaceMeeting;
+
+  /// No description provided for @spaceCafeteria.
+  ///
+  /// In en, this message translates to:
+  /// **'Cafeteria'**
+  String get spaceCafeteria;
+
+  /// No description provided for @spaceShop.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop Floor'**
+  String get spaceShop;
+
+  /// No description provided for @spaceStorefront.
+  ///
+  /// In en, this message translates to:
+  /// **'Storefront'**
+  String get spaceStorefront;
+
+  /// No description provided for @spaceBar.
+  ///
+  /// In en, this message translates to:
+  /// **'Bar Area'**
+  String get spaceBar;
+
+  /// No description provided for @spaceDiningRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Dining Room'**
+  String get spaceDiningRoom;
+
+  /// No description provided for @generateIdeas.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate Ideas'**
+  String get generateIdeas;
+
+  /// No description provided for @generatingIdeas.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating ideas...'**
+  String get generatingIdeas;
+
+  /// No description provided for @inspirationFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Inspiration for'**
+  String get inspirationFor;
+
+  /// No description provided for @noIdeasYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a style and space to generate ideas'**
+  String get noIdeasYet;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot your password?'**
+  String get forgotPassword;
+
+  /// No description provided for @recoverPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Recover Password'**
+  String get recoverPassword;
+
+  /// No description provided for @enterYourEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email to receive instructions'**
+  String get enterYourEmail;
+
+  /// No description provided for @sendEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Email'**
+  String get sendEmail;
+
+  /// No description provided for @emailNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No user found with this email'**
+  String get emailNotFound;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email'**
+  String get invalidEmail;
+
+  /// No description provided for @emailSentFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Email sent successfully! Check your inbox or spam for the password reset instructions.'**
+  String get emailSentFull;
+
+  /// No description provided for @passwordChangedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Your password has been successfully changed 🎉. You can now log in with your new password.'**
+  String get passwordChangedSuccess;
+
+  /// No description provided for @enterYourPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password'**
+  String get enterYourPassword;
+
+  /// No description provided for @styleTraditional.
+  ///
+  /// In en, this message translates to:
+  /// **'Traditional'**
+  String get styleTraditional;
+
+  /// No description provided for @styleJapanese.
+  ///
+  /// In en, this message translates to:
+  /// **'Japanese'**
+  String get styleJapanese;
+
+  /// No description provided for @styleContemporary.
+  ///
+  /// In en, this message translates to:
+  /// **'Contemporary'**
+  String get styleContemporary;
+
+  /// No description provided for @styleBohemian.
+  ///
+  /// In en, this message translates to:
+  /// **'Bohemian'**
+  String get styleBohemian;
+
+  /// No description provided for @styleFarmhouse.
+  ///
+  /// In en, this message translates to:
+  /// **'Farmhouse'**
+  String get styleFarmhouse;
+
+  /// No description provided for @styleVintage.
+  ///
+  /// In en, this message translates to:
+  /// **'Vintage'**
+  String get styleVintage;
+
+  /// No description provided for @styleIndustrial.
+  ///
+  /// In en, this message translates to:
+  /// **'Industrial'**
+  String get styleIndustrial;
+
+  /// No description provided for @styleRetro.
+  ///
+  /// In en, this message translates to:
+  /// **'Retro'**
+  String get styleRetro;
+
+  /// No description provided for @styleCyberpunk.
+  ///
+  /// In en, this message translates to:
+  /// **'Cyberpunk'**
+  String get styleCyberpunk;
+
+  /// No description provided for @styleChristmas.
+  ///
+  /// In en, this message translates to:
+  /// **'Christmas'**
+  String get styleChristmas;
+
+  /// No description provided for @styleTropical.
+  ///
+  /// In en, this message translates to:
+  /// **'Tropical'**
+  String get styleTropical;
+
+  /// No description provided for @styleBrutalist.
+  ///
+  /// In en, this message translates to:
+  /// **'Brutalist'**
+  String get styleBrutalist;
+
+  /// No description provided for @styleSouthwest.
+  ///
+  /// In en, this message translates to:
+  /// **'Southwest'**
+  String get styleSouthwest;
+
+  /// No description provided for @styleBaroque.
+  ///
+  /// In en, this message translates to:
+  /// **'Baroque'**
+  String get styleBaroque;
+
+  /// No description provided for @styleFuturistic.
+  ///
+  /// In en, this message translates to:
+  /// **'Futuristic'**
+  String get styleFuturistic;
+
+  /// No description provided for @styleColonial.
+  ///
+  /// In en, this message translates to:
+  /// **'Colonial'**
+  String get styleColonial;
+
+  /// No description provided for @styleRococo.
+  ///
+  /// In en, this message translates to:
+  /// **'Rococo'**
+  String get styleRococo;
+
+  /// No description provided for @styleValentine.
+  ///
+  /// In en, this message translates to:
+  /// **'Valentine\'s Day'**
+  String get styleValentine;
+
+  /// No description provided for @myDesigns.
+  ///
+  /// In en, this message translates to:
+  /// **'My Designs'**
+  String get myDesigns;
+
+  /// No description provided for @noDesignsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t generated any designs yet'**
+  String get noDesignsYet;
+
+  /// No description provided for @savedToDesigns.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved to My Designs'**
+  String get savedToDesigns;
+
+  /// No description provided for @generateDesign.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate Design'**
+  String get generateDesign;
+
+  /// No description provided for @generatingDesign.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating...'**
+  String get generatingDesign;
+
+  /// No description provided for @chooseRoomType.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Room Type'**
+  String get chooseRoomType;
+
+  /// No description provided for @chooseStyle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Style'**
+  String get chooseStyle;
+
+  /// No description provided for @chooseColorPalette.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Color Palette'**
+  String get chooseColorPalette;
+
+  /// No description provided for @addFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Features'**
+  String get addFeatures;
+
+  /// No description provided for @lighting.
+  ///
+  /// In en, this message translates to:
+  /// **'Lighting & Atmosphere'**
+  String get lighting;
+
+  /// No description provided for @architecture.
+  ///
+  /// In en, this message translates to:
+  /// **'Architectural Elements'**
+  String get architecture;
+
+  /// No description provided for @decoration.
+  ///
+  /// In en, this message translates to:
+  /// **'Decoration & Details'**
+  String get decoration;
+
+  /// No description provided for @ambientLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambient Lighting'**
+  String get ambientLight;
+
+  /// No description provided for @naturalLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Natural Light'**
+  String get naturalLight;
+
+  /// No description provided for @cozyAtmosphere.
+  ///
+  /// In en, this message translates to:
+  /// **'Cozy Atmosphere'**
+  String get cozyAtmosphere;
+
+  /// No description provided for @accentWall.
+  ///
+  /// In en, this message translates to:
+  /// **'Accent Wall'**
+  String get accentWall;
+
+  /// No description provided for @builtInShelves.
+  ///
+  /// In en, this message translates to:
+  /// **'Built-in Shelves'**
+  String get builtInShelves;
+
+  /// No description provided for @exposedBeams.
+  ///
+  /// In en, this message translates to:
+  /// **'Exposed Beams'**
+  String get exposedBeams;
+
+  /// No description provided for @arches.
+  ///
+  /// In en, this message translates to:
+  /// **'Arches'**
+  String get arches;
+
+  /// No description provided for @plants.
+  ///
+  /// In en, this message translates to:
+  /// **'Plants & Vegetation'**
+  String get plants;
+
+  /// No description provided for @mirrors.
+  ///
+  /// In en, this message translates to:
+  /// **'Mirrors'**
+  String get mirrors;
+
+  /// No description provided for @texturedWalls.
+  ///
+  /// In en, this message translates to:
+  /// **'Textured Walls'**
+  String get texturedWalls;
+
+  /// No description provided for @rugs.
+  ///
+  /// In en, this message translates to:
+  /// **'Area Rugs'**
+  String get rugs;
+
+  /// No description provided for @colorPaletteNeutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Neutral'**
+  String get colorPaletteNeutral;
+
+  /// No description provided for @colorPaletteWarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm'**
+  String get colorPaletteWarm;
+
+  /// No description provided for @colorPaletteCool.
+  ///
+  /// In en, this message translates to:
+  /// **'Cool'**
+  String get colorPaletteCool;
+
+  /// No description provided for @colorPaletteEarthy.
+  ///
+  /// In en, this message translates to:
+  /// **'Earthy'**
+  String get colorPaletteEarthy;
+
+  /// No description provided for @colorPaletteMonochrome.
+  ///
+  /// In en, this message translates to:
+  /// **'Monochrome'**
+  String get colorPaletteMonochrome;
+
+  /// No description provided for @colorPaletteVibrant.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibrant'**
+  String get colorPaletteVibrant;
+
+  /// No description provided for @required.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get required;
+
+  /// No description provided for @projectNameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Give your project a name'**
+  String get projectNameTitle;
+
+  /// No description provided for @projectNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Eg: My primary bedroom...'**
+  String get projectNameHint;
+
+  /// No description provided for @roomTypeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the room type'**
+  String get roomTypeTitle;
+
+  /// No description provided for @styleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the style'**
+  String get styleTitle;
+
+  /// No description provided for @colorPaletteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the color palette'**
+  String get colorPaletteTitle;
+
+  /// No description provided for @promptTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you want to change or add?'**
+  String get promptTitle;
+
+  /// No description provided for @promptHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Eg: Add a wooden desk, plants and warm light...'**
+  String get promptHint;
+
+  /// No description provided for @addFurnitureTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add furniture and objects'**
+  String get addFurnitureTitle;
+
+  /// No description provided for @addFurnitureSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose up to 5 items to suggest in your space'**
+  String get addFurnitureSubtitle;
+
+  /// No description provided for @cameraPhotoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera and photo'**
+  String get cameraPhotoTitle;
+
+  /// No description provided for @cameraOptionDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep details'**
+  String get cameraOptionDetails;
+
+  /// No description provided for @cameraOptionDetailsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep existing elements'**
+  String get cameraOptionDetailsDesc;
+
+  /// No description provided for @cameraOptionSameAngle.
+  ///
+  /// In en, this message translates to:
+  /// **'Same angle'**
+  String get cameraOptionSameAngle;
+
+  /// No description provided for @cameraOptionSameAngleDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the original perspective'**
+  String get cameraOptionSameAngleDesc;
+
+  /// No description provided for @cameraOptionChangeAngle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change angle'**
+  String get cameraOptionChangeAngle;
+
+  /// No description provided for @cameraOptionChangeAngleDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'AI chooses a better angle'**
+  String get cameraOptionChangeAngleDesc;
+
+  /// No description provided for @projectNameRequiredError.
+  ///
+  /// In en, this message translates to:
+  /// **'Project name is required'**
+  String get projectNameRequiredError;
+
+  /// No description provided for @roomTypeRequiredError.
+  ///
+  /// In en, this message translates to:
+  /// **'You must select a room type'**
+  String get roomTypeRequiredError;
+
+  /// No description provided for @colorPaletteRequiredError.
+  ///
+  /// In en, this message translates to:
+  /// **'You must select a color palette'**
+  String get colorPaletteRequiredError;
+
+  /// No description provided for @promptRequiredError.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe what you want to change or add'**
+  String get promptRequiredError;
+
+  /// No description provided for @styleRequiredError.
+  ///
+  /// In en, this message translates to:
+  /// **'You must select a style'**
+  String get styleRequiredError;
+
+  /// No description provided for @userNotAuthenticated.
+  ///
+  /// In en, this message translates to:
+  /// **'User is not authenticated'**
+  String get userNotAuthenticated;
+
+  /// No description provided for @microphonePermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone permission denied'**
+  String get microphonePermissionDenied;
+
+  /// No description provided for @speechUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Speech recognition is unavailable'**
+  String get speechUnavailable;
+
+  /// No description provided for @speechRecognitionStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Speech recognition status'**
+  String get speechRecognitionStatus;
+
+  /// No description provided for @speechRecognitionError.
+  ///
+  /// In en, this message translates to:
+  /// **'Speech recognition error'**
+  String get speechRecognitionError;
+
+  /// No description provided for @listening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening'**
+  String get listening;
+
+  /// No description provided for @errorUploadingOriginalImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not upload the original image'**
+  String get errorUploadingOriginalImage;
+
+  /// No description provided for @errorSavingProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save the project'**
+  String get errorSavingProject;
+
+  /// No description provided for @errorGeneratingIdea.
+  ///
+  /// In en, this message translates to:
+  /// **'Error generating idea'**
+  String get errorGeneratingIdea;
+
+  /// No description provided for @generateProjectError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not generate the project. Please try again.'**
+  String get generateProjectError;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optional;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @emailAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already registered'**
+  String get emailAlreadyExists;
+
+  /// No description provided for @passwordTooWeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is too weak'**
+  String get passwordTooWeak;
+
+  /// No description provided for @registrationError.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration error'**
+  String get registrationError;
+
+  /// No description provided for @profileCreationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create user profile'**
+  String get profileCreationFailed;
+
+  /// No description provided for @creatingAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating account...'**
+  String get creatingAccount;
+
+  /// No description provided for @login_tab.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get login_tab;
+
+  /// No description provided for @signup_tab.
+  ///
+  /// In en, this message translates to:
+  /// **'Signup'**
+  String get signup_tab;
+
+  /// No description provided for @full_name_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get full_name_label;
+
+  /// No description provided for @forgot_password_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgot_password_link;
+
+  /// No description provided for @terms_signup_intro.
+  ///
+  /// In en, this message translates to:
+  /// **'By creating an account you are accepting our '**
+  String get terms_signup_intro;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get newPassword;
+
+  /// No description provided for @enterNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your new password'**
+  String get enterNewPassword;
+
+  /// No description provided for @updatePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Password'**
+  String get updatePassword;
+
+  /// No description provided for @passwordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter both passwords'**
+  String get passwordRequired;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @passwordTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get passwordTooShort;
+
+  /// No description provided for @passwordUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Password updated successfully'**
+  String get passwordUpdated;
+
+  /// No description provided for @errorUpdatingPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating password'**
+  String get errorUpdatingPassword;
+
+  /// No description provided for @remember_me.
+  ///
+  /// In en, this message translates to:
+  /// **'Remember me'**
+  String get remember_me;
+
+  /// No description provided for @projects_new.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get projects_new;
+
+  /// No description provided for @projects_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have any projects yet.'**
+  String get projects_empty;
+
+  /// No description provided for @projects_untitled.
+  ///
+  /// In en, this message translates to:
+  /// **'Untitled'**
+  String get projects_untitled;
+
+  /// No description provided for @projects_styles_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} styles'**
+  String projects_styles_count(Object count);
+
+  /// No description provided for @projects_status_draft.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get projects_status_draft;
+
+  /// No description provided for @projects_status_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get projects_status_completed;
+
+  /// No description provided for @projects_status_in_progress.
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get projects_status_in_progress;
+
+  /// No description provided for @projects_error_generic.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get projects_error_generic;
+
+  /// No description provided for @favorites_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have any favorite projects yet'**
+  String get favorites_empty;
+
+  /// No description provided for @projects_empty_title.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved designs'**
+  String get projects_empty_title;
+
+  /// No description provided for @projects_empty_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your generated room designs will appear here. Start creating to see your transformations!'**
+  String get projects_empty_subtitle;
+
+  /// No description provided for @projects_empty_step1.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload a photo of the room'**
+  String get projects_empty_step1;
+
+  /// No description provided for @projects_empty_step2.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your style'**
+  String get projects_empty_step2;
+
+  /// No description provided for @projects_empty_step3.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate and save'**
+  String get projects_empty_step3;
+
+  /// No description provided for @projects_empty_button.
+  ///
+  /// In en, this message translates to:
+  /// **'+ Create your first design'**
+  String get projects_empty_button;
+
+  /// No description provided for @selectOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an option'**
+  String get selectOption;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get takePhoto;
+
+  /// No description provided for @uploadImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload image'**
+  String get uploadImage;
+
+  /// No description provided for @errorImagePickerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get errorImagePickerLabel;
+
+  /// No description provided for @project_detail_default_room.
+  ///
+  /// In en, this message translates to:
+  /// **'Room'**
+  String get project_detail_default_room;
+
+  /// No description provided for @project_detail_default_palette.
+  ///
+  /// In en, this message translates to:
+  /// **'Palette'**
+  String get project_detail_default_palette;
+
+  /// No description provided for @project_detail_default_feature.
+  ///
+  /// In en, this message translates to:
+  /// **'Object'**
+  String get project_detail_default_feature;
+
+  /// No description provided for @project_detail_date_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Not available'**
+  String get project_detail_date_unavailable;
+
+  /// No description provided for @project_detail_now_private.
+  ///
+  /// In en, this message translates to:
+  /// **'The project is now private'**
+  String get project_detail_now_private;
+
+  /// No description provided for @project_detail_now_public.
+  ///
+  /// In en, this message translates to:
+  /// **'The project is now public'**
+  String get project_detail_now_public;
+
+  /// No description provided for @project_detail_error_update.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating status: {error}'**
+  String project_detail_error_update(String error);
+
+  /// No description provided for @project_detail_section_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get project_detail_section_status;
+
+  /// No description provided for @project_detail_section_room_type.
+  ///
+  /// In en, this message translates to:
+  /// **'Room type'**
+  String get project_detail_section_room_type;
+
+  /// No description provided for @project_detail_section_styles.
+  ///
+  /// In en, this message translates to:
+  /// **'Styles'**
+  String get project_detail_section_styles;
+
+  /// No description provided for @project_detail_section_palette.
+  ///
+  /// In en, this message translates to:
+  /// **'Color palette'**
+  String get project_detail_section_palette;
+
+  /// No description provided for @project_detail_section_features.
+  ///
+  /// In en, this message translates to:
+  /// **'Furniture & objects'**
+  String get project_detail_section_features;
+
+  /// No description provided for @project_detail_section_prompt.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you want to change or add?'**
+  String get project_detail_section_prompt;
+
+  /// No description provided for @project_detail_section_times.
+  ///
+  /// In en, this message translates to:
+  /// **'Timestamps'**
+  String get project_detail_section_times;
+
+  /// No description provided for @project_detail_status_public.
+  ///
+  /// In en, this message translates to:
+  /// **'Public'**
+  String get project_detail_status_public;
+
+  /// No description provided for @project_detail_status_private.
+  ///
+  /// In en, this message translates to:
+  /// **'Private'**
+  String get project_detail_status_private;
+
+  /// No description provided for @project_detail_created_at.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get project_detail_created_at;
+
+  /// No description provided for @project_detail_updated_at.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get project_detail_updated_at;
+
+  /// No description provided for @project_detail_btn_publish.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish project'**
+  String get project_detail_btn_publish;
+
+  /// No description provided for @project_detail_btn_make_private.
+  ///
+  /// In en, this message translates to:
+  /// **'Make private'**
+  String get project_detail_btn_make_private;
+
+  /// No description provided for @project_detail_toggle_original.
+  ///
+  /// In en, this message translates to:
+  /// **'Original'**
+  String get project_detail_toggle_original;
+
+  /// No description provided for @project_detail_toggle_generated.
+  ///
+  /// In en, this message translates to:
+  /// **'Generated'**
+  String get project_detail_toggle_generated;
+
+  /// No description provided for @project_detail_updated_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Project updated successfully'**
+  String get project_detail_updated_success;
+
+  /// No description provided for @project_detail_error_update_edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating project: {error}'**
+  String project_detail_error_update_edit(String error);
+
+  /// No description provided for @project_detail_edit_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Project'**
+  String get project_detail_edit_title;
+
+  /// No description provided for @project_detail_edit_name_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Project name'**
+  String get project_detail_edit_name_label;
+
+  /// No description provided for @project_detail_edit_name_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter project name'**
+  String get project_detail_edit_name_hint;
+
+  /// No description provided for @project_detail_name_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Project name is required'**
+  String get project_detail_name_required;
+
+  /// No description provided for @project_detail_edit_prompt_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Prompt'**
+  String get project_detail_edit_prompt_label;
+
+  /// No description provided for @project_detail_edit_prompt_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe what to change or add...'**
+  String get project_detail_edit_prompt_hint;
+
+  /// No description provided for @project_detail_btn_regenerating.
+  ///
+  /// In en, this message translates to:
+  /// **'Regenerating...'**
+  String get project_detail_btn_regenerating;
+
+  /// No description provided for @project_detail_btn_saving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving...'**
+  String get project_detail_btn_saving;
+
+  /// No description provided for @project_detail_btn_save_and_regenerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Save and regenerate'**
+  String get project_detail_btn_save_and_regenerate;
+
+  /// No description provided for @project_detail_delete_confirm_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete project'**
+  String get project_detail_delete_confirm_title;
+
+  /// No description provided for @project_detail_delete_confirm_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this project? This cannot be undone.'**
+  String get project_detail_delete_confirm_message;
+
+  /// No description provided for @project_detail_delete_confirm_cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get project_detail_delete_confirm_cancel;
+
+  /// No description provided for @project_detail_delete_confirm_delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get project_detail_delete_confirm_delete;
+
+  /// No description provided for @project_detail_deleted_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Project deleted successfully'**
+  String get project_detail_deleted_success;
+
+  /// No description provided for @project_detail_error_delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting project: {error}'**
+  String project_detail_error_delete(String error);
+
+  /// No description provided for @project_detail_btn_edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit project'**
+  String get project_detail_btn_edit;
+
+  /// No description provided for @project_detail_btn_delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete project'**
+  String get project_detail_btn_delete;
+
+  /// No description provided for @projects_status_public.
+  ///
+  /// In en, this message translates to:
+  /// **'Public'**
+  String get projects_status_public;
+
+  /// No description provided for @projects_status_private.
+  ///
+  /// In en, this message translates to:
+  /// **'Private'**
+  String get projects_status_private;
+
+  /// No description provided for @publications_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Publications'**
+  String get publications_title;
+
+  /// No description provided for @publications_filter_favorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get publications_filter_favorites;
+
+  /// No description provided for @publications_empty_favorites.
+  ///
+  /// In en, this message translates to:
+  /// **'You have no favorites yet'**
+  String get publications_empty_favorites;
+
+  /// No description provided for @publications_empty_all.
+  ///
+  /// In en, this message translates to:
+  /// **'No publications yet'**
+  String get publications_empty_all;
+
+  /// No description provided for @publications_unknown_author.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get publications_unknown_author;
+
+  /// No description provided for @publications_liked.
+  ///
+  /// In en, this message translates to:
+  /// **'Liked'**
+  String get publications_liked;
+
+  /// No description provided for @home_error_image_pick.
+  ///
+  /// In en, this message translates to:
+  /// **'Error selecting image: {error}'**
+  String home_error_image_pick(String error);
+
+  /// No description provided for @home_section_stats.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get home_section_stats;
+
+  /// No description provided for @home_stat_this_month.
+  ///
+  /// In en, this message translates to:
+  /// **'+{count} this month'**
+  String home_stat_this_month(int count);
+
+  /// No description provided for @home_stat_new.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} new'**
+  String home_stat_new(int count);
+
+  /// No description provided for @home_stat_public_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Public'**
+  String get home_stat_public_label;
+
+  /// No description provided for @home_stat_published.
+  ///
+  /// In en, this message translates to:
+  /// **'Published'**
+  String get home_stat_published;
+
+  /// No description provided for @home_time_minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} min ago'**
+  String home_time_minutes(int count);
+
+  /// No description provided for @home_time_hours.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} h ago'**
+  String home_time_hours(int count);
+
+  /// No description provided for @home_time_yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get home_time_yesterday;
+
+  /// No description provided for @home_time_days.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days ago'**
+  String home_time_days(int count);
+
+  /// No description provided for @home_empty_projects.
+  ///
+  /// In en, this message translates to:
+  /// **'You have no projects yet.\nStart by taking a photo of your space.'**
+  String get home_empty_projects;
 }
 
-class AppLocalizationDelegate extends LocalizationsDelegate<S> {
-  const AppLocalizationDelegate();
+class _SDelegate extends LocalizationsDelegate<S> {
+  const _SDelegate();
 
-  List<Locale> get supportedLocales {
-    return const <Locale>[
-      Locale.fromSubtags(languageCode: 'en'),
-      Locale.fromSubtags(languageCode: 'es'),
-    ];
+  @override
+  Future<S> load(Locale locale) {
+    return SynchronousFuture<S>(lookupS(locale));
   }
 
   @override
-  bool isSupported(Locale locale) => _isSupported(locale);
-  @override
-  Future<S> load(Locale locale) => S.load(locale);
-  @override
-  bool shouldReload(AppLocalizationDelegate old) => false;
+  bool isSupported(Locale locale) =>
+      <String>['en', 'es'].contains(locale.languageCode);
 
-  bool _isSupported(Locale locale) {
-    for (var supportedLocale in supportedLocales) {
-      if (supportedLocale.languageCode == locale.languageCode) {
-        return true;
-      }
-    }
-    return false;
+  @override
+  bool shouldReload(_SDelegate old) => false;
+}
+
+S lookupS(Locale locale) {
+  // Lookup logic when only language code is specified.
+  switch (locale.languageCode) {
+    case 'en':
+      return SEn();
+    case 'es':
+      return SEs();
   }
+
+  throw FlutterError(
+    'S.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
 }

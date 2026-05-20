@@ -73,12 +73,12 @@ class _PublicationsDetailScreenState extends State<PublicationsDetailScreen> {
   }
 
   String _roomName(String? roomId) {
-    if (roomId == null) return S.current.project_detail_default_room;
+    if (roomId == null) return S.of(context).project_detail_default_room;
     final room = _rooms.firstWhere(
       (item) => item['id']?.toString() == roomId,
       orElse: () => {},
     );
-    return room.isNotEmpty ? _text(room['name_type_room']) : S.current.project_detail_default_room;
+    return room.isNotEmpty ? _text(room['name_type_room']) : S.of(context).project_detail_default_room;
   }
 
   String _roomIcon(String? roomId) {
@@ -124,11 +124,11 @@ class _PublicationsDetailScreenState extends State<PublicationsDetailScreen> {
   }
 
   String _paletteName(String? paletteId) {
-    if (paletteId == null) return S.current.project_detail_default_palette;
+    if (paletteId == null) return S.of(context).project_detail_default_palette;
     final palette = _findPalette(paletteId);
     return (palette != null && palette.isNotEmpty)
         ? _text(palette['name_palette'])
-        : S.current.project_detail_default_palette;
+        : S.of(context).project_detail_default_palette;
   }
 
   List<Color> _paletteColors(String? paletteId) {
@@ -142,7 +142,7 @@ class _PublicationsDetailScreenState extends State<PublicationsDetailScreen> {
       (item) => item['id']?.toString() == featureId,
       orElse: () => {},
     );
-    return feature.isNotEmpty ? _text(feature['name_feature']) : S.current.project_detail_default_feature;
+    return feature.isNotEmpty ? _text(feature['name_feature']) : S.of(context).project_detail_default_feature;
   }
 
   String _featureIcon(String featureId) {
@@ -183,7 +183,7 @@ class _PublicationsDetailScreenState extends State<PublicationsDetailScreen> {
   }
 
   String _formatDate(dynamic dateValue) {
-    if (dateValue == null) return S.current.project_detail_date_unavailable;
+    if (dateValue == null) return S.of(context).project_detail_date_unavailable;
     try {
       final date = dateValue is DateTime
           ? dateValue

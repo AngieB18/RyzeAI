@@ -83,13 +83,13 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   }
 
   String _roomName(String? roomId) {
-    if (roomId == null) return S.current.project_detail_default_room;
+    if (roomId == null) return S.of(context).project_detail_default_room;
     final room = _rooms.firstWhere(
       (item) => item['id']?.toString() == roomId,
       orElse: () => {},
     );
     if (room.isNotEmpty) return _text(room['name_type_room']);
-    return S.current.project_detail_default_room;
+    return S.of(context).project_detail_default_room;
   }
 
   String _roomIcon(String? roomId) {
@@ -136,10 +136,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   }
 
   String _paletteName(String? paletteId) {
-    if (paletteId == null) return S.current.project_detail_default_palette;
+    if (paletteId == null) return S.of(context).project_detail_default_palette;
     final palette = _findPalette(paletteId);
     if (palette != null && palette.isNotEmpty) return _text(palette['name_palette']);
-    return S.current.project_detail_default_palette;
+    return S.of(context).project_detail_default_palette;
   }
 
   List<Color> _paletteColors(String? paletteId) {
@@ -154,7 +154,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       orElse: () => {},
     );
     if (feature.isNotEmpty) return _text(feature['name_feature']);
-    return S.current.project_detail_default_feature;
+    return S.of(context).project_detail_default_feature;
   }
 
   String _featureIcon(String featureId) {
@@ -195,7 +195,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   }
 
   String _formatDate(dynamic dateValue) {
-    if (dateValue == null) return S.current.project_detail_date_unavailable;
+    if (dateValue == null) return S.of(context).project_detail_date_unavailable;
     try {
       final date = dateValue is DateTime
           ? dateValue

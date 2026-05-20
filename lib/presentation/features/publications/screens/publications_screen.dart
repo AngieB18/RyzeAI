@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/services/notifications/notification_service.dart';
 import '../../../../core/services/styles/style_service.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../presentation/widgets/emojis/app_emojis.dart';
@@ -57,8 +58,10 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
   }
 
   Future<void> _toggleLike(String projectId) async {
-    final currentUserId = _supabase.auth.currentUser?.id;
+    final currentUser = _supabase.auth.currentUser;
+    final currentUserId = currentUser?.id;
     if (currentUserId == null) return;
+
     final isLiked = _likedIds.contains(projectId);
     setState(() {
       if (isLiked) {
@@ -67,6 +70,7 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
         _likedIds.add(projectId);
       }
     });
+
     try {
       if (isLiked) {
         await _supabase
@@ -79,6 +83,29 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
           'user_id': currentUserId,
           'project_id': projectId,
         });
+
+        final projectResponse = await _supabase
+            .from('projects')
+            .select('user_id, name_projects')
+            .eq('id', projectId)
+            .single();
+
+        final authorId = projectResponse?['user_id']?.toString();
+        final projectName = projectResponse?['name_projects']?.toString() ?? '';
+
+        if (authorId != null && authorId != currentUserId) {
+          final senderName = await _getCurrentUserDisplayName(currentUser);
+          final title = 'Tu proyecto fue guardado';
+          final body = '$senderName añadió "$projectName" a sus favoritos.';
+
+          await NotificationService.createNotification(
+            recipientUserId: authorId,
+            senderUserId: currentUserId,
+            projectId: projectId,
+            title: title,
+            body: body,
+          );
+        }
       }
     } catch (e) {
       setState(() {
@@ -90,6 +117,34 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
       });
       debugPrint('Error toggling like: $e');
     }
+  }
+
+  Future<String> _getCurrentUserDisplayName(User? currentUser) async {
+    if (currentUser == null) return 'Alguien';
+
+    final metadata = currentUser.userMetadata;
+    final firstName = metadata?['first_name']?.toString() ?? metadata?['firstName']?.toString() ?? '';
+    final lastName = metadata?['last_name']?.toString() ?? metadata?['lastName']?.toString() ?? '';
+    final displayName = '$firstName $lastName'.trim();
+
+    if (displayName.isNotEmpty) return displayName;
+
+    try {
+      final response = await _supabase
+          .from('users')
+          .select('first_name, last_name')
+          .eq('id', currentUser.id)
+          .single();
+      final userData = response as Map<String, dynamic>?;
+      final dbFirstName = userData?['first_name']?.toString() ?? '';
+      final dbLastName = userData?['last_name']?.toString() ?? '';
+      final dbDisplayName = '$dbFirstName $dbLastName'.trim();
+      if (dbDisplayName.isNotEmpty) return dbDisplayName;
+    } catch (_) {
+      // Ignorar y usar nombre genérico
+    }
+
+    return 'Alguien';
   }
 
   Future<List<Map<String, dynamic>>> _fetchPublicPublications() async {
@@ -402,22 +457,45 @@ class _PublicationCard extends StatelessWidget {
                         ),
                 ),
 
-                // ── Botón corazón: fondo siempre oscuro, solo el emoji cambia ──
+                // ── Botón corazón mejorado ──
                 Positioned(
                   top: 12,
                   right: 12,
                   child: GestureDetector(
                     onTap: onLike,
                     child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      padding: const EdgeInsets.all(8),
+                      duration: const Duration(milliseconds: 300),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                       decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.35),
-                        shape: BoxShape.circle,
+                        color: isLiked ? AppColors.primary : Colors.white,
+                        borderRadius: BorderRadius.circular(24),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.25),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
                       ),
-                      child: Text(
-                        isLiked ? AppEmojis.favoriteActive : AppEmojis.favoriteInactive,
-                        style: const TextStyle(fontSize: 20),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            isLiked ? '❤️' : '🤍',
+                            style: const TextStyle(fontSize: 18),
+                          ),
+                          if (isLiked) ...[
+                            const SizedBox(width: 6),
+                            Text(
+                              strings.publications_liked,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
                     ),
                   ),
