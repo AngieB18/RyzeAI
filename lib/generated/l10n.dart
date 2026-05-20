@@ -2539,6 +2539,196 @@ class S {
     );
   }
 
+  /// `Project updated successfully`
+  String get project_detail_updated_success {
+    return Intl.message(
+      'Project updated successfully',
+      name: 'project_detail_updated_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error updating project: {error}`
+  String project_detail_error_update_edit(String error) {
+    return Intl.message(
+      'Error updating project: $error',
+      name: 'project_detail_error_update_edit',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Edit Project`
+  String get project_detail_edit_title {
+    return Intl.message(
+      'Edit Project',
+      name: 'project_detail_edit_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Project name`
+  String get project_detail_edit_name_label {
+    return Intl.message(
+      'Project name',
+      name: 'project_detail_edit_name_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter project name`
+  String get project_detail_edit_name_hint {
+    return Intl.message(
+      'Enter project name',
+      name: 'project_detail_edit_name_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Project name is required`
+  String get project_detail_name_required {
+    return Intl.message(
+      'Project name is required',
+      name: 'project_detail_name_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Prompt`
+  String get project_detail_edit_prompt_label {
+    return Intl.message(
+      'Prompt',
+      name: 'project_detail_edit_prompt_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Describe what to change or add...`
+  String get project_detail_edit_prompt_hint {
+    return Intl.message(
+      'Describe what to change or add...',
+      name: 'project_detail_edit_prompt_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Regenerating...`
+  String get project_detail_btn_regenerating {
+    return Intl.message(
+      'Regenerating...',
+      name: 'project_detail_btn_regenerating',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Saving...`
+  String get project_detail_btn_saving {
+    return Intl.message(
+      'Saving...',
+      name: 'project_detail_btn_saving',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save and regenerate`
+  String get project_detail_btn_save_and_regenerate {
+    return Intl.message(
+      'Save and regenerate',
+      name: 'project_detail_btn_save_and_regenerate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete project`
+  String get project_detail_delete_confirm_title {
+    return Intl.message(
+      'Delete project',
+      name: 'project_detail_delete_confirm_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to delete this project? This cannot be undone.`
+  String get project_detail_delete_confirm_message {
+    return Intl.message(
+      'Are you sure you want to delete this project? This cannot be undone.',
+      name: 'project_detail_delete_confirm_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get project_detail_delete_confirm_cancel {
+    return Intl.message(
+      'Cancel',
+      name: 'project_detail_delete_confirm_cancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete`
+  String get project_detail_delete_confirm_delete {
+    return Intl.message(
+      'Delete',
+      name: 'project_detail_delete_confirm_delete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Project deleted successfully`
+  String get project_detail_deleted_success {
+    return Intl.message(
+      'Project deleted successfully',
+      name: 'project_detail_deleted_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error deleting project: {error}`
+  String project_detail_error_delete(String error) {
+    return Intl.message(
+      'Error deleting project: $error',
+      name: 'project_detail_error_delete',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Edit project`
+  String get project_detail_btn_edit {
+    return Intl.message(
+      'Edit project',
+      name: 'project_detail_btn_edit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete project`
+  String get project_detail_btn_delete {
+    return Intl.message(
+      'Delete project',
+      name: 'project_detail_btn_delete',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Public`
   String get projects_status_public {
     return Intl.message(

@@ -7,7 +7,7 @@ import '../../../../core/services/styles/style_service.dart';
 import '../../../../core/services/type_room/type_room_service.dart';
 import '../../../../generated/l10n.dart';
 import 'package:ryzeai/presentation/widgets/emojis/app_emojis.dart';
-import 'package:ryzeai/presentation/widgets/index.dart';
+import '../widgets/project_detail_widgets.dart';
 
 class ProjectDetailScreen extends StatefulWidget {
   final Map<String, dynamic> project;
@@ -24,7 +24,11 @@ class ProjectDetailScreen extends StatefulWidget {
 class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   final _supabase = Supabase.instance.client;
   bool _isSaving = false;
+  bool _isDeleting = false;
   bool _isLoadingMetadata = true;
+
+  // ✅ FIX 1: Copia local mutable del proyecto para que setState funcione correctamente
+  late Map<String, dynamic> _project;
 
   List<Map<String, dynamic>> _rooms = [];
   List<Map<String, dynamic>> _styles = [];
@@ -32,10 +36,14 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   List<Map<String, dynamic>> _features = [];
 
   bool _showingOriginal = false;
+  // ✅ Cache buster: cambia cada vez que se regenera la imagen
+  int _imageCacheBuster = 0;
 
   @override
   void initState() {
     super.initState();
+    // ✅ FIX 1: Inicializar copia local en initState
+    _project = Map<String, dynamic>.from(widget.project);
     _loadMetadata();
   }
 
@@ -60,6 +68,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       setState(() => _isLoadingMetadata = false);
     }
   }
+
+  // ── Helpers de texto / lookup ──────────────────────────────────────────────
 
   String _text(dynamic value) {
     if (value is Map) {
@@ -198,17 +208,22 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     }
   }
 
+  // ── Acciones principales ───────────────────────────────────────────────────
+
   Future<void> _togglePublicState() async {
     setState(() => _isSaving = true);
     try {
-      final projectId = widget.project['id'];
-      final currentState = widget.project['public_state'] == true;
+      final projectId = _project['id'];
+      final currentState = _project['public_state'] == true;
       await _supabase
           .from('projects')
           .update({'public_state': !currentState}).eq('id', projectId);
       if (!mounted) return;
-      widget.project['public_state'] = !currentState;
-      setState(() => _isSaving = false);
+      // ✅ FIX 2: Usar _project en lugar de widget.project
+      setState(() {
+        _project['public_state'] = !currentState;
+        _isSaving = false;
+      });
       final strings = S.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -226,6 +241,479 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).project_detail_error_update(e.toString())),
+          backgroundColor: AppColors.passwordWeak,
+        ),
+      );
+    }
+  }
+
+  /// Muestra el bottom sheet de edición completo: nombre, prompt, habitación, estilos, paleta y features.
+  void _openEditSheet() {
+    final strings = S.of(context);
+
+    // ✅ FIX 2: Leer valores desde _project (copia local)
+    final nameController = TextEditingController(
+      text: _project['name_projects']?.toString() ?? '',
+    );
+    final promptController = TextEditingController(
+      text: _project['prompts']?.toString() ?? '',
+    );
+
+    String? selectedRoomId = _project['id_type_room']?.toString();
+    String? selectedPaletteId = _project['id_palette']?.toString();
+    List<String> selectedStyles = List<String>.from(
+      _toStringList(_project['styles']),
+    );
+    List<String> selectedFeatures = List<String>.from(
+      _toStringList(_project['id_features']),
+    );
+
+    final formKey = GlobalKey<FormState>();
+    bool isSavingEdit = false;
+    bool isRegenerating = false;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.surface(context),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (sheetContext) {
+        return StatefulBuilder(
+          builder: (ctx, setSheetState) {
+
+            // ── Guardar + regenerar imagen ─────────────────────────────
+            Future<void> saveAndRegenerate() async {
+              if (!formKey.currentState!.validate()) return;
+              setSheetState(() => isSavingEdit = true);
+              try {
+                final projectId = _project['id'];
+                final newName = nameController.text.trim();
+                final newPrompt = promptController.text.trim();
+                final now = DateTime.now().toIso8601String();
+
+                // 1. Actualizar todos los campos en Supabase
+                await _supabase.from('projects').update({
+                  'name_projects': newName,
+                  'prompts': newPrompt,
+                  'id_type_room': selectedRoomId,
+                  'id_palette': selectedPaletteId,
+                  'styles': selectedStyles,
+                  'id_features': selectedFeatures,
+                  'updated_at': now,
+                }).eq('id', projectId);
+
+                // 2. Marcar como regenerando e invocar edge function
+                setSheetState(() {
+                  isSavingEdit = false;
+                  isRegenerating = true;
+                });
+
+                // Obtener datos de paleta y estilos para construir el body correcto
+                final paletteData = _findPalette(selectedPaletteId);
+                final paletteColors = paletteData != null
+                    ? _parseColors(paletteData['colors_palette'])
+                        .map((c) =>
+                            '#${c.value.toRadixString(16).substring(2).toUpperCase()}')
+                        .toList()
+                    : <String>[];
+                final paletteName = paletteData != null
+                    ? _text(paletteData['name_palette'])
+                    : null;
+
+                // Primer estilo seleccionado como string (la función espera un solo estilo)
+                final styleLabel = selectedStyles.isNotEmpty
+                    ? _styleLabel(selectedStyles.first)
+                    : null;
+
+                // roomType como label legible
+                final roomTypeLabel = selectedRoomId != null
+                    ? _roomName(selectedRoomId)
+                    : null;
+
+                // originalImageUrl es obligatorio para la Edge Function
+                final originalImageUrl =
+                    _project['original_image_url']?.toString();
+
+                debugPrint('🔄 Invocando generate-room-design para proyecto: $projectId');
+                debugPrint('   originalImageUrl: $originalImageUrl');
+                debugPrint('   prompt: $newPrompt');
+
+                if (originalImageUrl == null || originalImageUrl.isEmpty) {
+                  throw Exception(
+                      'El proyecto no tiene imagen original. No se puede regenerar.');
+                }
+
+                final regenResponse = await _supabase.functions.invoke(
+                  'generate-room-design', // ✅ nombre correcto
+                  body: {
+                    'originalImageUrl': originalImageUrl,   // obligatorio
+                    'prompt': newPrompt,                     // obligatorio
+                    if (roomTypeLabel != null) 'roomType': roomTypeLabel,
+                    if (styleLabel != null) 'style': styleLabel,
+                    if (paletteName != null) 'palette': paletteName,
+                    if (paletteColors.isNotEmpty) 'paletteColors': paletteColors,
+                    if (selectedFeatures.isNotEmpty) 'features': selectedFeatures
+                        .map((id) => _featureLabel(id))
+                        .toList(),
+                  },
+                );
+
+                debugPrint('📦 Regen response data: ${regenResponse.data}');
+                debugPrint('📊 Regen response status: ${regenResponse.status}');
+
+                // La Edge Function devuelve 'generatedImageUrl' (camelCase)
+                final newImageUrl =
+                    regenResponse.data?['generatedImageUrl']?.toString();
+
+                if (newImageUrl == null) {
+                  debugPrint('⚠️ No se recibió generatedImageUrl en la respuesta');
+                } else {
+                  debugPrint('✅ Nueva imagen URL: $newImageUrl');
+                }
+
+                // 3. ✅ Limpiar caché y actualizar _project para refrescar la UI
+                if (!mounted) return;
+
+                // Evictar imagen antigua Y nueva del caché de Flutter
+                final oldImageUrl = _project['generated_image_url']?.toString();
+                if (oldImageUrl != null) {
+                  await NetworkImage(oldImageUrl).evict();
+                }
+                if (newImageUrl != null) {
+                  await NetworkImage(newImageUrl).evict();
+                }
+
+                setState(() {
+                  _project['name_projects'] = newName;
+                  _project['prompts'] = newPrompt;
+                  _project['id_type_room'] = selectedRoomId;
+                  _project['id_palette'] = selectedPaletteId;
+                  _project['styles'] = selectedStyles;
+                  _project['id_features'] = selectedFeatures;
+                  _project['updated_at'] = now;
+                  if (newImageUrl != null) {
+                    _project['generated_image_url'] = newImageUrl;
+                    _showingOriginal = false;
+                    _imageCacheBuster++; // ✅ fuerza recarga de imagen
+                  }
+                });
+
+                if (!mounted) return;
+                Navigator.pop(sheetContext);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(strings.project_detail_updated_success),
+                    backgroundColor: AppColors.passwordStrong,
+                  ),
+                );
+              } catch (e) {
+                debugPrint('❌ Error en saveAndRegenerate: $e');
+                if (!mounted) return;
+                setSheetState(() {
+                  isSavingEdit = false;
+                  isRegenerating = false;
+                });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(strings.project_detail_error_update_edit(e.toString())),
+                    backgroundColor: AppColors.passwordWeak,
+                  ),
+                );
+              }
+            }
+
+            final isBusy = isSavingEdit || isRegenerating;
+
+            return DraggableScrollableSheet(
+              expand: false,
+              initialChildSize: 0.92,
+              minChildSize: 0.5,
+              maxChildSize: 0.95,
+              builder: (_, scrollController) {
+                return Padding(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(ctx).viewInsets.bottom,
+                  ),
+                  child: Form(
+                    key: formKey,
+                    child: ListView(
+                      controller: scrollController,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      children: [
+                        // ── Handle ───────────────────────────────────────
+                        const SizedBox(height: 12),
+                        Center(
+                          child: Container(
+                            width: 40,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: AppColors.textSecondary(ctx)
+                                  .withValues(alpha: 0.3),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+
+                        Text(
+                          strings.project_detail_edit_title,
+                          style: TextStyle(
+                            color: AppColors.textPrimary(ctx),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // ── Nombre ───────────────────────────────────────
+                        _sheetLabel(ctx, strings.project_detail_edit_name_label),
+                        const SizedBox(height: 8),
+                        TextFormField(
+                          controller: nameController,
+                          style: TextStyle(color: AppColors.textPrimary(ctx)),
+                          decoration: _sheetInputDecoration(
+                            ctx,
+                            strings.project_detail_edit_name_hint,
+                          ),
+                          validator: (v) {
+                            if (v == null || v.trim().isEmpty) {
+                              return strings.project_detail_name_required;
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+
+                        // ── Prompt ───────────────────────────────────────
+                        _sheetLabel(ctx, strings.project_detail_edit_prompt_label),
+                        const SizedBox(height: 8),
+                        TextFormField(
+                          controller: promptController,
+                          style: TextStyle(color: AppColors.textPrimary(ctx)),
+                          maxLines: 4,
+                          decoration: _sheetInputDecoration(
+                            ctx,
+                            strings.project_detail_edit_prompt_hint,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // ── Tipo de habitación ───────────────────────────
+                        _sheetLabel(ctx, strings.project_detail_section_room_type),
+                        const SizedBox(height: 10),
+                        ProjectDetailRoomSelector(
+                          rooms: _rooms,
+                          selectedId: selectedRoomId,
+                          onSelect: (id) => setSheetState(() => selectedRoomId = id),
+                          titleBuilder: _text,
+                        ),
+                        const SizedBox(height: 24),
+
+                        // ── Estilos ──────────────────────────────────────
+                        _sheetLabel(ctx, strings.project_detail_section_styles),
+                        const SizedBox(height: 10),
+                        ProjectDetailStylesSelector(
+                          styles: _styles,
+                          selected: selectedStyles,
+                          onUpdate: (updated) => setSheetState(() => selectedStyles = updated),
+                          titleBuilder: _text,
+                        ),
+                        const SizedBox(height: 24),
+
+                        // ── Paleta de colores ────────────────────────────
+                        _sheetLabel(ctx, strings.project_detail_section_palette),
+                        const SizedBox(height: 10),
+                        ProjectDetailPaletteSelector(
+                          palettes: _palettes,
+                          selectedId: selectedPaletteId,
+                          onSelect: (id) => setSheetState(() => selectedPaletteId = id),
+                          nameBuilder: _text,
+                          parseColors: _parseColors,
+                        ),
+                        const SizedBox(height: 24),
+
+                        // ── Objetos / Features ───────────────────────────
+                        _sheetLabel(ctx, strings.project_detail_section_features),
+                        const SizedBox(height: 10),
+                        ProjectDetailFeaturesSelector(
+                          features: _features,
+                          selected: selectedFeatures,
+                          onUpdate: (updated) => setSheetState(() => selectedFeatures = updated),
+                          titleBuilder: _text,
+                        ),
+                        const SizedBox(height: 32),
+
+                        // ── Botón guardar + regenerar ────────────────────
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: isBusy ? null : saveAndRegenerate,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            child: isBusy
+                                ? Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const SizedBox(
+                                        height: 18,
+                                        width: 18,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor: AlwaysStoppedAnimation<Color>(
+                                              Colors.white),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        isRegenerating
+                                            ? strings.project_detail_btn_regenerating
+                                            : strings.project_detail_btn_saving,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Text('✨',
+                                          style: TextStyle(fontSize: 18)),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        strings.project_detail_btn_save_and_regenerate,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // ── Selectores del sheet ───────────────────────────────────────────────────
+
+  // ── Helpers del sheet ──────────────────────────────────────────────────────
+
+  Widget _sheetLabel(BuildContext ctx, String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        color: AppColors.textSecondary(ctx),
+        fontSize: 13,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.3,
+      ),
+    );
+  }
+
+  InputDecoration _sheetInputDecoration(BuildContext ctx, String hint) {
+    return InputDecoration(
+      hintText: hint,
+      hintStyle: TextStyle(
+        color: AppColors.textSecondary(ctx).withValues(alpha: 0.5),
+      ),
+      filled: true,
+      fillColor: AppColors.background(ctx),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide.none,
+      ),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 14,
+      ),
+    );
+  }
+
+  Future<void> _confirmAndDelete() async {
+    final strings = S.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: AppColors.surface(context),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          strings.project_detail_delete_confirm_title,
+          style: TextStyle(
+            color: AppColors.textPrimary(context),
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        content: Text(
+          strings.project_detail_delete_confirm_message,
+          style: TextStyle(color: AppColors.textSecondary(context)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(
+              strings.project_detail_delete_confirm_cancel,
+              style: TextStyle(color: AppColors.textSecondary(context)),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.passwordWeak,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: Text(
+              strings.project_detail_delete_confirm_delete,
+              style: const TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    setState(() => _isDeleting = true);
+    try {
+      // ✅ FIX 2: Usar _project
+      final projectId = _project['id'];
+      await _supabase.from('projects').delete().eq('id', projectId);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(strings.project_detail_deleted_success),
+          backgroundColor: AppColors.passwordStrong,
+        ),
+      );
+      Navigator.pop(context, 'deleted');
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isDeleting = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(strings.project_detail_error_delete(e.toString())),
           backgroundColor: AppColors.passwordWeak,
         ),
       );
@@ -271,19 +759,22 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     );
   }
 
+  // ── Build ──────────────────────────────────────────────────────────────────
+
   @override
   Widget build(BuildContext context) {
     final strings = S.of(context);
-    final isPublic = widget.project['public_state'] == true;
-    final projectName = widget.project['name_projects'] ?? strings.projects_untitled;
-    final roomId = widget.project['id_type_room']?.toString();
-    final styles = _toStringList(widget.project['styles']);
-    final features = _toStringList(widget.project['id_features']);
-    final paletteId = widget.project['id_palette']?.toString();
+    final isPublic = _project['public_state'] == true;
+    // ✅ FIX 2: Todo el build lee desde _project
+    final projectName = _project['name_projects'] ?? strings.projects_untitled;
+    final roomId = _project['id_type_room']?.toString();
+    final styles = _toStringList(_project['styles']);
+    final features = _toStringList(_project['id_features']);
+    final paletteId = _project['id_palette']?.toString();
     final paletteColors = _paletteColors(paletteId);
     final paletteName = _paletteName(paletteId);
-    final generatedImageUrl = widget.project['generated_image_url']?.toString();
-    final originalImageUrl = widget.project['original_image_url']?.toString();
+    final generatedImageUrl = _project['generated_image_url']?.toString();
+    final originalImageUrl = _project['original_image_url']?.toString();
     final activeImageUrl = _showingOriginal
         ? originalImageUrl
         : (generatedImageUrl ?? originalImageUrl);
@@ -299,6 +790,31 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
           color: AppColors.textPrimary(context),
           onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.edit_outlined,
+                color: AppColors.textPrimary(context)),
+            tooltip: strings.project_detail_btn_edit,
+            onPressed: _isLoadingMetadata ? null : _openEditSheet,
+          ),
+          IconButton(
+            icon: _isDeleting
+                ? SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppColors.passwordWeak,
+                    ),
+                  )
+                : Icon(Icons.delete_outline, color: AppColors.passwordWeak),
+            tooltip: strings.project_detail_btn_delete,
+            onPressed: (_isLoadingMetadata || _isDeleting)
+                ? null
+                : _confirmAndDelete,
+          ),
+          const SizedBox(width: 4),
+        ],
       ),
       body: _isLoadingMetadata
           ? const Center(child: CircularProgressIndicator())
@@ -306,10 +822,16 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildHeaderImage(
-                    context, activeImageUrl, projectName, isPublic,
+                  ProjectDetailHeader(
+                    imageUrl: activeImageUrl,
+                    title: projectName,
                     hasOriginal: originalImageUrl != null,
                     hasGenerated: generatedImageUrl != null,
+                    showingOriginal: _showingOriginal,
+                    onShowOriginal: () => setState(() => _showingOriginal = true),
+                    onShowGenerated: () => setState(() => _showingOriginal = false),
+                    originalLabel: strings.project_detail_toggle_original,
+                    generatedLabel: strings.project_detail_toggle_generated,
                   ),
                   const SizedBox(height: 20),
                   Padding(
@@ -317,22 +839,25 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
-                        // ── ESTADO ──────────────────────────────────────
-                        _buildSectionTitle(context, strings.project_detail_section_status),
+                        // ── ESTADO ───────────────────────────────────────
+                        ProjectDetailSectionTitle(
+                          title: strings.project_detail_section_status,
+                        ),
                         const SizedBox(height: 12),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 10),
                           decoration: BoxDecoration(
                             color: AppColors.surface(context),
                             borderRadius: BorderRadius.circular(14),
                           ),
-                          // 🔑 Row con emoji de AppEmojis + texto del ARB
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                isPublic ? AppEmojis.publicProject : AppEmojis.privateProject,
+                                isPublic
+                                    ? AppEmojis.publicProject
+                                    : AppEmojis.privateProject,
                                 style: const TextStyle(fontSize: 16),
                               ),
                               const SizedBox(width: 8),
@@ -354,10 +879,13 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                         const SizedBox(height: 20),
 
                         // ── TIPO DE HABITACIÓN ──────────────────────────
-                        _buildSectionTitle(context, strings.project_detail_section_room_type),
+                        ProjectDetailSectionTitle(
+                          title: strings.project_detail_section_room_type,
+                        ),
                         const SizedBox(height: 12),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 10),
                           decoration: BoxDecoration(
                             color: AppColors.surface(context),
                             borderRadius: BorderRadius.circular(14),
@@ -365,7 +893,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(_roomIcon(roomId), style: const TextStyle(fontSize: 16)),
+                              Text(_roomIcon(roomId),
+                                  style: const TextStyle(fontSize: 16)),
                               const SizedBox(width: 8),
                               Text(
                                 _roomName(roomId),
@@ -380,23 +909,33 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                         ),
                         const SizedBox(height: 20),
 
-                        // ── Estilos ─────────────────────────────────────
+                        // ── ESTILOS ─────────────────────────────────────
                         if (styles.isNotEmpty) ...[
-                          _buildSectionTitle(context, strings.project_detail_section_styles),
+                          ProjectDetailSectionTitle(
+                            title: strings.project_detail_section_styles,
+                          ),
                           const SizedBox(height: 12),
                           Wrap(
                             spacing: 10,
                             runSpacing: 10,
-                            children: styles.map((s) => _buildStyleTag(context, s)).toList(),
+                            children: styles
+                                .map((s) => ProjectDetailStyleTag(
+                                      icon: _styleIcon(s),
+                                      label: _styleLabel(s),
+                                    ))
+                                .toList(),
                           ),
                           const SizedBox(height: 20),
                         ],
 
-                        // ── Paleta de colores ───────────────────────────
-                        if (paletteId != null && paletteColors.isNotEmpty) ...[
-                          _buildSectionTitle(context, strings.project_detail_section_palette),
+                        // ── PALETA ──────────────────────────────────────
+                        if (paletteId != null &&
+                            paletteColors.isNotEmpty) ...[
+                          ProjectDetailSectionTitle(
+                            title: strings.project_detail_section_palette,
+                          ),
                           const SizedBox(height: 12),
-                          _buildPaletteRow(paletteColors),
+                          ProjectDetailPaletteRow(colors: paletteColors),
                           const SizedBox(height: 10),
                           Text(
                             paletteName,
@@ -408,22 +947,31 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                           const SizedBox(height: 20),
                         ],
 
-                        // ── Muebles y objetos ───────────────────────────
+                        // ── FEATURES ────────────────────────────────────
                         if (features.isNotEmpty) ...[
-                          _buildSectionTitle(context, strings.project_detail_section_features),
+                          ProjectDetailSectionTitle(
+                            title: strings.project_detail_section_features,
+                          ),
                           const SizedBox(height: 12),
                           Wrap(
                             spacing: 10,
                             runSpacing: 10,
-                            children: features.map((f) => _buildFeatureTag(context, f)).toList(),
+                            children: features
+                                .map((f) => ProjectDetailFeatureTag(
+                                      icon: _featureIcon(f),
+                                      label: _featureLabel(f),
+                                    ))
+                                .toList(),
                           ),
                           const SizedBox(height: 20),
                         ],
 
-                        // ── Prompt ──────────────────────────────────────
-                        if (widget.project['prompts'] != null &&
-                            widget.project['prompts'].toString().isNotEmpty) ...[
-                          _buildSectionTitle(context, strings.project_detail_section_prompt),
+                        // ── PROMPT ──────────────────────────────────────
+                        if (_project['prompts'] != null &&
+                            _project['prompts'].toString().isNotEmpty) ...[
+                          ProjectDetailSectionTitle(
+                            title: strings.project_detail_section_prompt,
+                          ),
                           const SizedBox(height: 12),
                           Container(
                             width: double.infinity,
@@ -435,12 +983,12 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // 🔑 AppEmojis.prompt
-                                Text(AppEmojis.prompt, style: const TextStyle(fontSize: 18)),
+                                Text(AppEmojis.prompt,
+                                    style: const TextStyle(fontSize: 18)),
                                 const SizedBox(width: 10),
                                 Expanded(
                                   child: Text(
-                                    widget.project['prompts'].toString(),
+                                    _project['prompts'].toString(),
                                     style: TextStyle(
                                       color: AppColors.textPrimary(context),
                                       fontSize: 14,
@@ -454,35 +1002,33 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                           const SizedBox(height: 20),
                         ],
 
-                        // ── Tiempos ─────────────────────────────────────
-                        _buildSectionTitle(context, strings.project_detail_section_times),
+                        // ── TIEMPOS ─────────────────────────────────────
+                        ProjectDetailSectionTitle(
+                          title: strings.project_detail_section_times,
+                        ),
                         const SizedBox(height: 12),
                         Row(
                           children: [
                             Expanded(
-                              child: _buildInfoCard(
-                                context,
-                                // 🔑 emoji + texto ARB
-                                AppEmojis.createdAt,
-                                strings.project_detail_created_at,
-                                _formatDate(widget.project['created_at']),
-                              ),
+                              child: ProjectDetailInfoCard(
+                              emoji: AppEmojis.createdAt,
+                              label: strings.project_detail_created_at,
+                              value: _formatDate(_project['created_at']),
+                            ),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
-                              child: _buildInfoCard(
-                                context,
-                                // 🔑 emoji + texto ARB
-                                AppEmojis.updatedAt,
-                                strings.project_detail_updated_at,
-                                _formatDate(widget.project['updated_at']),
+                              child: ProjectDetailInfoCard(
+                                emoji: AppEmojis.updatedAt,
+                                label: strings.project_detail_updated_at,
+                                value: _formatDate(_project['updated_at']),
                               ),
                             ),
                           ],
                         ),
                         const SizedBox(height: 30),
 
-                        // ── Botón publicar / privatizar ─────────────────
+                        // ── BOTÓN PUBLICAR / PRIVATIZAR ─────────────────
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
@@ -491,7 +1037,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                               backgroundColor: isPublic
                                   ? AppColors.passwordWeak
                                   : AppColors.passwordStrong,
-                              padding: const EdgeInsets.symmetric(vertical: 18),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 18),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16)),
                             ),
@@ -501,24 +1048,28 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                     width: 20,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                      valueColor:
+                                          AlwaysStoppedAnimation<Color>(
+                                              Colors.white),
                                     ),
                                   )
                                 : Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      // 🔑 emoji del botón desde AppEmojis
                                       Text(
                                         isPublic
                                             ? AppEmojis.privateProject
                                             : AppEmojis.publicProject,
-                                        style: const TextStyle(fontSize: 18),
+                                        style:
+                                            const TextStyle(fontSize: 18),
                                       ),
                                       const SizedBox(width: 8),
                                       Text(
                                         isPublic
-                                            ? strings.project_detail_btn_make_private
-                                            : strings.project_detail_btn_publish,
+                                            ? strings
+                                                .project_detail_btn_make_private
+                                            : strings
+                                                .project_detail_btn_publish,
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 16,
@@ -539,253 +1090,4 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     );
   }
 
-  Widget _buildHeaderImage(
-    BuildContext context,
-    String? imageUrl,
-    String title,
-    bool isPublic, {
-    required bool hasOriginal,
-    required bool hasGenerated,
-  }) {
-    final strings = S.of(context);
-    return Stack(
-      children: [
-        GestureDetector(
-          onTap: () {
-            if (imageUrl != null) _openImageFullscreen(context, imageUrl);
-          },
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 400),
-            child: Container(
-              key: ValueKey(imageUrl),
-              height: 320,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: AppColors.darkHeader.withValues(alpha: 0.15),
-                image: imageUrl != null
-                    ? DecorationImage(image: NetworkImage(imageUrl), fit: BoxFit.cover)
-                    : null,
-              ),
-            ),
-          ),
-        ),
-        IgnorePointer(
-          child: Container(
-            height: 320,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.transparent,
-                  AppColors.background(context).withValues(alpha: 0.88),
-                ],
-              ),
-            ),
-          ),
-        ),
-
-        // ── Hint de zoom con AppEmojis.zoomHint ────────────────────────
-        if (imageUrl != null)
-          Positioned(
-            bottom: 50,
-            right: 20,
-            child: IgnorePointer(
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.45),
-                  shape: BoxShape.circle,
-                ),
-                child: Text(
-                  AppEmojis.zoomHint,
-                  style: const TextStyle(fontSize: 18),
-                ),
-              ),
-            ),
-          ),
-
-        // ── Título ──────────────────────────────────────────────────────
-        Positioned(
-          bottom: 20,
-          left: 20,
-          right: 60,
-          child: Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-
-        // ── Toggle Original / Generada ──────────────────────────────────
-        if (hasOriginal && hasGenerated)
-          Positioned(
-            top: 16,
-            right: 16,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.55),
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _toggleChip(strings.project_detail_toggle_original, _showingOriginal,
-                      () => setState(() => _showingOriginal = true)),
-                  _toggleChip(strings.project_detail_toggle_generated, !_showingOriginal,
-                      () => setState(() => _showingOriginal = false)),
-                ],
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _toggleChip(String label, bool active, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(
-          color: active ? AppColors.primary : Colors.transparent,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: active ? Colors.white : Colors.white70,
-            fontSize: 12,
-            fontWeight: active ? FontWeight.w700 : FontWeight.w400,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSectionTitle(BuildContext context, String title) {
-    return Text(
-      title,
-      style: TextStyle(
-        color: AppColors.textPrimary(context),
-        fontSize: 16,
-        fontWeight: FontWeight.w700,
-      ),
-    );
-  }
-
-  Widget _buildPaletteRow(List<Color> colors) {
-    return Row(
-      children: colors.map((color) {
-        return Expanded(
-          child: Container(
-            height: 56,
-            margin: const EdgeInsets.only(right: 6),
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(14),
-            ),
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _buildStyleTag(BuildContext context, String styleId) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        color: AppColors.surface(context),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(_styleIcon(styleId), style: const TextStyle(fontSize: 16)),
-          const SizedBox(width: 8),
-          Text(
-            _styleLabel(styleId),
-            style: TextStyle(
-              color: AppColors.textPrimary(context),
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFeatureTag(BuildContext context, String featureId) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        color: AppColors.surface(context),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(_featureIcon(featureId), style: const TextStyle(fontSize: 16)),
-          const SizedBox(width: 8),
-          Text(
-            _featureLabel(featureId),
-            style: TextStyle(
-              color: AppColors.textPrimary(context),
-              fontSize: 14,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 🔑 Firma actualizada: recibe emoji por separado
-  Widget _buildInfoCard(
-    BuildContext context,
-    String emoji,
-    String label,
-    String value,
-  ) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface(context),
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(emoji, style: const TextStyle(fontSize: 14)),
-              const SizedBox(width: 6),
-              Text(
-                label,
-                style: TextStyle(
-                  color: AppColors.textSecondary(context),
-                  fontSize: 12,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Text(
-            value,
-            style: TextStyle(
-              color: AppColors.textPrimary(context),
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

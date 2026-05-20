@@ -296,6 +296,35 @@
   "project_detail_btn_make_private": "Make private",
   "project_detail_toggle_original": "Original",
   "project_detail_toggle_generated": "Generated",
+  "project_detail_updated_success": "Project updated successfully",
+  "project_detail_error_update_edit": "Error updating project: {error}",
+  "@project_detail_error_update_edit": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "project_detail_edit_title": "Edit Project",
+  "project_detail_edit_name_label": "Project name",
+  "project_detail_edit_name_hint": "Enter project name",
+  "project_detail_name_required": "Project name is required",
+  "project_detail_edit_prompt_label": "Prompt",
+  "project_detail_edit_prompt_hint": "Describe what to change or add...",
+  "project_detail_btn_regenerating": "Regenerating...",
+  "project_detail_btn_saving": "Saving...",
+  "project_detail_btn_save_and_regenerate": "Save and regenerate",
+  "project_detail_delete_confirm_title": "Delete project",
+  "project_detail_delete_confirm_message": "Are you sure you want to delete this project? This cannot be undone.",
+  "project_detail_delete_confirm_cancel": "Cancel",
+  "project_detail_delete_confirm_delete": "Delete",
+  "project_detail_deleted_success": "Project deleted successfully",
+  "project_detail_error_delete": "Error deleting project: {error}",
+  "@project_detail_error_delete": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "project_detail_btn_edit": "Edit project",
+  "project_detail_btn_delete": "Delete project",
   "projects_status_public": "Public",
   "projects_status_private": "Private",
   "publications_title": "Publications",

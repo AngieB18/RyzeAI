@@ -32,9 +32,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m5(count) => "Hace ${count} min";
 
-  static String m6(error) => "Error al actualizar el estado: ${error}";
+  static String m6(error) => "Error al eliminar el proyecto: ${error}";
 
-  static String m7(count) => "${count} estilos";
+  static String m7(error) => "Error al actualizar el estado: ${error}";
+
+  static String m8(error) => "Error al actualizar el proyecto: ${error}";
+
+  static String m9(count) => "${count} estilos";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -383,11 +387,25 @@ class MessageLookup extends MessageLookupByLibrary {
     "projectNotificationsDesc": MessageLookupByLibrary.simpleMessage(
       "Actualizaciones sobre tus proyectos de decoración",
     ),
+    "project_detail_btn_delete": MessageLookupByLibrary.simpleMessage(
+      "Eliminar proyecto",
+    ),
+    "project_detail_btn_edit": MessageLookupByLibrary.simpleMessage(
+      "Editar proyecto",
+    ),
     "project_detail_btn_make_private": MessageLookupByLibrary.simpleMessage(
       "Poner privado",
     ),
     "project_detail_btn_publish": MessageLookupByLibrary.simpleMessage(
       "Publicar proyecto",
+    ),
+    "project_detail_btn_regenerating": MessageLookupByLibrary.simpleMessage(
+      "Regenerando...",
+    ),
+    "project_detail_btn_save_and_regenerate":
+        MessageLookupByLibrary.simpleMessage("Guardar y regenerar"),
+    "project_detail_btn_saving": MessageLookupByLibrary.simpleMessage(
+      "Guardando...",
     ),
     "project_detail_created_at": MessageLookupByLibrary.simpleMessage("Creado"),
     "project_detail_date_unavailable": MessageLookupByLibrary.simpleMessage(
@@ -402,7 +420,40 @@ class MessageLookup extends MessageLookupByLibrary {
     "project_detail_default_room": MessageLookupByLibrary.simpleMessage(
       "Habitación",
     ),
-    "project_detail_error_update": m6,
+    "project_detail_delete_confirm_cancel":
+        MessageLookupByLibrary.simpleMessage("Cancelar"),
+    "project_detail_delete_confirm_delete":
+        MessageLookupByLibrary.simpleMessage("Eliminar"),
+    "project_detail_delete_confirm_message": MessageLookupByLibrary.simpleMessage(
+      "¿Estás seguro de que quieres eliminar este proyecto? Esto no se puede deshacer.",
+    ),
+    "project_detail_delete_confirm_title": MessageLookupByLibrary.simpleMessage(
+      "Eliminar proyecto",
+    ),
+    "project_detail_deleted_success": MessageLookupByLibrary.simpleMessage(
+      "Proyecto eliminado correctamente",
+    ),
+    "project_detail_edit_name_hint": MessageLookupByLibrary.simpleMessage(
+      "Ingresa el nombre del proyecto",
+    ),
+    "project_detail_edit_name_label": MessageLookupByLibrary.simpleMessage(
+      "Nombre del proyecto",
+    ),
+    "project_detail_edit_prompt_hint": MessageLookupByLibrary.simpleMessage(
+      "Describe qué cambiar o agregar...",
+    ),
+    "project_detail_edit_prompt_label": MessageLookupByLibrary.simpleMessage(
+      "Prompt",
+    ),
+    "project_detail_edit_title": MessageLookupByLibrary.simpleMessage(
+      "Editar proyecto",
+    ),
+    "project_detail_error_delete": m6,
+    "project_detail_error_update": m7,
+    "project_detail_error_update_edit": m8,
+    "project_detail_name_required": MessageLookupByLibrary.simpleMessage(
+      "El nombre del proyecto es obligatorio",
+    ),
     "project_detail_now_private": MessageLookupByLibrary.simpleMessage(
       "El proyecto ahora es privado",
     ),
@@ -445,6 +496,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "project_detail_updated_at": MessageLookupByLibrary.simpleMessage(
       "Actualizado",
     ),
+    "project_detail_updated_success": MessageLookupByLibrary.simpleMessage(
+      "Proyecto actualizado correctamente",
+    ),
     "projects": MessageLookupByLibrary.simpleMessage("Proyectos"),
     "projects_empty": MessageLookupByLibrary.simpleMessage(
       "No tienes proyectos creados aún.",
@@ -480,7 +534,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "projects_status_private": MessageLookupByLibrary.simpleMessage("Privado"),
     "projects_status_public": MessageLookupByLibrary.simpleMessage("Público"),
-    "projects_styles_count": m7,
+    "projects_styles_count": m9,
     "projects_untitled": MessageLookupByLibrary.simpleMessage("Sin título"),
     "promptHint": MessageLookupByLibrary.simpleMessage(
       "Ej: Pon un escritorio de madera, plantas y luz cálida...",
