@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ryzeai/core/constants/app_colors.dart';
 import 'package:ryzeai/core/services/feature_ser/feature_service.dart';
+import 'package:ryzeai/core/services/meshy/meshy_service.dart';
 import 'package:ryzeai/core/services/palette/palette_servicio.dart';
 import 'package:ryzeai/core/services/projects/projects_service.dart';
 import 'package:ryzeai/core/services/styles/style_service.dart';
@@ -378,8 +379,16 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
         throw Exception(strings.errorUploadingOriginalImage);
       }
 
-      const generatedImageUrl =
-          'https://i.pinimg.com/originals/ec/76/e8/ec76e84490e61a29f07812ac58fbca43.gif';
+      final meshyPrompt = _buildMeshyPrompt();
+
+      final generatedImageUrl = await MeshyService.generateDesignImage(
+        imageUrl: originalImageUrl,
+        prompt: meshyPrompt,
+      );
+
+      if (generatedImageUrl == null) {
+        throw Exception(strings.generateProjectError);
+      }
 
       final project = await ProjectsService.createProject(
         nameProjects: _nameController.text.trim(),
@@ -401,7 +410,7 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => const ResultScreen(resultImageUrl: generatedImageUrl),
+          builder: (_) => ResultScreen(resultImageUrl: generatedImageUrl),
         ),
       );
     } catch (e) {
@@ -417,6 +426,65 @@ class _StyleInspirationScreenState extends State<StyleInspirationScreen> {
         setState(() => _isGenerating = false);
       }
     }
+  }
+
+  String _buildMeshyPrompt() {
+    final roomName =
+        _text(
+          _rooms.firstWhere(
+            (r) => r['id'].toString() == _selectedRoomId,
+            orElse: () => {},
+          )['name_type_room'],
+        );
+
+    final styleName =
+        _text(
+          _styles.firstWhere(
+            (s) => s['id'].toString() == _selectedStyleId,
+            orElse: () => {},
+          )['name'],
+        );
+
+    final paletteName =
+        _text(
+          _palettes.firstWhere(
+            (p) => p['id'].toString() == _selectedPaletteId,
+            orElse: () => {},
+          )['name_palette'],
+        );
+
+    final features = _selectedFeatures.map((id) {
+      return _text(
+        _features.firstWhere(
+          (f) => f['id'].toString() == id,
+          orElse: () => {},
+        )['name_feature'],
+      );
+    }).join(', ');
+
+    final buffer = StringBuffer();
+    buffer.write('Redesign this $roomName');
+    if (styleName.isNotEmpty) {
+      buffer.write(' in $styleName style');
+    }
+    if (paletteName.isNotEmpty) {
+      buffer.write(' with $paletteName color palette');
+    }
+    if (features.isNotEmpty) {
+      buffer.write('. Include these elements: $features');
+    }
+
+    final customPrompt = _promptController.text.trim();
+    if (customPrompt.isNotEmpty) {
+      buffer.write('. Additional instructions: $customPrompt');
+    }
+
+    buffer.write(
+      '. Interior design, photorealistic, professional staging, '
+      'well-lit, cozy atmosphere, high quality, 4K.',
+    );
+
+    return buffer.toString();
   }
 
   // ─────────────────────────────────────────────────────────────────────────────
