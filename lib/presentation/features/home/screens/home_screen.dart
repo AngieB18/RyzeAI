@@ -12,7 +12,6 @@ import '../../../../presentation/widgets/emojis/app_emojis.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:ryzeai/presentation/features/camera/screens/style_inspiration_screen.dart';
-import '../../favorites/screens/favorites_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -178,8 +177,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return null;
   }
 
-
-
   String _formatDate(String isoDate) {
     try {
       final date = DateTime.parse(isoDate).toLocal();
@@ -195,7 +192,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // Subtitles calculados según idioma
   String _projectSubtitle(S t) {
     if (_loadingStats) return t.thisMonth;
     final locale = Localizations.localeOf(context).languageCode;
@@ -287,23 +283,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: GestureDetector(
-                          onTap: () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const FavoritesScreen(),
-                              ),
-                            );
-                            _loadStats();
-                          },
-                          child: HomeStatCard(
-                            emoji: AppEmojis.favoriteActive,
-                            title: translations.favorites,
-                            value: _loadingStats ? '—' : '$_favoriteCount',
-                            subtitle: _favoritesSubtitle(translations),
-                            subtitleColor: AppColors.primary,
-                          ),
+                        child: HomeStatCard(
+                          emoji: AppEmojis.favoriteActive,
+                          title: translations.favorites,
+                          value: _loadingStats ? '—' : '$_favoriteCount',
+                          subtitle: _favoritesSubtitle(translations),
+                          subtitleColor: AppColors.primary,
                         ),
                       ),
                       const SizedBox(width: 12),

@@ -5,7 +5,6 @@ import '../../../../core/services/styles/style_service.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../presentation/widgets/emojis/app_emojis.dart';
 import '../screens/publications_detail_screen.dart';
-import '../../favorites/screens/favorites_screen.dart';
 
 class PublicationsScreen extends StatefulWidget {
   const PublicationsScreen({super.key});
@@ -204,25 +203,18 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
                     ),
                   ),
                 ),
-                // Filtro favoritos -> Ahora lleva a una pantalla dedicada
+                // Filtro favoritos — toggle inline, sin navegar a otra pantalla
                 GestureDetector(
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const FavoritesScreen(),
-                      ),
-                    );
-                    _loadLikes();
-                    setState(() {
-                      _publicationsFuture = _fetchPublicPublications();
-                    });
+                  onTap: () {
+                    setState(() => _showingFavorites = !_showingFavorites);
                   },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
-                      color: AppColors.primary,
+                      color: _showingFavorites
+                          ? AppColors.primary
+                          : AppColors.primary.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Row(
@@ -235,8 +227,10 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
                         const SizedBox(width: 6),
                         Text(
                           strings.publications_filter_favorites,
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: _showingFavorites
+                                ? Colors.white
+                                : AppColors.primary,
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                           ),
@@ -272,7 +266,6 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // 🔑 emojis desde AppEmojis
                         Text(
                           _showingFavorites
                               ? AppEmojis.emptyFavorites
@@ -409,7 +402,7 @@ class _PublicationCard extends StatelessWidget {
                         ),
                 ),
 
-                // ── Botón corazón con emoji de AppEmojis ───────────────
+                // ── Botón corazón: fondo siempre oscuro, solo el emoji cambia ──
                 Positioned(
                   top: 12,
                   right: 12,
@@ -419,9 +412,7 @@ class _PublicationCard extends StatelessWidget {
                       duration: const Duration(milliseconds: 200),
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: isLiked
-                            ? Colors.red.withValues(alpha: 0.85)
-                            : Colors.black.withValues(alpha: 0.35),
+                        color: Colors.black.withValues(alpha: 0.35),
                         shape: BoxShape.circle,
                       ),
                       child: Text(
@@ -481,7 +472,6 @@ class _PublicationCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      // 🔑 emoji desde AppEmojis + fecha
                       if (formattedDate.isNotEmpty)
                         Row(
                           children: [

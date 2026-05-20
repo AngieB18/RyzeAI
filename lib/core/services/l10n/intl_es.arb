@@ -296,6 +296,35 @@
   "project_detail_btn_make_private": "Poner privado",
   "project_detail_toggle_original": "Original",
   "project_detail_toggle_generated": "Generada",
+  "project_detail_updated_success": "Proyecto actualizado correctamente",
+  "project_detail_error_update_edit": "Error al actualizar el proyecto: {error}",
+  "@project_detail_error_update_edit": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "project_detail_edit_title": "Editar proyecto",
+  "project_detail_edit_name_label": "Nombre del proyecto",
+  "project_detail_edit_name_hint": "Ingresa el nombre del proyecto",
+  "project_detail_name_required": "El nombre del proyecto es obligatorio",
+  "project_detail_edit_prompt_label": "Prompt",
+  "project_detail_edit_prompt_hint": "Describe qué cambiar o agregar...",
+  "project_detail_btn_regenerating": "Regenerando...",
+  "project_detail_btn_saving": "Guardando...",
+  "project_detail_btn_save_and_regenerate": "Guardar y regenerar",
+  "project_detail_delete_confirm_title": "Eliminar proyecto",
+  "project_detail_delete_confirm_message": "¿Estás seguro de que quieres eliminar este proyecto? Esto no se puede deshacer.",
+  "project_detail_delete_confirm_cancel": "Cancelar",
+  "project_detail_delete_confirm_delete": "Eliminar",
+  "project_detail_deleted_success": "Proyecto eliminado correctamente",
+  "project_detail_error_delete": "Error al eliminar el proyecto: {error}",
+  "@project_detail_error_delete": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "project_detail_btn_edit": "Editar proyecto",
+  "project_detail_btn_delete": "Eliminar proyecto",
   "projects_status_public": "Público",
   "projects_status_private": "Privado",
   "publications_title": "Publicaciones",
