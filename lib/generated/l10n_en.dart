@@ -16,11 +16,10 @@ class SEn extends S {
 
   @override
   String get welcome_subtitle =>
-      'Welcome! Get inspired and design your ideal space in 3D';
+      'Welcome! Get inspired and design your ideal space';
 
   @override
-  String get welcome =>
-      'Welcome! Get inspired and design your ideal space in 3D';
+  String get welcome => 'Welcome! Get inspired and design your ideal space';
 
   @override
   String get login => 'Log In';
@@ -101,7 +100,7 @@ class SEn extends S {
   String get decorate => 'Decorate with AI';
 
   @override
-  String get decorateDesc => 'Take a photo and visualize furniture in 3D';
+  String get decorateDesc => 'Take a photo and visualize furniture';
 
   @override
   String get openCamera => 'Open AI Camera';
@@ -132,7 +131,7 @@ class SEn extends S {
 
   @override
   String get decorateDesc2 =>
-      'Take a photo of your space and visualize furniture in 3D instantly';
+      'Take a photo of your space and visualize furniture instantly';
 
   @override
   String get modifiedAgo => 'Modified';
@@ -304,7 +303,7 @@ class SEn extends S {
 
   @override
   String get faqA2 =>
-      'Point your camera at any space and our AI will detect objects and suggest furniture in 3D.';
+      'Point your camera at any space and our AI will detect objects and suggest furniture.';
 
   @override
   String get faqQ3 => 'Can I change my email?';

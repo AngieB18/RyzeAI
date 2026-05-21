@@ -149,10 +149,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "darkMode": MessageLookupByLibrary.simpleMessage("Modo oscuro"),
     "decorate": MessageLookupByLibrary.simpleMessage("Decora con IA"),
     "decorateDesc": MessageLookupByLibrary.simpleMessage(
-      "Toma una foto y visualiza muebles en 3D",
+      "Toma una foto y visualiza tus ideas",
     ),
     "decorateDesc2": MessageLookupByLibrary.simpleMessage(
-      "Toma una foto de tu espacio y visualiza muebles en 3D al instante",
+      "Toma una foto de tu espacio y visualiza tus ideas al instante",
     ),
     "decoration": MessageLookupByLibrary.simpleMessage("Decoración y detalles"),
     "delete": MessageLookupByLibrary.simpleMessage("Eliminar"),
@@ -229,7 +229,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Ve a la pestaña Proyectos y toca el botón Nuevo para iniciar un proyecto de decoración.",
     ),
     "faqA2": MessageLookupByLibrary.simpleMessage(
-      "Apunta tu cámara a cualquier espacio y nuestra IA detectará objetos y sugerirá muebles en 3D.",
+      "Apunta tu cámara a cualquier espacio y nuestra IA detectará objetos y sugerirá nuevas ideas.",
     ),
     "faqA3": MessageLookupByLibrary.simpleMessage(
       "Sí, ve a Perfil → Editar perfil y despliega la sección de correo para cambiarlo.",
@@ -555,6 +555,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "publications_filter_favorites": MessageLookupByLibrary.simpleMessage(
       "Favoritos",
     ),
+    "publications_liked": MessageLookupByLibrary.simpleMessage("Me gusta"),
     "publications_title": MessageLookupByLibrary.simpleMessage("Publicaciones"),
     "publications_unknown_author": MessageLookupByLibrary.simpleMessage(
       "Usuario",
@@ -685,7 +686,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "El usuario no está autenticado",
     ),
     "welcome": MessageLookupByLibrary.simpleMessage(
-      "¡Bienvenido! Inspírate y diseña tu espacio ideal en 3D",
+      "¡Bienvenido! Inspírate y diseña tu espacio ideal",
     ),
     "welcomeBack": MessageLookupByLibrary.simpleMessage("Bienvenido de nuevo"),
     "welcomeSubtitle": MessageLookupByLibrary.simpleMessage(
@@ -695,7 +696,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "¡Bienvenido a RyzeAI! 🎉",
     ),
     "welcome_subtitle": MessageLookupByLibrary.simpleMessage(
-      "¡Bienvenido! Inspírate y diseña tu espacio ideal en 3D",
+      "¡Bienvenido! Inspírate y diseña tu espacio ideal",
     ),
     "welcome_title": MessageLookupByLibrary.simpleMessage("Bienvenido"),
     "yesterday": MessageLookupByLibrary.simpleMessage("ayer"),
